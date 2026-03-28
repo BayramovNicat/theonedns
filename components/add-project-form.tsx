@@ -95,9 +95,11 @@ export function AddProjectForm() {
             <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Platform</Label>
             <Select
               value={platform}
-              onValueChange={(v: Platform) => {
-                setPlatform(v);
-                setCredentials({});
+              onValueChange={(v) => {
+                if (v) {
+                  setPlatform(v as Platform);
+                  setCredentials({});
+                }
               }}
             >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">

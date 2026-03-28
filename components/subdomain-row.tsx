@@ -89,7 +89,7 @@ export function SubdomainRow({
   function handleCancel() {
     setRecordType(record.type);
     setContent(record.content);
-    setProxied(record.proxied);
+    setProxied(record.proxied ?? false);
     setEditing(false);
   }
 
@@ -127,7 +127,10 @@ export function SubdomainRow({
         </TableCell>
         <TableCell>
           {editing ? (
-            <Select value={recordType} onValueChange={setRecordType}>
+            <Select 
+              value={recordType} 
+              onValueChange={(v) => v && setRecordType(v)}
+            >
               <SelectTrigger size="sm" className="w-24 border-white/10 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>

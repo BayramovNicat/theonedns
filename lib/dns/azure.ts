@@ -74,10 +74,10 @@ class AzureDnsProvider implements DnsProvider {
       `${this.base}/recordsets?api-version=2018-05-01&$top=500`;
 
     while (url) {
-      const res = await fetch(url, { headers: headers(this.token) });
-      if (!res.ok) break;
+      const response: Response = await fetch(url, { headers: headers(this.token) });
+      if (!response.ok) break;
 
-      const data = await res.json();
+      const data: any = await response.json();
 
       for (const rs of data.value ?? []) {
         const type = rs.type?.split("/").pop();

@@ -106,7 +106,10 @@ export function AddSubdomainForm({
 
           <div className="space-y-2">
             <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Record type</Label>
-            <Select value={recordType} onValueChange={setRecordType}>
+            <Select 
+              value={recordType} 
+              onValueChange={(v) => v && setRecordType(v)}
+            >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>
