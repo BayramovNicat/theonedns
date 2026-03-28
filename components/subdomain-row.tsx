@@ -6,7 +6,25 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { Pencil, Trash2, Check, X } from "lucide-react";
 
 type DnsRecord = {
   id: string;
@@ -31,6 +49,7 @@ export function SubdomainRow({
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [removed, setRemoved] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   if (removed) return null;
 
@@ -93,92 +112,126 @@ export function SubdomainRow({
       toast.error("Network error");
     } finally {
       setDeleting(false);
+      setConfirmOpen(false);
     }
   }
 
   return (
-    <TableRow>
-      <TableCell className="font-medium">{record.name}</TableCell>
-      <TableCell>
-        {editing ? (
-          <select
-            value={recordType}
-            onChange={(e) => setRecordType(e.target.value)}
-            className="border-input focus-visible:ring-ring h-8 rounded-md border bg-transparent px-2 text-sm"
-          >
-            <option value="A">A</option>
-            <option value="AAAA">AAAA</option>
-            <option value="CNAME">CNAME</option>
-          </select>
-        ) : (
-          <Badge variant="secondary">{record.type}</Badge>
-        )}
-      </TableCell>
-      <TableCell>
-        {editing ? (
-          <Input
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="h-8 font-mono text-sm"
-          />
-        ) : (
-          <span className="font-mono text-sm">{record.content}</span>
-        )}
-      </TableCell>
-      <TableCell>
-        {editing ? (
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={proxied}
-              onChange={(e) => setProxied(e.target.checked)}
-              className="border-input h-4 w-4 rounded"
+    <>
+      <TableRow className="border-border/40">
+        <TableCell className="pl-6 font-medium">{record.name}</TableCell>
+        <TableCell>
+          {editing ? (
+            <Select value={recordType} onValueChange={setRecordType}>
+              <SelectTrigger size="sm" className="w-24">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="A">A</SelectItem>
+                <SelectItem value="AAAA">AAAA</SelectItem>
+                <SelectItem value="CNAME">CNAME</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <Badge variant="secondary" className="font-mono text-xs">
+              {record.type}
+            </Badge>
+          )}
+        </TableCell>
+        <TableCell>
+          {editing ? (
+            <Input
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="h-8 font-mono text-sm"
             />
-            <span className="text-xs">Proxied</span>
-          </label>
-        ) : record.proxied ? (
-          <Badge className="bg-orange-500/10 text-orange-600 hover:bg-orange-500/10">
-            Proxied
-          </Badge>
-        ) : (
-          <Badge variant="outline">DNS only</Badge>
-        )}
-      </TableCell>
-      <TableCell className="text-right">
-        {editing ? (
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCancel}
-              disabled={saving}
-            >
-              Cancel
-            </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving}>
-              {saving ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        ) : (
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setEditing(true)}
-            >
-              Edit
-            </Button>
+          ) : (
+            <span className="text-muted-foreground font-mono text-sm">
+              {record.content}
+            </span>
+          )}
+        </TableCell>
+        <TableCell>
+          {editing ? (
+            <Switch checked={proxied} onCheckedChange={setProxied} size="sm" />
+          ) : record.proxied ? (
+            <Badge className="border-0 bg-orange-500/10 text-orange-500 hover:bg-orange-500/10">
+              Proxied
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground">
+              DNS only
+            </Badge>
+          )}
+        </TableCell>
+        <TableCell className="pr-6 text-right">
+          {editing ? (
+            <div className="flex justify-end gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCancel}
+                disabled={saving}
+                className="size-8 p-0"
+              >
+                <X className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSave}
+                disabled={saving}
+                className="size-8 p-0 text-green-500 hover:text-green-400"
+              >
+                <Check className="size-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex justify-end gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditing(true)}
+                className="text-muted-foreground hover:text-foreground size-8 p-0"
+              >
+                <Pencil className="size-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConfirmOpen(true)}
+                disabled={deleting}
+                className="text-muted-foreground hover:text-destructive size-8 p-0"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+          )}
+        </TableCell>
+      </TableRow>
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete record</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="text-foreground font-medium">{record.name}</span>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
-              size="sm"
               onClick={handleDelete}
               disabled={deleting}
             >
               {deleting ? "Deleting..." : "Delete"}
             </Button>
-          </div>
-        )}
-      </TableCell>
-    </TableRow>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

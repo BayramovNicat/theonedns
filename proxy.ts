@@ -32,15 +32,16 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
+  const pathname = request.nextUrl.pathname;
+  const isPublic =
+    pathname === "/" ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/auth");
+
+  if (!user && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     const redirectResponse = NextResponse.redirect(url);
-    // Carry over cookie changes (e.g. session clearing) to the redirect
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value);
     });

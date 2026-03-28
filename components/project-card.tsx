@@ -3,11 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
+import { Globe, MoreVertical, Trash2, ExternalLink } from "lucide-react";
 
 type Project = {
   id: string;
@@ -19,15 +34,11 @@ type Project = {
 export function ProjectCard({ project }: { project: Project }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const platformName = PLATFORMS[project.platform]?.name ?? project.platform;
 
-  async function handleDelete(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!confirm(`Delete "${project.domain}"? This cannot be undone.`)) return;
-
+  async function handleDelete() {
     setDeleting(true);
     try {
       const res = await fetch("/api/projects", {
@@ -48,32 +59,79 @@ export function ProjectCard({ project }: { project: Project }) {
       toast.error("Network error");
     } finally {
       setDeleting(false);
+      setConfirmOpen(false);
     }
   }
 
   return (
-    <Link href={`/projects/${project.id}`}>
-      <Card className="hover:border-foreground/20 transition-colors">
-        <CardHeader>
+    <>
+      <div className="group border-border/60 bg-card hover:border-border relative rounded-xl border transition-colors">
+        <Link href={`/projects/${project.id}`} className="block p-5">
           <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-base">{project.domain}</CardTitle>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">{platformName}</Badge>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDelete}
-                disabled={deleting}
-                className="text-muted-foreground hover:text-destructive h-8 w-8 p-0"
-              >
-                &times;
-              </Button>
+            <div className="flex items-center gap-3">
+              <div className="bg-secondary flex size-10 items-center justify-center rounded-lg">
+                <Globe className="text-muted-foreground size-5" />
+              </div>
+              <div>
+                <p className="font-medium">{project.domain}</p>
+                <div className="mt-1 flex items-center gap-2">
+                  <Badge variant="secondary" className="text-xs">
+                    {platformName}
+                  </Badge>
+                </div>
+              </div>
             </div>
           </div>
-        </CardHeader>
-      </Card>
-    </Link>
+        </Link>
+
+        <div className="absolute top-3 right-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground flex size-8 items-center justify-center rounded-md opacity-0 transition-opacity group-hover:opacity-100">
+              <MoreVertical className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => router.push(`/projects/${project.id}`)}
+              >
+                <ExternalLink className="mr-2 size-4" />
+                Open
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => setConfirmOpen(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="text-foreground font-medium">
+                {project.domain}
+              </span>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

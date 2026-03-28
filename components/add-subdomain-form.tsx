@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -13,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 
 export function AddSubdomainForm({
   domain,
@@ -47,7 +56,7 @@ export function AddSubdomainForm({
         return;
       }
 
-      toast.success("Subdomain created");
+      toast.success("Record created");
       setSubdomain("");
       setContent("");
       setRecordType("A");
@@ -63,14 +72,15 @@ export function AddSubdomainForm({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none">
-        Add subdomain
+      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors">
+        <Plus className="size-4" />
+        Add record
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New subdomain</DialogTitle>
+          <DialogTitle>New DNS record</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="subdomain">Subdomain</Label>
             <div className="flex items-center gap-2">
@@ -82,49 +92,48 @@ export function AddSubdomainForm({
                 value={subdomain}
                 onChange={(e) => setSubdomain(e.target.value)}
               />
-              <span className="text-muted-foreground text-sm">.{domain}</span>
+              <span className="text-muted-foreground shrink-0 text-sm">
+                .{domain}
+              </span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="recordType">Record type</Label>
-            <select
-              id="recordType"
-              value={recordType}
-              onChange={(e) => setRecordType(e.target.value)}
-              className="border-input focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none"
-            >
-              <option value="A">A (IPv4 address)</option>
-              <option value="CNAME">CNAME (alias)</option>
-            </select>
+            <Label>Record type</Label>
+            <Select value={recordType} onValueChange={setRecordType}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="A">A (IPv4 address)</SelectItem>
+                <SelectItem value="CNAME">CNAME (alias)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="content">Target</Label>
             <Input
               id="content"
-              placeholder="192.0.2.1 or example.com"
+              placeholder={recordType === "A" ? "192.0.2.1" : "example.com"}
               required
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="proxied"
-              checked={proxied}
-              onChange={(e) => setProxied(e.target.checked)}
-              className="border-input h-4 w-4 rounded"
-            />
-            <Label htmlFor="proxied" className="text-sm font-normal">
-              Proxy through Cloudflare (recommended)
-            </Label>
+          <div className="border-border/60 flex items-center justify-between rounded-lg border px-4 py-3">
+            <div>
+              <Label className="text-sm">Proxy through Cloudflare</Label>
+              <p className="text-muted-foreground text-xs">
+                Enable CDN and DDoS protection
+              </p>
+            </div>
+            <Switch checked={proxied} onCheckedChange={setProxied} />
           </div>
 
           <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Creating..." : "Create"}
+            {pending ? "Creating..." : "Create record"}
           </Button>
         </form>
       </DialogContent>

@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { Globe } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -14,21 +17,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-      <div className="w-full max-w-sm space-y-6 px-4">
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center">
+      <div className="w-full max-w-sm space-y-8 px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Sign in
+          <Link
+            href="/"
+            className="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-2 transition-colors"
+          >
+            <Globe className="size-5" />
+            <span className="text-lg font-semibold tracking-tight">Domnix</span>
+          </Link>
+          <h1 className="mt-6 text-2xl font-semibold tracking-tight">
+            Welcome back
           </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Continue with your Google account
+          <p className="text-muted-foreground mt-2 text-sm">
+            Sign in to manage your DNS records
           </p>
         </div>
-        <button
+
+        <Button
+          variant="outline"
+          className="h-12 w-full gap-3 text-sm"
           onClick={signInWithGoogle}
-          className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
         >
-          <svg className="h-5 w-5" viewBox="0 0 24 24">
+          <svg className="size-5" viewBox="0 0 24 24">
             <path
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
               fill="#4285F4"
@@ -47,7 +59,11 @@ export default function LoginPage() {
             />
           </svg>
           Continue with Google
-        </button>
+        </Button>
+
+        <p className="text-muted-foreground text-center text-xs">
+          By continuing, you agree to our terms of service.
+        </p>
       </div>
     </div>
   );

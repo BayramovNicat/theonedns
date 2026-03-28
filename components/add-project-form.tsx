@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -14,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
+import { Plus } from "lucide-react";
 
 export function AddProjectForm() {
   const router = useRouter();
@@ -66,31 +74,35 @@ export function AddProjectForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none">
+      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors">
+        <Plus className="size-4" />
         New project
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add project</DialogTitle>
+          <DialogTitle>Connect a domain</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="platform">Platform</Label>
-            <select
-              id="platform"
+            <Label>Platform</Label>
+            <Select
               value={platform}
-              onChange={(e) => {
-                setPlatform(e.target.value as Platform);
+              onValueChange={(v: Platform) => {
+                setPlatform(v);
                 setCredentials({});
               }}
-              className="border-input focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none"
             >
-              {Object.entries(PLATFORMS).map(([key, cfg]) => (
-                <option key={key} value={key}>
-                  {cfg.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(PLATFORMS).map(([key, cfg]) => (
+                  <SelectItem key={key} value={key}>
+                    {cfg.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
@@ -104,8 +116,8 @@ export function AddProjectForm() {
             />
           </div>
 
-          <div className="space-y-3">
-            <Label className="text-muted-foreground text-xs tracking-wide uppercase">
+          <div className="space-y-4">
+            <Label className="text-muted-foreground text-xs tracking-wider uppercase">
               {platformConfig.name} credentials
             </Label>
             {platformConfig.fields.map((field) => (
@@ -127,7 +139,7 @@ export function AddProjectForm() {
           </div>
 
           <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Creating..." : "Create project"}
+            {pending ? "Connecting..." : "Connect domain"}
           </Button>
         </form>
       </DialogContent>
