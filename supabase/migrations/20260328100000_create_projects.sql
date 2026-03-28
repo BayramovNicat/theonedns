@@ -5,7 +5,7 @@ create table public.projects (
     'cloudflare', 'vercel', 'netlify', 'digitalocean', 'hetzner',
     'godaddy', 'gcloud', 'porkbun', 'dnsimple', 'namecom',
     'route53', 'vultr', 'linode', 'gandi', 'ovh',
-    'namecheap', 'azure', 'bunny', 'dynadot', 'hostinger'
+    'namecheap', 'bunny', 'dynadot', 'hostinger'
   )),
   credentials text not null default '{}',
   domain text not null,

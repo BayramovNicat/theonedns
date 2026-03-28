@@ -1,4 +1,3 @@
-import { azureAdapter } from "./azure";
 import { bunnyAdapter } from "./bunny";
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
@@ -37,7 +36,6 @@ const adapters: Record<string, PlatformAdapter> = {
   gandi: gandiAdapter,
   ovh: ovhAdapter,
   namecheap: namecheapAdapter,
-  azure: azureAdapter,
   bunny: bunnyAdapter,
   dynadot: dynadotAdapter,
   hostinger: hostingerAdapter,
