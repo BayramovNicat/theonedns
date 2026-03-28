@@ -11,8 +11,7 @@ import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { SubdomainRow } from "@/components/subdomain-row";
 import { ConnectCloudflare } from "@/components/connect-cloudflare";
 import { DisconnectButton } from "@/components/disconnect-button";
-import { signOut } from "@/lib/supabase/actions";
-import { Button } from "@/components/ui/button";
+import { SignOutButton } from "@/components/sign-out-button";
 import { listDnsRecords } from "@/lib/cloudflare";
 
 export default async function Dashboard() {
@@ -40,11 +39,7 @@ export default async function Dashboard() {
           <div className="flex items-center gap-3">
             {config && <DisconnectButton />}
             <span className="text-muted-foreground text-sm">{user?.email}</span>
-            <form action={signOut}>
-              <Button variant="outline" size="sm">
-                Sign out
-              </Button>
-            </form>
+            <SignOutButton />
           </div>
         </div>
       </header>

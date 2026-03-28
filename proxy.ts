@@ -39,7 +39,12 @@ export async function proxy(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    // Carry over cookie changes (e.g. session clearing) to the redirect
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as is.
