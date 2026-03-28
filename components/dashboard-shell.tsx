@@ -10,13 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 
 type User = {
   id: string;
   email?: string;
-  user_metadata?: { full_name?: string; avatar_url?: string };
+  user_metadata?: Record<string, string | undefined>;
 };
 
 export function DashboardShell({
@@ -27,8 +27,11 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const meta = user.user_metadata;
+  const avatarUrl = meta?.avatar_url ?? meta?.picture;
+  const fullName = meta?.full_name ?? meta?.name;
   const initials =
-    user.user_metadata?.full_name
+    fullName
       ?.split(" ")
       .map((n) => n[0])
       .join("")
@@ -58,23 +61,24 @@ export function DashboardShell({
 
           <DropdownMenu>
             <DropdownMenuTrigger className="ring-offset-background focus-visible:ring-ring rounded-full ring-offset-2 transition-opacity outline-none hover:opacity-80 focus-visible:ring-2">
-              <Avatar className="size-8">
-                <AvatarImage
-                  src={user.user_metadata?.avatar_url}
-                  alt={user.user_metadata?.full_name ?? user.email}
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={fullName ?? user.email ?? ""}
+                  referrerPolicy="no-referrer"
+                  className="size-8 rounded-full object-cover"
                 />
-                <AvatarFallback className="bg-secondary text-xs font-medium">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+              ) : (
+                <Avatar className="size-8">
+                  <AvatarFallback className="bg-secondary text-xs font-medium">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={8} className="w-56">
               <div className="px-2 py-2">
-                {user.user_metadata?.full_name && (
-                  <p className="text-sm font-medium">
-                    {user.user_metadata.full_name}
-                  </p>
-                )}
+                {fullName && <p className="text-sm font-medium">{fullName}</p>}
                 <p className="text-muted-foreground truncate text-xs">
                   {user.email}
                 </p>

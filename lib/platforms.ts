@@ -5,7 +5,7 @@ export const PLATFORMS = {
       {
         key: "api_token",
         label: "API Token",
-        type: "password" as const,
+        type: "text" as const,
         placeholder: "Your Cloudflare API token",
         help: "Create one at Cloudflare Dashboard > My Profile > API Tokens with Zone.DNS Edit permission.",
       },
@@ -24,7 +24,7 @@ export const PLATFORMS = {
       {
         key: "api_token",
         label: "API Token",
-        type: "password" as const,
+        type: "text" as const,
         placeholder: "Your Vercel API token",
         help: "Create one at Vercel Dashboard > Settings > Tokens.",
       },
@@ -43,7 +43,7 @@ export const PLATFORMS = {
       {
         key: "api_token",
         label: "Personal Access Token",
-        type: "password" as const,
+        type: "text" as const,
         placeholder: "Your Netlify access token",
         help: "Create one at Netlify > User Settings > Applications > Personal access tokens.",
       },

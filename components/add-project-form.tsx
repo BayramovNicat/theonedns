@@ -82,7 +82,11 @@ export function AddProjectForm() {
         <DialogHeader>
           <DialogTitle>Connect a domain</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+          autoComplete="one-time-code"
+        >
           <div className="space-y-2">
             <Label>Platform</Label>
             <Select
@@ -111,6 +115,7 @@ export function AddProjectForm() {
               id="domain"
               placeholder="example.com"
               required
+              autoComplete="one-time-code"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
             />
@@ -128,6 +133,7 @@ export function AddProjectForm() {
                   type={field.type}
                   placeholder={field.placeholder}
                   required={!field.label.includes("optional")}
+                  autoComplete="one-time-code"
                   value={credentials[field.key] ?? ""}
                   onChange={(e) => updateCredential(field.key, e.target.value)}
                 />
@@ -138,7 +144,7 @@ export function AddProjectForm() {
             ))}
           </div>
 
-          <Button type="submit" className="w-full" disabled={pending}>
+          <Button type="submit" className="h-10 w-full" disabled={pending}>
             {pending ? "Connecting..." : "Connect domain"}
           </Button>
         </form>
