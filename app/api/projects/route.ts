@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { verifyCredentials } from "@/lib/cloudflare";
+import { verifyCredentials as verifyCf } from "@/lib/cloudflare";
+import { verifyCredentials as verifyVercel } from "@/lib/vercel";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
 
 export async function POST(request: Request) {
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      const result = await verifyCredentials(apiToken, zoneId);
+      const result = await verifyCf(apiToken, zoneId);
       if (!result.valid) {
         return NextResponse.json(
           { error: result.error ?? "Invalid credentials" },
@@ -55,6 +56,36 @@ export async function POST(request: Request) {
     } catch {
       return NextResponse.json(
         { error: "Could not reach Cloudflare API" },
+        { status: 502 }
+      );
+    }
+  }
+
+  if (platform === "vercel") {
+    const apiToken = credentials.api_token?.trim();
+
+    if (!apiToken) {
+      return NextResponse.json(
+        { error: "API Token is required" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      const result = await verifyVercel(
+        apiToken,
+        domain,
+        credentials.team_id?.trim() || undefined
+      );
+      if (!result.valid) {
+        return NextResponse.json(
+          { error: result.error ?? "Invalid credentials" },
+          { status: 400 }
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: "Could not reach Vercel API" },
         { status: 502 }
       );
     }

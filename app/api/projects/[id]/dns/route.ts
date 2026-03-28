@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import {
-  createDnsRecord,
-  updateDnsRecord,
-  deleteDnsRecord,
-  type CloudflareCredentials,
-} from "@/lib/cloudflare";
+import { getDnsProvider } from "@/lib/dns-provider";
 
 async function getProject(projectId: string) {
   const supabase = await createClient();
@@ -35,24 +30,21 @@ export async function POST(
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  if (project.platform !== "cloudflare") {
+  let provider;
+  try {
+    provider = getDnsProvider(project);
+  } catch {
     return NextResponse.json(
-      { error: "DNS management not yet supported for this platform" },
+      { error: "DNS management not supported for this platform" },
       { status: 400 }
     );
   }
 
-  const creds: CloudflareCredentials = {
-    api_token: project.credentials.api_token,
-    zone_id: project.credentials.zone_id,
-    domain: project.domain,
-  };
-
   const body = await request.json();
   const subdomain = body.subdomain?.trim().toLowerCase();
-  const recordType = body.recordType as "A" | "CNAME";
+  const recordType = body.recordType as string;
   const content = body.content?.trim();
-  const proxied = body.proxied ?? true;
+  const proxied = body.proxied ?? false;
 
   if (!subdomain || !content) {
     return NextResponse.json(
@@ -79,7 +71,7 @@ export async function POST(
   }
 
   try {
-    await createDnsRecord(creds, {
+    await provider.createRecord({
       subdomain,
       type: recordType,
       content,
@@ -106,23 +98,20 @@ export async function PATCH(
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  if (project.platform !== "cloudflare") {
+  let provider;
+  try {
+    provider = getDnsProvider(project);
+  } catch {
     return NextResponse.json(
-      { error: "DNS management not yet supported for this platform" },
+      { error: "DNS management not supported for this platform" },
       { status: 400 }
     );
   }
 
-  const creds: CloudflareCredentials = {
-    api_token: project.credentials.api_token,
-    zone_id: project.credentials.zone_id,
-    domain: project.domain,
-  };
-
   const body = await request.json();
-  const { cloudflareRecordId, type, content, proxied } = body;
+  const { recordId, type, content, proxied } = body;
 
-  if (!cloudflareRecordId || !content?.trim()) {
+  if (!recordId || !content?.trim()) {
     return NextResponse.json(
       { error: "Record ID and content are required" },
       { status: 400 }
@@ -130,10 +119,10 @@ export async function PATCH(
   }
 
   try {
-    await updateDnsRecord(creds, cloudflareRecordId, {
+    await provider.updateRecord(recordId, {
       type,
       content: content.trim(),
-      proxied: proxied ?? true,
+      proxied: proxied ?? false,
     });
   } catch (e) {
     return NextResponse.json(
@@ -156,27 +145,24 @@ export async function DELETE(
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  if (project.platform !== "cloudflare") {
+  let provider;
+  try {
+    provider = getDnsProvider(project);
+  } catch {
     return NextResponse.json(
-      { error: "DNS management not yet supported for this platform" },
+      { error: "DNS management not supported for this platform" },
       { status: 400 }
     );
   }
 
-  const creds: CloudflareCredentials = {
-    api_token: project.credentials.api_token,
-    zone_id: project.credentials.zone_id,
-    domain: project.domain,
-  };
+  const { recordId } = await request.json();
 
-  const { cloudflareRecordId } = await request.json();
-
-  if (!cloudflareRecordId) {
+  if (!recordId) {
     return NextResponse.json({ error: "Missing record id" }, { status: 400 });
   }
 
   try {
-    await deleteDnsRecord(creds, cloudflareRecordId);
+    await provider.deleteRecord(recordId);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Failed to delete record" },

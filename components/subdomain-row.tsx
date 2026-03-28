@@ -31,21 +31,24 @@ type DnsRecord = {
   name: string;
   type: string;
   content: string;
-  proxied: boolean;
+  proxied?: boolean;
 };
 
 export function SubdomainRow({
   record,
   projectId,
+  platform,
 }: {
   record: DnsRecord;
   projectId: string;
+  platform: string;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [recordType, setRecordType] = useState(record.type);
   const [content, setContent] = useState(record.content);
-  const [proxied, setProxied] = useState(record.proxied);
+  const [proxied, setProxied] = useState(record.proxied ?? false);
+  const showProxy = platform === "cloudflare";
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [removed, setRemoved] = useState(false);
@@ -60,7 +63,7 @@ export function SubdomainRow({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cloudflareRecordId: record.id,
+          recordId: record.id,
           type: recordType,
           content,
           proxied,
@@ -151,19 +154,25 @@ export function SubdomainRow({
             </span>
           )}
         </TableCell>
-        <TableCell>
-          {editing ? (
-            <Switch checked={proxied} onCheckedChange={setProxied} size="sm" />
-          ) : record.proxied ? (
-            <Badge className="border-0 bg-orange-500/10 text-orange-500 hover:bg-orange-500/10">
-              Proxied
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              DNS only
-            </Badge>
-          )}
-        </TableCell>
+        {showProxy && (
+          <TableCell>
+            {editing ? (
+              <Switch
+                checked={proxied}
+                onCheckedChange={setProxied}
+                size="sm"
+              />
+            ) : record.proxied ? (
+              <Badge className="border-0 bg-orange-500/10 text-orange-500 hover:bg-orange-500/10">
+                Proxied
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-muted-foreground">
+                DNS only
+              </Badge>
+            )}
+          </TableCell>
+        )}
         <TableCell className="pr-6 text-right">
           {editing ? (
             <div className="flex justify-end gap-1">

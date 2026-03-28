@@ -12,7 +12,10 @@ import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { SubdomainRow } from "@/components/subdomain-row";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
-import { listDnsRecords } from "@/lib/cloudflare";
+import { getDnsProvider } from "@/lib/dns-provider";
+import type { DnsRecord } from "@/lib/dns";
+
+const SUPPORTED_PLATFORMS = ["cloudflare", "vercel"];
 
 export default async function ProjectPage({
   params,
@@ -34,55 +37,64 @@ export default async function ProjectPage({
 
   if (!project) notFound();
 
-  let subdomains: Awaited<ReturnType<typeof listDnsRecords>> = [];
+  let records: DnsRecord[] = [];
+  const isSupported = SUPPORTED_PLATFORMS.includes(project.platform);
 
-  if (project.platform === "cloudflare") {
-    const creds = {
-      api_token: project.credentials.api_token,
-      zone_id: project.credentials.zone_id,
-      domain: project.domain,
-    };
-    const records = await listDnsRecords(creds);
-    subdomains = records.filter(
-      (r) =>
-        (r.name === project.domain || r.name.endsWith(`.${project.domain}`)) &&
-        (r.type === "A" || r.type === "AAAA" || r.type === "CNAME")
-    );
+  if (isSupported) {
+    try {
+      const provider = getDnsProvider(project);
+      const allRecords = await provider.listRecords();
+      records = allRecords.filter(
+        (r) =>
+          (r.name === project.domain ||
+            r.name.endsWith(`.${project.domain}`)) &&
+          ["A", "AAAA", "CNAME"].includes(r.type)
+      );
+    } catch {
+      // Failed to fetch — show empty state
+    }
   }
+
+  const showProxy = project.platform === "cloudflare";
 
   return (
     <DashboardShell user={user!}>
       <ProjectBreadcrumb domain={project.domain} platform={project.platform} />
 
-      {project.platform === "cloudflare" ? (
+      {isSupported ? (
         <div className="border-border/60 bg-card mt-6 rounded-xl border">
           <div className="border-border/40 flex items-center justify-between border-b px-6 py-4">
             <div>
               <h2 className="font-semibold">DNS Records</h2>
               <p className="text-muted-foreground mt-0.5 text-sm">
-                {subdomains.length} record{subdomains.length !== 1 && "s"} found
+                {records.length} record{records.length !== 1 && "s"} found
               </p>
             </div>
-            <AddSubdomainForm domain={project.domain} projectId={project.id} />
+            <AddSubdomainForm
+              domain={project.domain}
+              projectId={project.id}
+              platform={project.platform}
+            />
           </div>
 
-          {subdomains.length > 0 ? (
+          {records.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow className="border-border/40 hover:bg-transparent">
                   <TableHead className="pl-6">Name</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Content</TableHead>
-                  <TableHead>Proxy</TableHead>
+                  {showProxy && <TableHead>Proxy</TableHead>}
                   <TableHead className="pr-6 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {subdomains.map((record) => (
+                {records.map((record) => (
                   <SubdomainRow
                     key={record.id}
                     record={record}
                     projectId={project.id}
+                    platform={project.platform}
                   />
                 ))}
               </TableBody>

@@ -26,9 +26,11 @@ import { Plus } from "lucide-react";
 export function AddSubdomainForm({
   domain,
   projectId,
+  platform,
 }: {
   domain: string;
   projectId: string;
+  platform: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -122,15 +124,17 @@ export function AddSubdomainForm({
             />
           </div>
 
-          <div className="border-border/60 flex items-center justify-between rounded-lg border px-4 py-3">
-            <div>
-              <Label className="text-sm">Proxy through Cloudflare</Label>
-              <p className="text-muted-foreground text-xs">
-                Enable CDN and DDoS protection
-              </p>
+          {platform === "cloudflare" && (
+            <div className="border-border/60 flex items-center justify-between rounded-lg border px-4 py-3">
+              <div>
+                <Label className="text-sm">Proxy through Cloudflare</Label>
+                <p className="text-muted-foreground text-xs">
+                  Enable CDN and DDoS protection
+                </p>
+              </div>
+              <Switch checked={proxied} onCheckedChange={setProxied} />
             </div>
-            <Switch checked={proxied} onCheckedChange={setProxied} />
-          </div>
+          )}
 
           <Button type="submit" className="w-full" disabled={pending}>
             {pending ? "Creating..." : "Create record"}
