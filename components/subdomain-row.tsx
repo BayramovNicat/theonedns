@@ -66,6 +66,7 @@ export function SubdomainRow({
   const [editing, setEditing] = useState(false);
   const [recordType, setRecordType] = useState(record.type);
   const [content, setContent] = useState(record.content);
+  const [priority, setPriority] = useState(String(record.priority ?? "10"));
   const [ttl, setTtl] = useState(String(record.ttl ?? ""));
   const [proxied, setProxied] = useState(record.proxied ?? false);
   const showProxy = platform === "cloudflare";
@@ -87,6 +88,7 @@ export function SubdomainRow({
           type: recordType,
           content,
           ttl: ttl ? Number(ttl) : undefined,
+          priority: recordType === "MX" ? Number(priority) : undefined,
           proxied,
         }),
       });
@@ -110,6 +112,7 @@ export function SubdomainRow({
   function handleCancel() {
     setRecordType(record.type);
     setContent(record.content);
+    setPriority(String(record.priority ?? "10"));
     setTtl(String(record.ttl ?? ""));
     setProxied(record.proxied ?? false);
     setEditing(false);
@@ -176,11 +179,36 @@ export function SubdomainRow({
         </TableCell>
         <TableCell>
           {editing ? (
-            <Input
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="h-8 border-white/10 bg-white/5 font-mono text-sm text-white"
-            />
+            <div className="flex items-center gap-2">
+              {recordType === "MX" && (
+                <Input
+                  type="number"
+                  min="0"
+                  max="65535"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                  className="h-8 w-16 border-white/10 bg-white/5 font-mono text-sm text-white"
+                  placeholder="10"
+                  title="Priority"
+                />
+              )}
+              <Input
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={
+                  recordType === "A"
+                    ? "192.0.2.1"
+                    : recordType === "AAAA"
+                      ? "2001:db8::1"
+                      : recordType === "MX"
+                        ? "mail.example.com"
+                        : recordType === "TXT"
+                          ? "v=spf1 ..."
+                          : "example.com"
+                }
+                className="h-8 flex-1 border-white/10 bg-white/5 font-mono text-sm text-white placeholder:text-zinc-700"
+              />
+            </div>
           ) : (
             <span className="font-mono text-sm text-zinc-500">
               {record.priority != null
