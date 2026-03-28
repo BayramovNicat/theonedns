@@ -8,6 +8,7 @@ import { hetznerAdapter } from "./hetzner";
 import { linodeAdapter } from "./linode";
 import { namecomAdapter } from "./namecom";
 import { netlifyAdapter } from "./netlify";
+import { ovhAdapter } from "./ovh";
 import { porkbunAdapter } from "./porkbun";
 import { route53Adapter } from "./route53";
 import type { DnsProvider, PlatformAdapter } from "./types";
@@ -29,6 +30,7 @@ const adapters: Record<string, PlatformAdapter> = {
   vultr: vultrAdapter,
   linode: linodeAdapter,
   gandi: gandiAdapter,
+  ovh: ovhAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

@@ -258,6 +258,32 @@ export const PLATFORMS = {
       },
     ],
   },
+  ovh: {
+    name: "OVH",
+    fields: [
+      {
+        key: "app_key",
+        label: "Application Key",
+        type: "text" as const,
+        placeholder: "Your OVH application key",
+        help: "Create an app at OVH API > Create application.",
+      },
+      {
+        key: "app_secret",
+        label: "Application Secret",
+        type: "text" as const,
+        placeholder: "Your OVH application secret",
+        help: "Shown once when you create the application.",
+      },
+      {
+        key: "consumer_key",
+        label: "Consumer Key",
+        type: "text" as const,
+        placeholder: "Your OVH consumer key",
+        help: "Generated when you request API credentials with DNS access rights.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
