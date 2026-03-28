@@ -34,6 +34,9 @@ export default function LoginPage() {
             href="/"
             className="group relative mb-6 inline-flex flex-col items-center transition-opacity hover:opacity-90"
           >
+            <span className="mb-2 text-[10px] font-bold tracking-[0.6em] text-zinc-600 uppercase">
+              The Master Interface
+            </span>
             <h2 className="text-4xl leading-none font-black md:text-5xl">
               <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 TheOne
