@@ -6,13 +6,14 @@ import { createClient } from "@/lib/supabase/server";
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session!.user;
 
   const { data: projects } = await supabase
     .from("projects")
     .select("*")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   return (

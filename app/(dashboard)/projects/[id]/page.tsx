@@ -24,14 +24,15 @@ export default async function ProjectPage({
   const { id } = await params;
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session!.user;
 
   const { data: raw } = await supabase
     .from("projects")
     .select("*")
     .eq("id", id)
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .single();
 
   const project = raw

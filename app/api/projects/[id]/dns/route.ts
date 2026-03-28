@@ -6,9 +6,11 @@ import { createClient } from "@/lib/supabase/server";
 async function getProject(projectId: string) {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return null;
+
+  const user = session.user;
 
   const { data: project } = await supabase
     .from("projects")
