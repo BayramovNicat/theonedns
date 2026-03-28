@@ -87,6 +87,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  godaddy: {
+    name: "GoDaddy",
+    fields: [
+      {
+        key: "api_key",
+        label: "API Key",
+        type: "text" as const,
+        placeholder: "Your GoDaddy API key",
+        help: "Create one at GoDaddy Developer Portal > API Keys.",
+      },
+      {
+        key: "api_secret",
+        label: "API Secret",
+        type: "text" as const,
+        placeholder: "Your GoDaddy API secret",
+        help: "Shown once when you create the API key — save it immediately.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
