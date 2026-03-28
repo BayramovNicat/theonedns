@@ -106,6 +106,32 @@ export const PLATFORMS = {
       },
     ],
   },
+  gcloud: {
+    name: "Google Cloud DNS",
+    fields: [
+      {
+        key: "project_id",
+        label: "Project ID",
+        type: "text" as const,
+        placeholder: "e.g. my-project-123",
+        help: "Your Google Cloud project ID (not the project number).",
+      },
+      {
+        key: "managed_zone",
+        label: "Managed Zone Name",
+        type: "text" as const,
+        placeholder: "e.g. my-zone",
+        help: "The name of your Cloud DNS managed zone (not the DNS name).",
+      },
+      {
+        key: "service_account_json",
+        label: "Service Account JSON",
+        type: "text" as const,
+        placeholder: "Paste your service account key JSON",
+        help: "Create a service account with DNS Administrator role, then generate a JSON key.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

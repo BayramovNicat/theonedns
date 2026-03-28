@@ -1,5 +1,6 @@
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
+import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
 import { netlifyAdapter } from "./netlify";
@@ -13,6 +14,7 @@ const adapters: Record<string, PlatformAdapter> = {
   digitalocean: digitaloceanAdapter,
   hetzner: hetznerAdapter,
   godaddy: godaddyAdapter,
+  gcloud: gcloudAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
