@@ -4,6 +4,7 @@ import { dnsimpleAdapter } from "./dnsimple";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
+import { namecomAdapter } from "./namecom";
 import { netlifyAdapter } from "./netlify";
 import { porkbunAdapter } from "./porkbun";
 import type { DnsProvider, PlatformAdapter } from "./types";
@@ -19,6 +20,7 @@ const adapters: Record<string, PlatformAdapter> = {
   gcloud: gcloudAdapter,
   porkbun: porkbunAdapter,
   dnsimple: dnsimpleAdapter,
+  namecom: namecomAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

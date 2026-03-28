@@ -170,6 +170,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  namecom: {
+    name: "Name.com",
+    fields: [
+      {
+        key: "username",
+        label: "Username",
+        type: "text" as const,
+        placeholder: "Your Name.com username",
+        help: "The username you use to log in to Name.com.",
+      },
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Name.com API token",
+        help: "Generate one at Name.com > Account > API Tokens.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
