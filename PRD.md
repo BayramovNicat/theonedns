@@ -2,11 +2,11 @@
 
 ## Overview
 
-TheOneDNS is a unified DNS management control plane that lets users manage DNS records across multiple platforms (Cloudflare, Vercel, Netlify) from a single interface. Instead of logging into each platform's dashboard, users connect their credentials once and manage all their domains and DNS records in one place.
+TheOneDNS is a unified DNS management control plane that lets users manage DNS records across multiple platforms from a single interface. Instead of logging into each platform's dashboard, users connect their credentials once and manage all their domains and DNS records in one place.
 
 ## Problem Statement
 
-Managing DNS records across multiple platforms is tedious. Each provider has a different UI, different workflows, and requires separate logins. For users who manage domains on Cloudflare, Vercel, and Netlify simultaneously, context-switching between dashboards wastes time and increases the chance of configuration errors.
+Managing DNS records across multiple platforms is tedious. Each provider has a different UI, different workflows, and requires separate logins. For users who manage domains on Cloudflare, Vercel, AWS, and others simultaneously, context-switching between dashboards wastes time and increases the chance of configuration errors.
 
 ## Target Users
 
@@ -19,30 +19,40 @@ Managing DNS records across multiple platforms is tedious. Each provider has a d
 ### 1. Authentication
 
 - Google OAuth via Supabase Auth
-- Session management with automatic token refresh
+- Session management with automatic token refresh via Next.js 16 proxy
 - Protected routes — unauthenticated users redirect to `/login`
+- Proxy skips auth check on public routes for faster page loads
 
 ### 2. Multi-Platform Projects
 
 Users create **projects**, each representing a single domain on a specific platform.
 
-- **Supported platforms:** Cloudflare (active), Vercel (planned), Netlify (planned)
-- **Per-project credentials:** stored as encrypted JSONB in Supabase
+- **19 supported platforms** — Cloudflare, Vercel, Netlify, DigitalOcean, Hetzner, GoDaddy, Google Cloud DNS, Porkbun, DNSimple, Name.com, AWS Route 53, Vultr, Linode, Gandi, OVH, Namecheap, Bunny DNS, Dynadot, Hostinger
+- **Per-project credentials:** encrypted with AES-256-GCM, stored in Supabase
 - **Credential validation:** on project creation, credentials are verified against the platform API before saving
 - **Dynamic form fields:** each platform defines its own required credential fields (API token, zone ID, team ID, etc.)
 
-### 3. DNS Record Management (Cloudflare)
+### 3. DNS Record Management
 
-Full CRUD operations on DNS records, fetched live from the Cloudflare API:
+Full CRUD operations on DNS records, fetched live from each platform's API:
 
-- **View:** lists all A, AAAA, and CNAME records for the domain (including the root domain)
-- **Create:** add new DNS records with subdomain name, record type (A/CNAME), target content, and proxy toggle
+- **View:** lists all A, AAAA, and CNAME records for the domain
+- **Create:** add new DNS records with subdomain name, record type (A/CNAME), target content, and proxy toggle (Cloudflare)
 - **Edit:** inline editing of record type, content, and proxy status
 - **Delete:** remove records with confirmation
+- **Streaming:** DNS records load via Suspense with skeleton fallbacks while the page shell renders instantly
 
-### 4. Projects Dashboard
+### 4. Landing Page
 
-- Grid view of all connected projects
+- Server-rendered landing page with client-side animations (framer-motion)
+- Interactive 3D card hover effects for featured platforms
+- Mock DNS dashboard demo with filterable records
+- Infinite marquee of supported registrars
+- Bento grid with simulated sync/ping demo for infrastructure providers
+
+### 5. Projects Dashboard
+
+- Grid view of all connected projects with skeleton loading via Suspense
 - Each card shows domain name, platform badge, and delete action
 - Click-through to project detail page for DNS management
 
@@ -50,12 +60,13 @@ Full CRUD operations on DNS records, fetched live from the Cloudflare API:
 
 | Layer         | Technology                                  |
 | ------------- | ------------------------------------------- |
-| Framework     | Next.js 16.2.1 (App Router)                 |
+| Framework     | Next.js 16 (App Router)                     |
 | Language      | TypeScript                                  |
 | Auth          | Supabase Auth (Google OAuth)                |
 | Database      | Supabase (PostgreSQL)                       |
-| DNS API       | Cloudflare API v4                           |
+| DNS APIs      | 19 platform integrations                    |
 | UI            | shadcn/ui v4, Tailwind CSS v4, Lucide icons |
+| Animations    | Framer Motion                               |
 | Notifications | Sonner (toast)                              |
 | Runtime       | Bun                                         |
 
@@ -63,14 +74,14 @@ Full CRUD operations on DNS records, fetched live from the Cloudflare API:
 
 ### `projects` table
 
-| Column        | Type                   | Description                          |
-| ------------- | ---------------------- | ------------------------------------ |
-| `id`          | uuid (PK)              | Auto-generated                       |
-| `user_id`     | uuid (FK → auth.users) | Owner                                |
-| `platform`    | text                   | `cloudflare`, `vercel`, or `netlify` |
-| `credentials` | jsonb                  | Platform-specific credentials        |
-| `domain`      | text                   | The managed domain                   |
-| `created_at`  | timestamptz            | Creation timestamp                   |
+| Column        | Type                   | Description                |
+| ------------- | ---------------------- | -------------------------- |
+| `id`          | uuid (PK)              | Auto-generated             |
+| `user_id`     | uuid (FK → auth.users) | Owner                      |
+| `platform`    | text                   | Platform identifier        |
+| `credentials` | text                   | AES-256-GCM encrypted JSON |
+| `domain`      | text                   | The managed domain         |
+| `created_at`  | timestamptz            | Creation timestamp         |
 
 Row Level Security ensures users can only access their own projects.
 
@@ -84,45 +95,43 @@ Row Level Security ensures users can only access their own projects.
 | PATCH  | `/api/projects/[id]/dns` | Update a DNS record                      |
 | DELETE | `/api/projects/[id]/dns` | Delete a DNS record                      |
 
-All routes verify authentication and project ownership before performing operations.
+All routes use `getSession()` for fast auth (session already refreshed by proxy) and verify project ownership.
 
 ## Pages
 
 | Route            | Description                                        |
 | ---------------- | -------------------------------------------------- |
+| `/`              | Landing page with platform showcase                |
 | `/login`         | Google OAuth sign-in                               |
-| `/`              | Projects dashboard (list/create/delete projects)   |
+| `/dashboard`     | Projects dashboard (list/create/delete projects)   |
 | `/projects/[id]` | Project detail — DNS record table with inline CRUD |
 
 ## Security Model
 
-- **Authentication:** Supabase Auth with server-side session validation on every request
+- **Authentication:** Supabase Auth with proxy-level session refresh (`getUser()` once per request)
 - **Authorization:** RLS policies scope all database queries to the authenticated user
-- **Credentials:** platform API tokens stored in Supabase JSONB, never exposed to the client
+- **Credentials:** platform API tokens encrypted with AES-256-GCM, never exposed to the client
 - **Input validation:** subdomain format, IP address format, required fields validated server-side
 - **Proxy layer:** Next.js 16 `proxy.ts` intercepts requests to refresh sessions and enforce auth
 
-## Platform Credentials
+## Performance Optimizations
 
-### Cloudflare (active)
+- **Proxy auth skip:** public routes (`/`, `/login`, `/auth/*`) bypass Supabase auth entirely
+- **Session-based auth in pages:** `getSession()` reads JWT from cookies instead of `getUser()` network call
+- **Suspense streaming:** dashboard and project pages render shells instantly, data streams in with skeletons
+- **Inline SVG icons:** platform logos bundled as components instead of external URL fetches
+- **Server component landing page:** reduces client JS bundle — only interactive sections are client components
 
-- **API Token** — with `Zone.DNS Edit` permission
-- **Zone ID** — from the domain's Overview page
-- Supports both User API Tokens and Account API Tokens (`cfat_` prefix)
+## Accessibility
 
-### Vercel (planned)
-
-- **API Token** — from Vercel dashboard settings
-- **Team ID** — optional, required for team-owned domains
-
-### Netlify (planned)
-
-- **Personal Access Token** — from user application settings
-- **DNS Zone ID** — from domain DNS settings
+- `<main>` landmark for screen reader navigation
+- `aria-label` on icon-only links
+- `aria-pressed` on filter toggle buttons
+- `aria-label` on data tables
+- WCAG AA contrast ratios on all text elements
 
 ## Future Considerations
 
-- Vercel and Netlify DNS management implementation
 - Bulk DNS record operations
 - DNS record templates
 - Domain health monitoring

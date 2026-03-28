@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TheOneDNS
+
+A unified DNS management control plane. Manage DNS records across 19 platforms from a single dashboard instead of logging into each provider separately.
+
+## Supported Platforms
+
+Cloudflare, Vercel, Netlify, DigitalOcean, Hetzner, GoDaddy, Google Cloud DNS, Porkbun, DNSimple, Name.com, AWS Route 53, Vultr, Linode, Gandi, OVH, Namecheap, Bunny DNS, Dynadot, Hostinger
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Auth:** Supabase Auth (Google OAuth)
+- **Database:** Supabase (PostgreSQL)
+- **UI:** shadcn/ui v4, Tailwind CSS v4, Lucide icons
+- **Animations:** Framer Motion
+- **Runtime:** Bun
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- [Bun](https://bun.sh) installed
+- A [Supabase](https://supabase.com) project with Google OAuth configured
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+ENCRYPTION_KEY=your_aes_256_encryption_key
+```
+
+### Install and Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  (landing)/page.tsx     Landing page (server component)
+  (dashboard)/
+    dashboard/page.tsx   Projects dashboard
+    projects/[id]/       DNS record management
+  api/
+    projects/            CRUD for projects
+    projects/[id]/dns/   CRUD for DNS records
+components/              UI components
+lib/
+  platforms.ts           Platform configs (credentials, API adapters)
+  crypto.ts              AES-256-GCM encryption
+  supabase/              Supabase client helpers
+proxy.ts                 Auth session refresh proxy
+```
 
-## Learn More
+## Security
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Platform credentials encrypted with AES-256-GCM, never exposed to the client
+- Row Level Security scopes all queries to the authenticated user
+- Proxy-level session refresh with public route bypass
+- Server-side validation on all inputs
