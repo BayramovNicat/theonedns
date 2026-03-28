@@ -8,6 +8,7 @@ import { gandiAdapter } from "./gandi";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
+import { hostingerAdapter } from "./hostinger";
 import { linodeAdapter } from "./linode";
 import { namecheapAdapter } from "./namecheap";
 import { namecomAdapter } from "./namecom";
@@ -39,6 +40,7 @@ const adapters: Record<string, PlatformAdapter> = {
   azure: azureAdapter,
   bunny: bunnyAdapter,
   dynadot: dynadotAdapter,
+  hostinger: hostingerAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

@@ -381,6 +381,18 @@ export const PLATFORMS = {
       },
     ],
   },
+  hostinger: {
+    name: "Hostinger",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Hostinger API token",
+        help: "Generate one at Hostinger > Account > API Tokens.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
