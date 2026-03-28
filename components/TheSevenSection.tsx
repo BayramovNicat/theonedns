@@ -6,39 +6,53 @@ import { Check, Loader2, RefreshCw } from "lucide-react";
 
 const SEVEN = [
   {
-    name: "DigitalOcean Holdings, Inc.",
+    name: "DigitalOcean",
     desc: "The foundation for many digital halls",
     grid: "md:col-span-2 md:row-span-1",
+    ping: 24,
+    records: 8,
   },
   {
-    name: "Hetzner Online GmbH",
+    name: "Hetzner",
     desc: "Deeply rooted in bare-metal performance",
     grid: "md:col-span-1 md:row-span-1",
+    ping: 18,
+    records: 3,
   },
   {
-    name: "Google Cloud DNS / Google LLC",
+    name: "Google Cloud",
     desc: "A vast, ancient power",
     grid: "md:col-span-1 md:row-span-2",
+    ping: 12,
+    records: 14,
   },
   {
-    name: "Amazon Route 53 / AWS",
+    name: "AWS Route 53",
     desc: "Immense power, high-tier servant",
     grid: "md:col-span-2 md:row-span-1",
+    ping: 16,
+    records: 22,
   },
   {
-    name: "Vultr / The Constant Company, LLC",
+    name: "Vultr",
     desc: "High-performance infrastructure",
     grid: "md:col-span-1 md:row-span-1",
+    ping: 31,
+    records: 5,
   },
   {
-    name: "Linode, LLC / Akamai",
+    name: "Akamai",
     desc: "A legendary name in hosting",
     grid: "md:col-span-1 md:row-span-1",
+    ping: 22,
+    records: 6,
   },
   {
-    name: "OVH Groupe SAS / OVHcloud",
+    name: "OVHcloud",
     desc: "Sprawling network of northern data centers",
     grid: "md:col-span-2 md:row-span-1",
+    ping: 35,
+    records: 11,
   },
 ];
 
@@ -49,8 +63,8 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
     setStatus("loading");
     setTimeout(() => {
       setStatus("success");
-      setTimeout(() => setStatus("idle"), 2000);
-    }, 1500);
+      setTimeout(() => setStatus("idle"), 4000);
+    }, 1200 + Math.random() * 800);
   };
 
   return (
@@ -100,9 +114,12 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
                 key="success"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative"
+                className="relative flex items-center gap-2"
               >
                 <Check size={14} className="text-emerald-500" />
+                <span className="text-[10px] font-bold tracking-widest text-emerald-500 uppercase">
+                  {item.ping}ms
+                </span>
                 <motion.div
                   initial={{ opacity: 0.8, scale: 1 }}
                   animate={{ opacity: 0, scale: 2 }}
@@ -121,13 +138,27 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
         <p className="text-sm leading-relaxed text-zinc-500">{item.desc}</p>
       </div>
 
-      <div className="mt-6 flex items-center gap-1.5">
-        <div
-          className={`h-1.5 w-1.5 rounded-full ${status === "success" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-zinc-700"}`}
-        />
-        <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase">
-          {status === "success" ? "Connected" : "Standby"}
-        </span>
+      <div className="mt-6 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <div
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${status === "success" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-zinc-700"}`}
+          />
+          <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase">
+            {status === "success" ? "Connected" : "Standby"}
+          </span>
+        </div>
+        <AnimatePresence>
+          {status === "success" && (
+            <motion.span
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className="font-mono text-[10px] text-zinc-500"
+            >
+              {item.records} records
+            </motion.span>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

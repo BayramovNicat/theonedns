@@ -161,6 +161,7 @@ export default function HeroSection() {
           </div>
           <div className="no-scrollbar flex gap-2 overflow-x-auto px-2 pb-1">
             <button
+              aria-pressed={filter === null}
               onClick={() => setFilter(null)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                 filter === null
@@ -173,6 +174,7 @@ export default function HeroSection() {
             {platforms.map((p) => (
               <button
                 key={p}
+                aria-pressed={filter === p}
                 onClick={() => setFilter(p)}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   filter === p
@@ -188,7 +190,7 @@ export default function HeroSection() {
 
         {/* Dashboard Table */}
         <div className="min-h-87.5 overflow-x-auto">
-          <table className="w-full border-collapse text-left">
+          <table aria-label="Example DNS records" className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-white/5 text-xs font-medium tracking-wider text-zinc-500 uppercase">
                 <th className="px-6 py-4">Type</th>
