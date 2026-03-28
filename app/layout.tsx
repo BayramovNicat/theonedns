@@ -14,8 +14,38 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TheOneDNS — DNS Management",
-  description: "Unified DNS management across Cloudflare, Vercel, and Netlify",
+  title: "TheOneDNS — The Master Interface for DNS Management",
+  description:
+    "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure. Manage Cloudflare, Vercel, AWS, and more from a single throne.",
+  keywords: [
+    "DNS management",
+    "Cloudflare",
+    "Vercel",
+    "AWS Route53",
+    "Netlify",
+    "unified DNS",
+    "DevOps tools",
+  ],
+  authors: [{ name: "TheOneDNS Corporation" }],
+  openGraph: {
+    title: "TheOneDNS — The Master Interface for DNS Management",
+    description:
+      "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.",
+    url: "https://theonedns.com",
+    siteName: "TheOneDNS",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TheOneDNS — The Master Interface for DNS Management",
+    description:
+      "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
