@@ -246,6 +246,18 @@ export const PLATFORMS = {
       },
     ],
   },
+  gandi: {
+    name: "Gandi",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Gandi Personal Access Token",
+        help: "Create one at Gandi > Account > Authentication > Personal Access Tokens.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

@@ -1,6 +1,7 @@
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
 import { dnsimpleAdapter } from "./dnsimple";
+import { gandiAdapter } from "./gandi";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
@@ -27,6 +28,7 @@ const adapters: Record<string, PlatformAdapter> = {
   route53: route53Adapter,
   vultr: vultrAdapter,
   linode: linodeAdapter,
+  gandi: gandiAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
