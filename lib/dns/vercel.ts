@@ -1,8 +1,8 @@
 import type {
+  CreateRecordParams,
   DnsProvider,
   DnsRecord,
   PlatformAdapter,
-  CreateRecordParams,
   UpdateRecordParams,
 } from "./types";
 

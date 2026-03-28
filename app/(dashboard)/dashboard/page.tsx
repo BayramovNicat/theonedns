@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
 import { AddProjectForm } from "@/components/add-project-form";
-import { ProjectCard } from "@/components/project-card";
 import { DashboardShell } from "@/components/dashboard-shell";
+import { ProjectCard } from "@/components/project-card";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
   const supabase = await createClient();

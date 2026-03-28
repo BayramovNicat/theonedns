@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { AddSubdomainForm } from "@/components/add-subdomain-form";
+import { DashboardShell } from "@/components/dashboard-shell";
+import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
+import { SubdomainRow } from "@/components/subdomain-row";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -7,13 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { AddSubdomainForm } from "@/components/add-subdomain-form";
-import { SubdomainRow } from "@/components/subdomain-row";
-import { DashboardShell } from "@/components/dashboard-shell";
-import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
-import { getProvider, isSupported } from "@/lib/dns";
 import type { DnsRecord } from "@/lib/dns";
+import { getProvider, isSupported } from "@/lib/dns";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function ProjectPage({
   params,

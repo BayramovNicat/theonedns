@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { Globe } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 

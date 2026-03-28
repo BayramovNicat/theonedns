@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { getProvider, isSupported } from "@/lib/dns";
+import { createClient } from "@/lib/supabase/server";
 
 async function getProject(projectId: string) {
   const supabase = await createClient();

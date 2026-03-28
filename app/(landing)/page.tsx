@@ -1,6 +1,6 @@
+import { ArrowRight, Globe, Shield, Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Globe, Shield, Zap, ArrowRight } from "lucide-react";
 
 export default function LandingPage() {
   return (

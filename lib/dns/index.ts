@@ -1,8 +1,8 @@
+export { getAdapter, getProvider, isSupported } from "./registry";
 export type {
-  DnsRecord,
-  DnsProvider,
-  PlatformAdapter,
   CreateRecordParams,
+  DnsProvider,
+  DnsRecord,
+  PlatformAdapter,
   UpdateRecordParams,
 } from "./types";
-export { getAdapter, getProvider, isSupported } from "./registry";
