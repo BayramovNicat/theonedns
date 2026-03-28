@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
-import { Globe, MoreVertical, Trash2, ExternalLink } from "lucide-react";
+import { MoreVertical, Trash2, ExternalLink } from "lucide-react";
 
 type Project = {
   id: string;
@@ -68,10 +68,7 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="group border-border/60 bg-card hover:border-border relative rounded-xl border transition-colors">
         <Link href={`/projects/${project.id}`} className="block p-5">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-secondary flex size-10 items-center justify-center rounded-lg">
-                <Globe className="text-muted-foreground size-5" />
-              </div>
+            <div>
               <div>
                 <p className="font-medium">{project.domain}</p>
                 <div className="mt-1 flex items-center gap-2">

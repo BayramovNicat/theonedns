@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Globe, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +55,6 @@ export function DashboardShell({
             href="/dashboard"
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
-            <Globe className="text-primary size-5" />
             <span className="text-lg font-semibold tracking-tight">Domnix</span>
           </Link>
 
