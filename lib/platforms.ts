@@ -284,6 +284,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  namecheap: {
+    name: "Namecheap",
+    fields: [
+      {
+        key: "api_user",
+        label: "API User",
+        type: "text" as const,
+        placeholder: "Your Namecheap username",
+        help: "The username you use to log in to Namecheap.",
+      },
+      {
+        key: "api_key",
+        label: "API Key",
+        type: "text" as const,
+        placeholder: "Your Namecheap API key",
+        help: "Enable API access at Namecheap > Profile > Tools > API Access. Whitelist your server IP.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

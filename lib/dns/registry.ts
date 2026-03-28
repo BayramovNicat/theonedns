@@ -6,6 +6,7 @@ import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
 import { linodeAdapter } from "./linode";
+import { namecheapAdapter } from "./namecheap";
 import { namecomAdapter } from "./namecom";
 import { netlifyAdapter } from "./netlify";
 import { ovhAdapter } from "./ovh";
@@ -31,6 +32,7 @@ const adapters: Record<string, PlatformAdapter> = {
   linode: linodeAdapter,
   gandi: gandiAdapter,
   ovh: ovhAdapter,
+  namecheap: namecheapAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
