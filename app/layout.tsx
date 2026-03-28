@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Domnix — DNS Management",
+  title: "TheOneDNS — DNS Management",
   description: "Unified DNS management across Cloudflare, Vercel, and Netlify",
 };
 

@@ -114,7 +114,7 @@ class CloudflareProvider implements DnsProvider {
 }
 
 export const cloudflareAdapter: PlatformAdapter = {
-  async verify(creds, _domain) {
+  async verify(creds) {
     const res = await fetch(
       `${API}/zones/${creds.zone_id}/dns_records?per_page=1`,
       { headers: headers(creds.api_token) }

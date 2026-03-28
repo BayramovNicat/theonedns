@@ -191,7 +191,7 @@ class AzureDnsProvider implements DnsProvider {
 }
 
 export const azureAdapter: PlatformAdapter = {
-  async verify(creds, _domain) {
+  async verify(creds) {
     try {
       const token = await getAccessToken(
         creds.tenant_id,

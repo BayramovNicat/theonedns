@@ -25,7 +25,9 @@ export default function LoginPage() {
             className="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-2 transition-colors"
           >
             <Globe className="size-5" />
-            <span className="text-lg font-semibold tracking-tight">Domnix</span>
+            <span className="text-lg font-semibold tracking-tight">
+              TheOneDNS
+            </span>
           </Link>
           <h1 className="mt-6 text-2xl font-semibold tracking-tight">
             Welcome back

@@ -1,6 +1,7 @@
 "use client";
 
 import { LogOut } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -55,17 +56,22 @@ export function DashboardShell({
             href="/dashboard"
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
-            <span className="text-lg font-semibold tracking-tight">Domnix</span>
+            <span className="text-lg font-semibold tracking-tight">
+              TheOneDNS
+            </span>
           </Link>
 
           <DropdownMenu>
             <DropdownMenuTrigger className="ring-offset-background focus-visible:ring-ring rounded-full ring-offset-2 transition-opacity outline-none hover:opacity-80 focus-visible:ring-2">
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt={fullName ?? user.email ?? ""}
+                  width={32}
+                  height={32}
                   referrerPolicy="no-referrer"
                   className="size-8 rounded-full object-cover"
+                  unoptimized
                 />
               ) : (
                 <Avatar className="size-8">

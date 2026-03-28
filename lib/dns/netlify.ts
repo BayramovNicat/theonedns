@@ -141,7 +141,7 @@ class NetlifyProvider implements DnsProvider {
 }
 
 export const netlifyAdapter: PlatformAdapter = {
-  async verify(creds, _domain) {
+  async verify(creds) {
     const res = await fetch(`${API}/dns_zones/${creds.zone_id}`, {
       headers: headers(creds.api_token),
     });

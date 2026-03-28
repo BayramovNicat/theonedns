@@ -113,7 +113,7 @@ function bunnyTypeName(typeId: number): string | null {
 }
 
 export const bunnyAdapter: PlatformAdapter = {
-  async verify(creds, _domain) {
+  async verify(creds) {
     const res = await fetch(`${API}/${creds.zone_id}`, {
       headers: headers(creds.api_key),
     });

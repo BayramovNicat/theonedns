@@ -1,15 +1,14 @@
--- Drop old tables
-drop table if exists public.subdomains;
-drop table if exists public.cloudflare_configs;
-
--- Projects table: one per domain/platform connection
 create table public.projects (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users(id) on delete cascade not null,
-  name text not null,
-  platform text not null check (platform in ('cloudflare', 'vercel', 'netlify')),
-  credentials jsonb not null default '{}',
-  domain text,
+  platform text not null check (platform in (
+    'cloudflare', 'vercel', 'netlify', 'digitalocean', 'hetzner',
+    'godaddy', 'gcloud', 'porkbun', 'dnsimple', 'namecom',
+    'route53', 'vultr', 'linode', 'gandi', 'ovh',
+    'namecheap', 'azure', 'bunny', 'dynadot', 'hostinger'
+  )),
+  credentials text not null default '{}',
+  domain text not null,
   created_at timestamptz default now() not null
 );
 

@@ -1,8 +1,8 @@
-# Domnix — Product Requirements Document
+# TheOneDNS — Product Requirements Document
 
 ## Overview
 
-Domnix is a unified DNS management control plane that lets users manage DNS records across multiple platforms (Cloudflare, Vercel, Netlify) from a single interface. Instead of logging into each platform's dashboard, users connect their credentials once and manage all their domains and DNS records in one place.
+TheOneDNS is a unified DNS management control plane that lets users manage DNS records across multiple platforms (Cloudflare, Vercel, Netlify) from a single interface. Instead of logging into each platform's dashboard, users connect their credentials once and manage all their domains and DNS records in one place.
 
 ## Problem Statement
 

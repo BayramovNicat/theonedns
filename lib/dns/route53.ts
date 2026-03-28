@@ -336,7 +336,7 @@ class Route53Provider implements DnsProvider {
 }
 
 export const route53Adapter: PlatformAdapter = {
-  async verify(creds, _domain) {
+  async verify(creds) {
     const zoneId = creds.hosted_zone_id.replace(/^\/hostedzone\//, "");
     const url = `${API}/hostedzones/${zoneId}`;
     const hdrs = await signedHeaders(
