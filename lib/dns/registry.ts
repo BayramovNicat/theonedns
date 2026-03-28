@@ -7,6 +7,7 @@ import { hetznerAdapter } from "./hetzner";
 import { namecomAdapter } from "./namecom";
 import { netlifyAdapter } from "./netlify";
 import { porkbunAdapter } from "./porkbun";
+import { route53Adapter } from "./route53";
 import type { DnsProvider, PlatformAdapter } from "./types";
 import { vercelAdapter } from "./vercel";
 
@@ -21,6 +22,7 @@ const adapters: Record<string, PlatformAdapter> = {
   porkbun: porkbunAdapter,
   dnsimple: dnsimpleAdapter,
   namecom: namecomAdapter,
+  route53: route53Adapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

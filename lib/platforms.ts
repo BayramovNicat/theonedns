@@ -189,6 +189,32 @@ export const PLATFORMS = {
       },
     ],
   },
+  route53: {
+    name: "AWS Route 53",
+    fields: [
+      {
+        key: "access_key_id",
+        label: "Access Key ID",
+        type: "text" as const,
+        placeholder: "AKIAIOSFODNN7EXAMPLE",
+        help: "IAM user access key with Route 53 permissions.",
+      },
+      {
+        key: "secret_access_key",
+        label: "Secret Access Key",
+        type: "text" as const,
+        placeholder: "Your AWS secret access key",
+        help: "The secret key paired with your access key ID.",
+      },
+      {
+        key: "hosted_zone_id",
+        label: "Hosted Zone ID",
+        type: "text" as const,
+        placeholder: "Z1234567890ABC",
+        help: "Found in Route 53 > Hosted zones — the zone ID for your domain.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
