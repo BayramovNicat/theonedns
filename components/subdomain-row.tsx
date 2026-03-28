@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { removeSubdomain } from "@/lib/actions/subdomains";
 import { toast } from "sonner";
 
 type Subdomain = {
@@ -24,21 +24,37 @@ export function SubdomainRow({
   record: Subdomain;
   domain: string;
 }) {
-  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
   const [removed, setRemoved] = useState(false);
 
   if (removed) return null;
 
-  function handleDelete() {
-    startTransition(async () => {
-      const result = await removeSubdomain(record.id);
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        toast.success(`${record.subdomain}.${domain} deleted`);
-        setRemoved(true);
+  async function handleDelete() {
+    setPending(true);
+
+    try {
+      const res = await fetch("/api/subdomains", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: record.id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Something went wrong");
+        return;
       }
-    });
+
+      toast.success(`${record.subdomain}.${domain} deleted`);
+      setRemoved(true);
+      router.refresh();
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,25 +12,47 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { addSubdomain } from "@/lib/actions/subdomains";
 import { toast } from "sonner";
 
 export function AddSubdomainForm({ domain }: { domain: string }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [pending, startTransition] = useTransition();
-  const formRef = useRef<HTMLFormElement>(null);
+  const [pending, setPending] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
+  const [recordType, setRecordType] = useState("A");
+  const [content, setContent] = useState("");
+  const [proxied, setProxied] = useState(true);
 
-  function handleSubmit(formData: FormData) {
-    startTransition(async () => {
-      const result = await addSubdomain(formData);
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        toast.success("Subdomain created");
-        formRef.current?.reset();
-        setOpen(false);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setPending(true);
+
+    try {
+      const res = await fetch("/api/subdomains", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subdomain, recordType, content, proxied }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Something went wrong");
+        return;
       }
-    });
+
+      toast.success("Subdomain created");
+      setSubdomain("");
+      setContent("");
+      setRecordType("A");
+      setProxied(true);
+      setOpen(false);
+      router.refresh();
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -41,16 +64,17 @@ export function AddSubdomainForm({ domain }: { domain: string }) {
         <DialogHeader>
           <DialogTitle>New subdomain</DialogTitle>
         </DialogHeader>
-        <form ref={formRef} action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="subdomain">Subdomain</Label>
             <div className="flex items-center gap-2">
               <Input
                 id="subdomain"
-                name="subdomain"
                 placeholder="blog"
                 required
                 className="flex-1"
+                value={subdomain}
+                onChange={(e) => setSubdomain(e.target.value)}
               />
               <span className="text-muted-foreground text-sm">.{domain}</span>
             </div>
@@ -60,8 +84,8 @@ export function AddSubdomainForm({ domain }: { domain: string }) {
             <Label htmlFor="recordType">Record type</Label>
             <select
               id="recordType"
-              name="recordType"
-              defaultValue="A"
+              value={recordType}
+              onChange={(e) => setRecordType(e.target.value)}
               className="border-input focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none"
             >
               <option value="A">A (IPv4 address)</option>
@@ -73,9 +97,10 @@ export function AddSubdomainForm({ domain }: { domain: string }) {
             <Label htmlFor="content">Target</Label>
             <Input
               id="content"
-              name="content"
               placeholder="192.0.2.1 or example.com"
               required
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
           </div>
 
@@ -83,8 +108,8 @@ export function AddSubdomainForm({ domain }: { domain: string }) {
             <input
               type="checkbox"
               id="proxied"
-              name="proxied"
-              defaultChecked
+              checked={proxied}
+              onChange={(e) => setProxied(e.target.checked)}
               className="border-input h-4 w-4 rounded"
             />
             <Label htmlFor="proxied" className="text-sm font-normal">

@@ -13,12 +13,22 @@ function getHeaders(apiToken: string) {
   };
 }
 
-export async function verifyToken(apiToken: string): Promise<boolean> {
+export async function verifyToken(
+  apiToken: string
+): Promise<{ valid: boolean; error?: string }> {
   const res = await fetch(`${API_BASE}/user/tokens/verify`, {
     headers: getHeaders(apiToken),
   });
   const data = await res.json();
-  return data.success === true;
+
+  if (data.success && data.result?.status === "active") {
+    return { valid: true };
+  }
+
+  const msg =
+    data.errors?.[0]?.message ??
+    `Token status: ${data.result?.status ?? "unknown"}`;
+  return { valid: false, error: msg };
 }
 
 export async function createDnsRecord(

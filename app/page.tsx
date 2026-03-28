@@ -10,8 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { SubdomainRow } from "@/components/subdomain-row";
 import { ConnectCloudflare } from "@/components/connect-cloudflare";
+import { DisconnectButton } from "@/components/disconnect-button";
 import { signOut } from "@/lib/supabase/actions";
-import { disconnectCloudflare } from "@/lib/actions/cloudflare-config";
 import { Button } from "@/components/ui/button";
 
 export default async function Dashboard() {
@@ -38,13 +38,7 @@ export default async function Dashboard() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            {config && (
-              <form action={disconnectCloudflare}>
-                <Button variant="ghost" size="sm">
-                  Disconnect
-                </Button>
-              </form>
-            )}
+            {config && <DisconnectButton />}
             <span className="text-muted-foreground text-sm">{user?.email}</span>
             <form action={signOut}>
               <Button variant="outline" size="sm">
