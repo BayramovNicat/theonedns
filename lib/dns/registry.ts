@@ -2,11 +2,13 @@ import type { PlatformAdapter, DnsProvider } from "./types";
 import { cloudflareAdapter } from "./cloudflare";
 import { vercelAdapter } from "./vercel";
 import { netlifyAdapter } from "./netlify";
+import { digitaloceanAdapter } from "./digitalocean";
 
 const adapters: Record<string, PlatformAdapter> = {
   cloudflare: cloudflareAdapter,
   vercel: vercelAdapter,
   netlify: netlifyAdapter,
+  digitalocean: digitaloceanAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

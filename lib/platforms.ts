@@ -56,6 +56,18 @@ export const PLATFORMS = {
       },
     ],
   },
+  digitalocean: {
+    name: "DigitalOcean",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your DigitalOcean API token",
+        help: "Create one at DigitalOcean > API > Tokens with read+write scope.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
