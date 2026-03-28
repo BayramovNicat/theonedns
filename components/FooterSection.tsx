@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Mail, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export default function FooterSection() {
   return (
@@ -18,13 +19,16 @@ export default function FooterSection() {
             &quot;One Portal to find them, one Interface to bind them.&quot;
           </p>
 
-          <button className="group relative overflow-hidden rounded-full bg-amber-500 px-10 py-5 font-bold text-black shadow-[0_0_40px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
+          <Link
+            href="/login"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-amber-500 px-12 py-6 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_50px_rgba(245,158,11,0.4)] transition-all hover:scale-105 active:scale-95"
+          >
             <div className="animate-pulse-slow pointer-events-none absolute inset-0 bg-white/20" />
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center gap-3">
               Start Managing Free
-              <ExternalLink size={18} />
+              <ExternalLink size={18} strokeWidth={3} />
             </span>
-          </button>
+          </Link>
         </motion.div>
 
         {/* Footer Links */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -114,11 +115,11 @@ export default function HeroSection() {
             <span className="mb-4 text-[10px] font-bold tracking-[0.6em] text-zinc-600 uppercase">
               The Master Interface
             </span>
-            <h2 className="text-7xl leading-none font-black tracking-tighter md:text-9xl">
+            <h2 className="text-7xl leading-none font-black md:text-9xl">
               <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>
@@ -140,13 +141,13 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          <button className="group relative overflow-hidden rounded-full bg-amber-500 px-12 py-6 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_50px_rgba(245,158,11,0.4)] transition-all hover:scale-105 active:scale-95">
+          <Link href="/login" className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-amber-500 px-12 py-6 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_50px_rgba(245,158,11,0.4)] transition-all hover:scale-105 active:scale-95">
             <div className="animate-pulse-slow pointer-events-none absolute inset-0 bg-white/20" />
             <span className="relative z-10 flex items-center gap-3">
               Start Managing Free
               <ExternalLink size={18} strokeWidth={3} />
             </span>
-          </button>
+          </Link>
         </motion.div>
       </motion.div>
 
