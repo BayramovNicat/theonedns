@@ -303,6 +303,53 @@ export const PLATFORMS = {
       },
     ],
   },
+  azure: {
+    name: "Azure DNS",
+    fields: [
+      {
+        key: "tenant_id",
+        label: "Tenant ID",
+        type: "text" as const,
+        placeholder: "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        help: "Your Azure Active Directory tenant ID.",
+      },
+      {
+        key: "client_id",
+        label: "Client ID (App ID)",
+        type: "text" as const,
+        placeholder: "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        help: "The application (client) ID of your service principal.",
+      },
+      {
+        key: "client_secret",
+        label: "Client Secret",
+        type: "text" as const,
+        placeholder: "Your service principal client secret",
+        help: "Create one in Azure AD > App registrations > Certificates & secrets.",
+      },
+      {
+        key: "subscription_id",
+        label: "Subscription ID",
+        type: "text" as const,
+        placeholder: "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        help: "The Azure subscription containing your DNS zone.",
+      },
+      {
+        key: "resource_group",
+        label: "Resource Group",
+        type: "text" as const,
+        placeholder: "e.g. my-resource-group",
+        help: "The resource group containing your DNS zone.",
+      },
+      {
+        key: "zone_name",
+        label: "DNS Zone Name",
+        type: "text" as const,
+        placeholder: "e.g. example.com",
+        help: "The name of your Azure DNS zone.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

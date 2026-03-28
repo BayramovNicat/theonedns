@@ -1,3 +1,4 @@
+import { azureAdapter } from "./azure";
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
 import { dnsimpleAdapter } from "./dnsimple";
@@ -33,6 +34,7 @@ const adapters: Record<string, PlatformAdapter> = {
   gandi: gandiAdapter,
   ovh: ovhAdapter,
   namecheap: namecheapAdapter,
+  azure: azureAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
