@@ -112,9 +112,6 @@ export default function HeroSection() {
           <div className="absolute inset-0 animate-pulse rounded-full bg-amber-500/10 blur-[40px]" />
 
           <div className="relative flex flex-col items-center">
-            <span className="mb-4 text-[10px] font-bold tracking-[0.6em] text-zinc-600 uppercase">
-              The Master Interface
-            </span>
             <h2 className="text-7xl leading-none font-black md:text-9xl">
               <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                 TheOne

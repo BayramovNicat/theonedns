@@ -60,9 +60,6 @@ export function DashboardShell({
             href="/dashboard"
             className="group flex flex-col items-start transition-opacity hover:opacity-90"
           >
-            <span className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 uppercase">
-              The Master Interface
-            </span>
             <h2 className="text-xl leading-none font-black md:text-2xl">
               <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                 TheOne
