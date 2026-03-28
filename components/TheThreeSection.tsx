@@ -36,11 +36,12 @@ function GlassCard({ card }: { card: (typeof CARDS)[0] }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+  const springConfig = { stiffness: 300, damping: 30, mass: 0.5 };
+  const mouseXSpring = useSpring(x, springConfig);
+  const mouseYSpring = useSpring(y, springConfig);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -74,7 +75,7 @@ function GlassCard({ card }: { card: (typeof CARDS)[0] }) {
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="group relative h-[400px] w-full max-w-[350px] cursor-pointer"
+      className="group relative h-100 w-full max-w-87.5 cursor-pointer"
     >
       <div
         className="absolute inset-0 rounded-3xl opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20"

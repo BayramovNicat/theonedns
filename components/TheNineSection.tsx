@@ -43,7 +43,7 @@ export default function TheNineSection() {
         style={{ scale }}
         className="relative flex overflow-hidden py-10"
       >
-        <div className="animate-marquee flex whitespace-nowrap hover:[animation-play-state:paused]">
+        <div className="animate-marquee hover:paused flex whitespace-nowrap">
           {[...NINE, ...NINE, ...NINE].map((name, idx) => (
             <div
               key={`${name}-${idx}`}
@@ -58,8 +58,8 @@ export default function TheNineSection() {
         </div>
       </motion.div>
 
-      <div className="absolute top-0 bottom-0 left-0 z-10 w-32 bg-gradient-to-r from-zinc-950 to-transparent" />
-      <div className="absolute top-0 right-0 bottom-0 z-10 w-32 bg-gradient-to-l from-zinc-950 to-transparent" />
+      <div className="absolute top-0 bottom-0 left-0 z-10 w-32 bg-linear-to-r from-zinc-950 to-transparent" />
+      <div className="absolute top-0 right-0 bottom-0 z-10 w-32 bg-linear-to-l from-zinc-950 to-transparent" />
 
       <style jsx global>{`
         @keyframes marquee {

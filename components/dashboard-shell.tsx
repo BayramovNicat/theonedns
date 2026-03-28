@@ -52,7 +52,7 @@ export function DashboardShell({
     <div className="relative min-h-screen bg-zinc-950 text-white selection:bg-amber-500/30 selection:text-amber-200">
       {/* Background Elements */}
       <div className="grid-bg pointer-events-none fixed inset-0 z-0 opacity-10" />
-      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-[100] opacity-[0.02]" />
+      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-100 opacity-[0.02]" />
 
       <header className="sticky top-0 z-40 border-b border-white/10 bg-zinc-900/50 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -64,7 +64,7 @@ export function DashboardShell({
               <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>

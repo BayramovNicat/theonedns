@@ -121,7 +121,7 @@ export function SubdomainRow({
 
   return (
     <>
-      <TableRow className="border-white/5 transition-colors hover:bg-white/[0.02]">
+      <TableRow className="border-white/5 transition-colors hover:bg-white/2">
         <TableCell className="pl-8 font-mono text-sm text-zinc-300">
           {record.name}
         </TableCell>

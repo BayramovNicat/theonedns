@@ -92,7 +92,7 @@ export default function HeroSection() {
       className="relative flex min-h-[140vh] flex-col items-center justify-start overflow-hidden px-4 pt-32"
     >
       {/* Background Glow */}
-      <div className="pointer-events-none absolute top-1/4 left-1/2 h-[400px] w-[800px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/4 left-1/2 h-100 w-200 -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
 
       <motion.div
         style={{ y: textY }}
@@ -109,7 +109,7 @@ export default function HeroSection() {
         >
           {/* Epic Glow Backdrop */}
           <div className="absolute -inset-10 rounded-full bg-amber-500/5 opacity-0 blur-[80px] transition-opacity duration-1000 group-hover:opacity-100" />
-          <div className="absolute inset-0 animate-pulse rounded-full bg-amber-500/10 blur-[40px]" />
+          <div className="absolute inset-0 animate-pulse rounded-full bg-amber-500/10 blur-2xl" />
 
           <div className="relative flex flex-col items-center">
             <span className="mb-4 text-[10px] font-bold tracking-[0.6em] text-zinc-600 uppercase">
@@ -119,11 +119,11 @@ export default function HeroSection() {
               <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>
-            <div className="mt-6 h-px w-32 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+            <div className="mt-6 h-px w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           </div>
         </motion.div>
 
@@ -197,7 +197,7 @@ export default function HeroSection() {
         </div>
 
         {/* Dashboard Table */}
-        <div className="min-h-[350px] overflow-x-auto">
+        <div className="min-h-87.5 overflow-x-auto">
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-white/5 text-xs font-medium tracking-wider text-zinc-500 uppercase">
@@ -218,7 +218,7 @@ export default function HeroSection() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.3 }}
-                    className="border-b border-white/5 transition-colors hover:bg-white/[0.02]"
+                    className="border-b border-white/5 transition-colors hover:bg-white/2"
                   >
                     <td className="px-6 py-4">
                       <span className="rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-500">
