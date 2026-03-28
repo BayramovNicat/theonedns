@@ -1,5 +1,6 @@
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
+import { dnsimpleAdapter } from "./dnsimple";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
@@ -17,6 +18,7 @@ const adapters: Record<string, PlatformAdapter> = {
   godaddy: godaddyAdapter,
   gcloud: gcloudAdapter,
   porkbun: porkbunAdapter,
+  dnsimple: dnsimpleAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

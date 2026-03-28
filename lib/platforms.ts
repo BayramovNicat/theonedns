@@ -151,6 +151,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  dnsimple: {
+    name: "DNSimple",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your DNSimple API token",
+        help: "Create one at DNSimple > Account > Automation > API Tokens.",
+      },
+      {
+        key: "account_id",
+        label: "Account ID",
+        type: "text" as const,
+        placeholder: "e.g. 12345",
+        help: "Found at DNSimple > Account settings (numeric ID).",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
