@@ -3,5 +3,3 @@ Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /projects/
-
-Sitemap: https://theonedns.com/sitemap.xml
