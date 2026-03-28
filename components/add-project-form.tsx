@@ -107,7 +107,9 @@ export function AddProjectForm() {
               }}
             >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
-                <SelectValue />
+                <SelectValue placeholder="Select platform">
+                  {PLATFORMS[platform].name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
                 {Object.entries(PLATFORMS)

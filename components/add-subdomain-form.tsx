@@ -120,7 +120,9 @@ export function AddSubdomainForm({
               onValueChange={(v) => v && setRecordType(v)}
             >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
-                <SelectValue />
+                <SelectValue>
+                  {recordType === "A" ? "A (IPv4 address)" : "CNAME (alias)"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
                 <SelectItem
