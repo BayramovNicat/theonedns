@@ -350,6 +350,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  bunny: {
+    name: "Bunny DNS",
+    fields: [
+      {
+        key: "api_key",
+        label: "API Key",
+        type: "text" as const,
+        placeholder: "Your Bunny.net API key",
+        help: "Found at Bunny.net > Account > API Key.",
+      },
+      {
+        key: "zone_id",
+        label: "DNS Zone ID",
+        type: "text" as const,
+        placeholder: "e.g. 123456",
+        help: "The numeric ID of your DNS zone in Bunny.net.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

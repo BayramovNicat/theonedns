@@ -1,4 +1,5 @@
 import { azureAdapter } from "./azure";
+import { bunnyAdapter } from "./bunny";
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
 import { dnsimpleAdapter } from "./dnsimple";
@@ -35,6 +36,7 @@ const adapters: Record<string, PlatformAdapter> = {
   ovh: ovhAdapter,
   namecheap: namecheapAdapter,
   azure: azureAdapter,
+  bunny: bunnyAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
