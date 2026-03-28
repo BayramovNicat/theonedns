@@ -15,7 +15,13 @@ type DnsRecord = {
   proxied: boolean;
 };
 
-export function SubdomainRow({ record }: { record: DnsRecord }) {
+export function SubdomainRow({
+  record,
+  projectId,
+}: {
+  record: DnsRecord;
+  projectId: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [removed, setRemoved] = useState(false);
@@ -26,7 +32,7 @@ export function SubdomainRow({ record }: { record: DnsRecord }) {
     setPending(true);
 
     try {
-      const res = await fetch("/api/subdomains", {
+      const res = await fetch(`/api/projects/${projectId}/dns`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cloudflareRecordId: record.id }),

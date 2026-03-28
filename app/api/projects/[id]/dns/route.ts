@@ -6,35 +6,48 @@ import {
   type CloudflareCredentials,
 } from "@/lib/cloudflare";
 
-async function getUserConfig() {
+async function getProject(projectId: string) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: config } = await supabase
-    .from("cloudflare_configs")
+  const { data: project } = await supabase
+    .from("projects")
     .select("*")
+    .eq("id", projectId)
     .eq("user_id", user.id)
     .single();
 
-  if (!config) return null;
-  return { config: config as CloudflareCredentials };
+  return project;
 }
 
-export async function POST(request: Request) {
-  const ctx = await getUserConfig();
-  if (!ctx) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const project = await getProject(id);
+
+  if (!project) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
+  if (project.platform !== "cloudflare") {
     return NextResponse.json(
-      { error: "Connect Cloudflare first" },
+      { error: "DNS management not yet supported for this platform" },
       { status: 400 }
     );
   }
 
-  const { config } = ctx;
-  const body = await request.json();
+  const creds: CloudflareCredentials = {
+    api_token: project.credentials.api_token,
+    zone_id: project.credentials.zone_id,
+    domain: project.domain,
+  };
 
+  const body = await request.json();
   const subdomain = body.subdomain?.trim().toLowerCase();
   const recordType = body.recordType as "A" | "CNAME";
   const content = body.content?.trim();
@@ -65,7 +78,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    await createDnsRecord(config, {
+    await createDnsRecord(creds, {
       subdomain,
       type: recordType,
       content,
@@ -81,16 +94,30 @@ export async function POST(request: Request) {
   return NextResponse.json({ success: true });
 }
 
-export async function DELETE(request: Request) {
-  const ctx = await getUserConfig();
-  if (!ctx) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const project = await getProject(id);
+
+  if (!project) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
+  if (project.platform !== "cloudflare") {
     return NextResponse.json(
-      { error: "Connect Cloudflare first" },
+      { error: "DNS management not yet supported for this platform" },
       { status: 400 }
     );
   }
 
-  const { config } = ctx;
+  const creds: CloudflareCredentials = {
+    api_token: project.credentials.api_token,
+    zone_id: project.credentials.zone_id,
+    domain: project.domain,
+  };
+
   const { cloudflareRecordId } = await request.json();
 
   if (!cloudflareRecordId) {
@@ -98,7 +125,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    await deleteDnsRecord(config, cloudflareRecordId);
+    await deleteDnsRecord(creds, cloudflareRecordId);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Failed to delete record" },

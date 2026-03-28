@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
-export function AddSubdomainForm({ domain }: { domain: string }) {
+export function AddSubdomainForm({
+  domain,
+  projectId,
+}: {
+  domain: string;
+  projectId: string;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
@@ -28,7 +34,7 @@ export function AddSubdomainForm({ domain }: { domain: string }) {
     setPending(true);
 
     try {
-      const res = await fetch("/api/subdomains", {
+      const res = await fetch(`/api/projects/${projectId}/dns`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ subdomain, recordType, content, proxied }),
