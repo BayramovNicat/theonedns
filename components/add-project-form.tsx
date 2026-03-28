@@ -110,15 +110,17 @@ export function AddProjectForm() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
-                {Object.entries(PLATFORMS).map(([key, cfg]) => (
-                  <SelectItem
-                    key={key}
-                    value={key}
-                    className="cursor-pointer hover:bg-white/5"
-                  >
-                    {cfg.name}
-                  </SelectItem>
-                ))}
+                {Object.entries(PLATFORMS)
+                  .sort((a, b) => a[1].name.localeCompare(b[1].name))
+                  .map(([key, cfg]) => (
+                    <SelectItem
+                      key={key}
+                      value={key}
+                      className="cursor-pointer hover:bg-white/5"
+                    >
+                      {cfg.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
