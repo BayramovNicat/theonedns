@@ -87,7 +87,7 @@ class OvhProvider implements DnsProvider {
   async listRecords(): Promise<DnsRecord[]> {
     const records: DnsRecord[] = [];
 
-    for (const fieldType of ["A", "AAAA", "CNAME"]) {
+    for (const fieldType of ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV"]) {
       const idsRes = await this.req(
         "GET",
         `/domain/zone/${this.domain}/record?fieldType=${fieldType}`
@@ -110,6 +110,7 @@ class OvhProvider implements DnsProvider {
             r.subDomain === "" ? this.domain : `${r.subDomain}.${this.domain}`,
           type: r.fieldType,
           content: r.target,
+          ttl: r.ttl,
         });
       }
     }
@@ -125,7 +126,7 @@ class OvhProvider implements DnsProvider {
         fieldType: params.type,
         subDomain: params.subdomain,
         target: params.content,
-        ttl: 300,
+        ttl: params.ttl ?? 300,
       })
     );
 
@@ -145,6 +146,7 @@ class OvhProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { target: params.content };
     if (params.type) body.fieldType = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
 
     const res = await this.req(
       "PUT",

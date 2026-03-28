@@ -33,12 +33,13 @@ class PorkbunProvider implements DnsProvider {
 
     const records: DnsRecord[] = [];
     for (const r of data.records ?? []) {
-      if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
       records.push({
         id: String(r.id),
         name: r.name,
         type: r.type,
         content: r.content,
+        ttl: r.ttl ? Number(r.ttl) : undefined,
+        priority: r.prio ? Number(r.prio) : undefined,
       });
     }
 
@@ -54,7 +55,8 @@ class PorkbunProvider implements DnsProvider {
         type: params.type,
         name: params.subdomain,
         content: params.content,
-        ttl: 600,
+        ttl: params.ttl ?? 600,
+        ...(params.priority != null && { prio: params.priority }),
       }),
     });
 

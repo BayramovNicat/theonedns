@@ -42,12 +42,13 @@ class NamecomProvider implements DnsProvider {
       const items = data.records ?? [];
 
       for (const r of items) {
-        if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
         records.push({
           id: String(r.id),
           name: r.fqdn?.replace(/\.$/, "") ?? this.domain,
           type: r.type,
           content: r.answer,
+          ttl: r.ttl,
+          priority: r.priority,
         });
       }
 
@@ -66,7 +67,8 @@ class NamecomProvider implements DnsProvider {
         type: params.type,
         host: params.subdomain,
         answer: params.content,
-        ttl: 300,
+        ttl: params.ttl ?? 300,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -82,6 +84,8 @@ class NamecomProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { answer: params.content };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
+    if (params.priority != null) body.priority = params.priority;
 
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,

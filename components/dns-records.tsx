@@ -1,11 +1,4 @@
-import { SubdomainRow } from "@/components/subdomain-row";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DnsRecordsClient } from "@/components/dns-records-client";
 import { decrypt } from "@/lib/crypto";
 import type { DnsRecord } from "@/lib/dns";
 import { getProvider } from "@/lib/dns";
@@ -27,15 +20,11 @@ export async function DnsRecords({
   try {
     const allRecords = await provider.listRecords();
     records = allRecords.filter(
-      (r) =>
-        (r.name === project.domain || r.name.endsWith(`.${project.domain}`)) &&
-        ["A", "AAAA", "CNAME"].includes(r.type)
+      (r) => r.name === project.domain || r.name.endsWith(`.${project.domain}`)
     );
   } catch {
     // Failed to fetch — show empty state
   }
-
-  const showProxy = project.platform === "cloudflare";
 
   if (records.length === 0) {
     return (
@@ -48,41 +37,11 @@ export async function DnsRecords({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-white/5 hover:bg-transparent">
-            <TableHead className="pl-8 text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-              Name
-            </TableHead>
-            <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-              Type
-            </TableHead>
-            <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-              Content
-            </TableHead>
-            {showProxy && (
-              <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                Proxy
-              </TableHead>
-            )}
-            <TableHead className="pr-8 text-right text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {records.map((record) => (
-            <SubdomainRow
-              key={record.id}
-              record={record}
-              projectId={project.id}
-              platform={project.platform}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <DnsRecordsClient
+      records={records}
+      projectId={project.id}
+      platform={project.platform}
+    />
   );
 }
 

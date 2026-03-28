@@ -23,6 +23,44 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
+const RECORD_TYPES = [
+  { value: "A", label: "A (IPv4 address)" },
+  { value: "AAAA", label: "AAAA (IPv6 address)" },
+  { value: "CNAME", label: "CNAME (alias)" },
+  { value: "MX", label: "MX (mail server)" },
+  { value: "TXT", label: "TXT (text)" },
+  { value: "NS", label: "NS (nameserver)" },
+];
+
+const TTL_OPTIONS = [
+  { value: "", label: "Auto" },
+  { value: "60", label: "1 minute" },
+  { value: "300", label: "5 minutes" },
+  { value: "600", label: "10 minutes" },
+  { value: "1800", label: "30 minutes" },
+  { value: "3600", label: "1 hour" },
+  { value: "86400", label: "1 day" },
+];
+
+function getPlaceholder(type: string) {
+  switch (type) {
+    case "A":
+      return "192.0.2.1";
+    case "AAAA":
+      return "2001:db8::1";
+    case "CNAME":
+      return "example.com";
+    case "MX":
+      return "mail.example.com";
+    case "TXT":
+      return "v=spf1 include:_spf.google.com ~all";
+    case "NS":
+      return "ns1.example.com";
+    default:
+      return "value";
+  }
+}
+
 export function AddSubdomainForm({
   domain,
   projectId,
@@ -38,6 +76,8 @@ export function AddSubdomainForm({
   const [subdomain, setSubdomain] = useState("");
   const [recordType, setRecordType] = useState("A");
   const [content, setContent] = useState("");
+  const [ttl, setTtl] = useState("");
+  const [priority, setPriority] = useState("10");
   const [proxied, setProxied] = useState(true);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -48,7 +88,14 @@ export function AddSubdomainForm({
       const res = await fetch(`/api/projects/${projectId}/dns`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subdomain, recordType, content, proxied }),
+        body: JSON.stringify({
+          subdomain,
+          recordType,
+          content,
+          ttl: ttl ? Number(ttl) : undefined,
+          priority: recordType === "MX" ? Number(priority) : undefined,
+          proxied,
+        }),
       });
 
       const data = await res.json();
@@ -62,6 +109,8 @@ export function AddSubdomainForm({
       setSubdomain("");
       setContent("");
       setRecordType("A");
+      setTtl("");
+      setPriority("10");
       setProxied(true);
       setOpen(false);
       router.refresh();
@@ -71,6 +120,11 @@ export function AddSubdomainForm({
       setPending(false);
     }
   }
+
+  const selectedTypeLabel =
+    RECORD_TYPES.find((t) => t.value === recordType)?.label ?? recordType;
+  const selectedTtlLabel =
+    TTL_OPTIONS.find((t) => t.value === ttl)?.label ?? "Auto";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -120,23 +174,18 @@ export function AddSubdomainForm({
               onValueChange={(v) => v && setRecordType(v)}
             >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
-                <SelectValue>
-                  {recordType === "A" ? "A (IPv4 address)" : "CNAME (alias)"}
-                </SelectValue>
+                <SelectValue>{selectedTypeLabel}</SelectValue>
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
-                <SelectItem
-                  value="A"
-                  className="cursor-pointer hover:bg-white/5"
-                >
-                  A (IPv4 address)
-                </SelectItem>
-                <SelectItem
-                  value="CNAME"
-                  className="cursor-pointer hover:bg-white/5"
-                >
-                  CNAME (alias)
-                </SelectItem>
+                {RECORD_TYPES.map((t) => (
+                  <SelectItem
+                    key={t.value}
+                    value={t.value}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
+                    {t.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -150,12 +199,59 @@ export function AddSubdomainForm({
             </Label>
             <Input
               id="content"
-              placeholder={recordType === "A" ? "192.0.2.1" : "example.com"}
+              placeholder={getPlaceholder(recordType)}
               required
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
             />
+          </div>
+
+          {recordType === "MX" && (
+            <div className="space-y-2">
+              <Label
+                htmlFor="priority"
+                className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+              >
+                Priority
+              </Label>
+              <Input
+                id="priority"
+                type="number"
+                min="0"
+                max="65535"
+                placeholder="10"
+                required
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
+              />
+              <p className="font-serif text-[10px] text-zinc-600 italic">
+                Lower values have higher priority
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+              TTL
+            </Label>
+            <Select value={ttl} onValueChange={(v) => setTtl(v ?? "")}>
+              <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
+                <SelectValue>{selectedTtlLabel}</SelectValue>
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-zinc-900 text-white">
+                {TTL_OPTIONS.map((opt) => (
+                  <SelectItem
+                    key={opt.value || "auto"}
+                    value={opt.value}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {platform === "cloudflare" && (

@@ -61,6 +61,8 @@ export async function POST(
   const recordType = body.recordType as string;
   const content = body.content?.trim();
   const proxied = body.proxied ?? false;
+  const ttl = body.ttl ? Number(body.ttl) : undefined;
+  const priority = body.priority != null ? Number(body.priority) : undefined;
 
   if (!subdomain || !content) {
     return NextResponse.json(
@@ -69,11 +71,11 @@ export async function POST(
     );
   }
 
-  if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(subdomain)) {
+  if (!/^[a-z0-9_]([a-z0-9_-]*[a-z0-9_])?$/.test(subdomain)) {
     return NextResponse.json(
       {
         error:
-          "Invalid subdomain. Use lowercase letters, numbers, and hyphens only.",
+          "Invalid subdomain. Use lowercase letters, numbers, hyphens, and underscores only.",
       },
       { status: 400 }
     );
@@ -91,6 +93,8 @@ export async function POST(
       subdomain,
       type: recordType,
       content,
+      ttl,
+      priority,
       proxied,
     });
   } catch (e) {
@@ -122,7 +126,7 @@ export async function PATCH(
   }
 
   const body = await request.json();
-  const { recordId, type, content, proxied } = body;
+  const { recordId, type, content, proxied, ttl, priority } = body;
 
   if (!recordId || !content?.trim()) {
     return NextResponse.json(
@@ -135,6 +139,8 @@ export async function PATCH(
     await provider.updateRecord(recordId, {
       type,
       content: content.trim(),
+      ttl: ttl ? Number(ttl) : undefined,
+      priority: priority != null ? Number(priority) : undefined,
       proxied: proxied ?? false,
     });
   } catch (e) {

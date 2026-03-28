@@ -40,12 +40,13 @@ class DigitalOceanProvider implements DnsProvider {
       const items = data.domain_records ?? [];
 
       for (const r of items) {
-        if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
         records.push({
           id: String(r.id),
           name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
           type: r.type,
           content: r.data,
+          ttl: r.ttl,
+          priority: r.priority,
         });
       }
 
@@ -64,7 +65,8 @@ class DigitalOceanProvider implements DnsProvider {
         type: params.type,
         name: params.subdomain,
         data: params.content,
-        ttl: 1800,
+        ttl: params.ttl ?? 1800,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -80,6 +82,8 @@ class DigitalOceanProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { data: params.content };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
+    if (params.priority != null) body.priority = params.priority;
 
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,

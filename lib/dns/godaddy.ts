@@ -43,17 +43,23 @@ class GoDaddyProvider implements DnsProvider {
 
     if (!res.ok) return [];
 
-    const data: { name: string; type: string; data: string }[] =
-      await res.json();
+    const data: {
+      name: string;
+      type: string;
+      data: string;
+      ttl?: number;
+      priority?: number;
+    }[] = await res.json();
     const records: DnsRecord[] = [];
 
     for (const r of data) {
-      if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
       records.push({
         id: encodeId(r.type, r.name),
         name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.data,
+        ttl: r.ttl,
+        priority: r.priority,
       });
     }
 
@@ -69,7 +75,8 @@ class GoDaddyProvider implements DnsProvider {
           type: params.type,
           name: params.subdomain,
           data: params.content,
-          ttl: 3600,
+          ttl: params.ttl ?? 3600,
+          ...(params.priority != null && { priority: params.priority }),
         },
       ]),
     });
@@ -91,7 +98,9 @@ class GoDaddyProvider implements DnsProvider {
       {
         method: "PUT",
         headers: this.hdrs,
-        body: JSON.stringify([{ data: params.content, ttl: 3600 }]),
+        body: JSON.stringify([
+          { data: params.content, ttl: params.ttl ?? 3600 },
+        ]),
       }
     );
 

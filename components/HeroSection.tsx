@@ -190,7 +190,10 @@ export default function HeroSection() {
 
         {/* Dashboard Table */}
         <div className="min-h-87.5 overflow-x-auto">
-          <table aria-label="Example DNS records" className="w-full border-collapse text-left">
+          <table
+            aria-label="Example DNS records"
+            className="w-full border-collapse text-left"
+          >
             <thead>
               <tr className="border-b border-white/5 text-xs font-medium tracking-wider text-zinc-500 uppercase">
                 <th className="px-6 py-4">Type</th>

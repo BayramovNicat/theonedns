@@ -41,12 +41,13 @@ class LinodeProvider implements DnsProvider {
       const items = data.data ?? [];
 
       for (const r of items) {
-        if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
         records.push({
           id: String(r.id),
           name: r.name === "" ? this.domain : `${r.name}.${this.domain}`,
           type: r.type,
           content: r.target,
+          ttl: r.ttl_sec || undefined,
+          priority: r.priority,
         });
       }
 
@@ -65,7 +66,8 @@ class LinodeProvider implements DnsProvider {
         type: params.type,
         name: params.subdomain,
         target: params.content,
-        ttl_sec: 300,
+        ttl_sec: params.ttl ?? 300,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -82,6 +84,8 @@ class LinodeProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { target: params.content };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl_sec = params.ttl;
+    if (params.priority != null) body.priority = params.priority;
 
     const res = await fetch(
       `${API}/domains/${this.domainId}/records/${recordId}`,

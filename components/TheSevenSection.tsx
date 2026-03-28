@@ -61,10 +61,13 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
 
   const handleSync = () => {
     setStatus("loading");
-    setTimeout(() => {
-      setStatus("success");
-      setTimeout(() => setStatus("idle"), 4000);
-    }, 1200 + Math.random() * 800);
+    setTimeout(
+      () => {
+        setStatus("success");
+        setTimeout(() => setStatus("idle"), 4000);
+      },
+      1200 + Math.random() * 800
+    );
   };
 
   return (

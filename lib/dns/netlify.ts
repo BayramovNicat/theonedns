@@ -41,12 +41,13 @@ class NetlifyProvider implements DnsProvider {
       if (!Array.isArray(data) || data.length === 0) break;
 
       for (const r of data) {
-        if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
         records.push({
           id: r.id,
           name: r.hostname,
           type: r.type,
           content: r.value,
+          ttl: r.ttl,
+          priority: r.priority,
         });
       }
 
@@ -66,7 +67,8 @@ class NetlifyProvider implements DnsProvider {
         type: params.type,
         hostname,
         value: params.content,
-        ttl: 3600,
+        ttl: params.ttl ?? 3600,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -114,7 +116,8 @@ class NetlifyProvider implements DnsProvider {
           type: params.type ?? existing.type,
           hostname: existing.hostname,
           value: params.content,
-          ttl: existing.ttl ?? 3600,
+          ttl: params.ttl ?? existing.ttl ?? 3600,
+          ...(params.priority != null && { priority: params.priority }),
         }),
       }
     );

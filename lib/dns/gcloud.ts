@@ -130,7 +130,6 @@ class GoogleCloudDnsProvider implements DnsProvider {
       const data = await res.json();
 
       for (const rrset of data.rrsets ?? []) {
-        if (!["A", "AAAA", "CNAME"].includes(rrset.type)) continue;
         for (const rdata of rrset.rrdatas ?? []) {
           const name = rrset.name.replace(/\.$/, "");
           records.push({
@@ -138,6 +137,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
             name,
             type: rrset.type,
             content: rdata.replace(/\.$/, ""),
+            ttl: rrset.ttl,
           });
         }
       }
@@ -160,7 +160,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
         body: JSON.stringify({
           name,
           type: params.type,
-          ttl: 300,
+          ttl: params.ttl ?? 300,
           rrdatas: [params.content],
         }),
       }
@@ -212,7 +212,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
             {
               name,
               type: recordType,
-              ttl: 300,
+              ttl: params.ttl ?? 300,
               rrdatas: [params.content],
             },
           ],

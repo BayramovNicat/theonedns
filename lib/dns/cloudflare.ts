@@ -40,6 +40,8 @@ class CloudflareProvider implements DnsProvider {
           name: r.name,
           type: r.type,
           content: r.content,
+          ttl: r.ttl === 1 ? undefined : r.ttl,
+          priority: r.priority,
           proxied: r.proxied,
         });
       }
@@ -61,7 +63,8 @@ class CloudflareProvider implements DnsProvider {
         name,
         content: params.content,
         proxied: params.proxied ?? false,
-        ttl: 1,
+        ttl: params.ttl ?? 1,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -80,6 +83,8 @@ class CloudflareProvider implements DnsProvider {
       proxied: params.proxied ?? false,
     };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
+    if (params.priority != null) body.priority = params.priority;
 
     const res = await fetch(
       `${API}/zones/${this.zoneId}/dns_records/${recordId}`,

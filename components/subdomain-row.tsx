@@ -31,8 +31,27 @@ type DnsRecord = {
   name: string;
   type: string;
   content: string;
+  ttl?: number;
+  priority?: number;
   proxied?: boolean;
 };
+
+const TTL_OPTIONS = [
+  { value: "60", label: "1 min" },
+  { value: "300", label: "5 min" },
+  { value: "600", label: "10 min" },
+  { value: "1800", label: "30 min" },
+  { value: "3600", label: "1 hour" },
+  { value: "86400", label: "1 day" },
+];
+
+function formatTtl(ttl?: number): string {
+  if (!ttl) return "Auto";
+  if (ttl < 60) return `${ttl}s`;
+  if (ttl < 3600) return `${Math.round(ttl / 60)}m`;
+  if (ttl < 86400) return `${Math.round(ttl / 3600)}h`;
+  return `${Math.round(ttl / 86400)}d`;
+}
 
 export function SubdomainRow({
   record,
@@ -47,6 +66,7 @@ export function SubdomainRow({
   const [editing, setEditing] = useState(false);
   const [recordType, setRecordType] = useState(record.type);
   const [content, setContent] = useState(record.content);
+  const [ttl, setTtl] = useState(String(record.ttl ?? ""));
   const [proxied, setProxied] = useState(record.proxied ?? false);
   const showProxy = platform === "cloudflare";
   const [saving, setSaving] = useState(false);
@@ -66,6 +86,7 @@ export function SubdomainRow({
           recordId: record.id,
           type: recordType,
           content,
+          ttl: ttl ? Number(ttl) : undefined,
           proxied,
         }),
       });
@@ -89,6 +110,7 @@ export function SubdomainRow({
   function handleCancel() {
     setRecordType(record.type);
     setContent(record.content);
+    setTtl(String(record.ttl ?? ""));
     setProxied(record.proxied ?? false);
     setEditing(false);
   }
@@ -99,7 +121,7 @@ export function SubdomainRow({
       const res = await fetch(`/api/projects/${projectId}/dns`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cloudflareRecordId: record.id }),
+        body: JSON.stringify({ recordId: record.id }),
       });
 
       const data = await res.json();
@@ -141,6 +163,9 @@ export function SubdomainRow({
                 <SelectItem value="A">A</SelectItem>
                 <SelectItem value="AAAA">AAAA</SelectItem>
                 <SelectItem value="CNAME">CNAME</SelectItem>
+                <SelectItem value="MX">MX</SelectItem>
+                <SelectItem value="TXT">TXT</SelectItem>
+                <SelectItem value="NS">NS</SelectItem>
               </SelectContent>
             </Select>
           ) : (
@@ -158,7 +183,35 @@ export function SubdomainRow({
             />
           ) : (
             <span className="font-mono text-sm text-zinc-500">
-              {record.content}
+              {record.priority != null
+                ? `${record.priority} ${record.content}`
+                : record.content}
+            </span>
+          )}
+        </TableCell>
+        <TableCell>
+          {editing ? (
+            <Select value={ttl} onValueChange={(v) => setTtl(v ?? "")}>
+              <SelectTrigger
+                size="sm"
+                className="w-24 border-white/10 bg-white/5 text-white"
+              >
+                <SelectValue>
+                  {ttl ? formatTtl(Number(ttl)) : "Auto"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-zinc-900 text-white">
+                <SelectItem value="">Auto</SelectItem>
+                {TTL_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="font-mono text-xs text-zinc-500">
+              {formatTtl(record.ttl)}
             </span>
           )}
         </TableCell>

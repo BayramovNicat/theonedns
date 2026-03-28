@@ -44,6 +44,8 @@ class BunnyProvider implements DnsProvider {
         name: r.Name === "" ? this.domain : `${r.Name}.${this.domain}`,
         type: typeName,
         content: r.Value,
+        ttl: r.Ttl,
+        priority: r.Priority,
       });
     }
 
@@ -58,7 +60,8 @@ class BunnyProvider implements DnsProvider {
         Type: bunnyTypeId(params.type),
         Name: params.subdomain,
         Value: params.content,
-        Ttl: 300,
+        Ttl: params.ttl ?? 300,
+        ...(params.priority != null && { Priority: params.priority }),
       }),
     });
 
@@ -78,7 +81,8 @@ class BunnyProvider implements DnsProvider {
       body: JSON.stringify({
         Type: bunnyTypeId(params.type ?? "A"),
         Value: params.content,
-        Ttl: 300,
+        Ttl: params.ttl ?? 300,
+        ...(params.priority != null && { Priority: params.priority }),
       }),
     });
 
@@ -103,12 +107,28 @@ class BunnyProvider implements DnsProvider {
 
 /** Bunny uses numeric type IDs. */
 function bunnyTypeId(type: string): number {
-  const map: Record<string, number> = { A: 0, AAAA: 1, CNAME: 2 };
+  const map: Record<string, number> = {
+    A: 0,
+    AAAA: 1,
+    CNAME: 2,
+    MX: 3,
+    TXT: 4,
+    NS: 5,
+    SRV: 6,
+  };
   return map[type] ?? 0;
 }
 
 function bunnyTypeName(typeId: number): string | null {
-  const map: Record<number, string> = { 0: "A", 1: "AAAA", 2: "CNAME" };
+  const map: Record<number, string> = {
+    0: "A",
+    1: "AAAA",
+    2: "CNAME",
+    3: "MX",
+    4: "TXT",
+    5: "NS",
+    6: "SRV",
+  };
   return map[typeId] ?? null;
 }
 

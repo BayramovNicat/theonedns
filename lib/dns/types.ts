@@ -3,6 +3,8 @@ export type DnsRecord = {
   name: string;
   type: string;
   content: string;
+  ttl?: number;
+  priority?: number;
   proxied?: boolean;
 };
 
@@ -10,12 +12,16 @@ export type CreateRecordParams = {
   subdomain: string;
   type: string;
   content: string;
+  ttl?: number;
+  priority?: number;
   proxied?: boolean;
 };
 
 export type UpdateRecordParams = {
   type?: string;
   content: string;
+  ttl?: number;
+  priority?: number;
   proxied?: boolean;
 };
 

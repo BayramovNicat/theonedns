@@ -183,8 +183,8 @@ class Route53Provider implements DnsProvider {
         const type = xmlValue(rrset, "Type");
         const name = xmlValue(rrset, "Name");
         if (!type || !name) continue;
-        if (!["A", "AAAA", "CNAME"].includes(type)) continue;
 
+        const ttl = xmlValue(rrset, "TTL");
         const values = xmlAll(rrset, "Value");
         for (const value of values) {
           records.push({
@@ -192,6 +192,7 @@ class Route53Provider implements DnsProvider {
             name: name.replace(/\.$/, ""),
             type,
             content: value.replace(/\.$/, ""),
+            ttl: ttl ? Number(ttl) : undefined,
           });
         }
       }
@@ -216,7 +217,7 @@ class Route53Provider implements DnsProvider {
         <ResourceRecordSet>
           <Name>${escapeXml(name)}</Name>
           <Type>${escapeXml(params.type)}</Type>
-          <TTL>300</TTL>
+          <TTL>${params.ttl ?? 300}</TTL>
           <ResourceRecords>
             <ResourceRecord><Value>${escapeXml(params.content)}</Value></ResourceRecord>
           </ResourceRecords>
@@ -255,7 +256,7 @@ class Route53Provider implements DnsProvider {
         <ResourceRecordSet>
           <Name>${escapeXml(name)}</Name>
           <Type>${escapeXml(params.type ?? type)}</Type>
-          <TTL>300</TTL>
+          <TTL>${params.ttl ?? 300}</TTL>
           <ResourceRecords>
             <ResourceRecord><Value>${escapeXml(params.content)}</Value></ResourceRecord>
           </ResourceRecords>

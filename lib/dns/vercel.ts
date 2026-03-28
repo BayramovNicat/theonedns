@@ -45,12 +45,13 @@ class VercelProvider implements DnsProvider {
 
       const data = await res.json();
       for (const r of data.records) {
-        if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
         records.push({
           id: r.id,
           name: r.name ? `${r.name}.${this.domain}` : this.domain,
           type: r.type,
           content: r.value,
+          ttl: r.ttl,
+          priority: r.mxPriority,
         });
       }
 
@@ -71,7 +72,8 @@ class VercelProvider implements DnsProvider {
           name: params.subdomain,
           type: params.type,
           value: params.content,
-          ttl: 60,
+          ttl: params.ttl ?? 60,
+          ...(params.priority != null && { mxPriority: params.priority }),
         }),
       }
     );
@@ -86,6 +88,8 @@ class VercelProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { value: params.content };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
+    if (params.priority != null) body.mxPriority = params.priority;
 
     const res = await fetch(
       `${API}/v1/domains/records/${recordId}${this.qs()}`,

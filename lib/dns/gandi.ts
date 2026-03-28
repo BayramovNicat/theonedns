@@ -47,10 +47,10 @@ class GandiProvider implements DnsProvider {
       rrset_name: string;
       rrset_type: string;
       rrset_values: string[];
+      rrset_ttl?: number;
     }[] = await res.json();
 
     for (const rrset of data) {
-      if (!["A", "AAAA", "CNAME"].includes(rrset.rrset_type)) continue;
       for (const value of rrset.rrset_values) {
         records.push({
           id: encodeId(rrset.rrset_type, rrset.rrset_name),
@@ -60,6 +60,7 @@ class GandiProvider implements DnsProvider {
               : `${rrset.rrset_name}.${this.domain}`,
           type: rrset.rrset_type,
           content: value,
+          ttl: rrset.rrset_ttl,
         });
       }
     }
@@ -75,7 +76,7 @@ class GandiProvider implements DnsProvider {
         headers: this.hdrs,
         body: JSON.stringify({
           rrset_values: [params.content],
-          rrset_ttl: 300,
+          rrset_ttl: params.ttl ?? 300,
         }),
       }
     );
@@ -99,7 +100,7 @@ class GandiProvider implements DnsProvider {
         headers: this.hdrs,
         body: JSON.stringify({
           rrset_values: [params.content],
-          rrset_ttl: 300,
+          rrset_ttl: params.ttl ?? 300,
         }),
       }
     );

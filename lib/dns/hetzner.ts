@@ -37,12 +37,12 @@ class HetznerProvider implements DnsProvider {
     const records: DnsRecord[] = [];
 
     for (const r of data.records ?? []) {
-      if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
       records.push({
         id: r.id,
         name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.value,
+        ttl: r.ttl,
       });
     }
 
@@ -58,7 +58,7 @@ class HetznerProvider implements DnsProvider {
         type: params.type,
         name: params.subdomain,
         value: params.content,
-        ttl: 1800,
+        ttl: params.ttl ?? 1800,
       }),
     });
 
@@ -91,7 +91,7 @@ class HetznerProvider implements DnsProvider {
         type: params.type ?? existing.type,
         name: existing.name,
         value: params.content,
-        ttl: existing.ttl ?? 1800,
+        ttl: params.ttl ?? existing.ttl ?? 1800,
       }),
     });
 

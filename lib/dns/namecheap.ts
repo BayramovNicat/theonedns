@@ -115,12 +115,12 @@ class NamecheapProvider implements DnsProvider {
     const records: DnsRecord[] = [];
 
     for (const r of hosts) {
-      if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
       records.push({
         id: r.hostId,
         name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.address,
+        ttl: r.ttl ? Number(r.ttl) : undefined,
       });
     }
 
@@ -135,7 +135,7 @@ class NamecheapProvider implements DnsProvider {
       name: params.subdomain,
       type: params.type,
       address: params.content,
-      ttl: "1800",
+      ttl: String(params.ttl ?? 1800),
       domain: this.domain,
     });
 

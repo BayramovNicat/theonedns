@@ -36,16 +36,19 @@ class HostingerProvider implements DnsProvider {
       name: string;
       type: string;
       content: string;
+      ttl?: number;
+      priority?: number;
     }[] = await res.json();
     const records: DnsRecord[] = [];
 
     for (const r of data) {
-      if (!["A", "AAAA", "CNAME"].includes(r.type)) continue;
       records.push({
         id: String(r.id),
         name: r.name === "" ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.content,
+        ttl: r.ttl,
+        priority: r.priority,
       });
     }
 
@@ -60,7 +63,8 @@ class HostingerProvider implements DnsProvider {
         type: params.type,
         name: params.subdomain,
         content: params.content,
-        ttl: 300,
+        ttl: params.ttl ?? 300,
+        ...(params.priority != null && { priority: params.priority }),
       }),
     });
 
@@ -76,6 +80,8 @@ class HostingerProvider implements DnsProvider {
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const body: Record<string, unknown> = { content: params.content };
     if (params.type) body.type = params.type;
+    if (params.ttl != null) body.ttl = params.ttl;
+    if (params.priority != null) body.priority = params.priority;
 
     const res = await fetch(`${API}/zones/${this.domain}/records/${recordId}`, {
       method: "PUT",

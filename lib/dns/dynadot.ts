@@ -90,8 +90,6 @@ class DynadotProvider implements DnsProvider {
     const records: DnsRecord[] = [];
 
     for (const r of hosts) {
-      if (!["a", "aaaa", "cname"].includes(r.record_type.toLowerCase()))
-        continue;
       records.push({
         id: encodeId(r.record_type.toUpperCase(), r.subdomain),
         name:
