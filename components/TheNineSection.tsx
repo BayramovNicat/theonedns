@@ -4,15 +4,15 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const NINE = [
-  "Porkbun LLC",
-  "DNSimple Corporation",
-  "GoDaddy Inc.",
-  "Namecheap, Inc.",
-  "Name.com (Identity Digital Inc.)",
-  "Gandi SAS",
-  "Bunny.net (BunnyWay d.o.o.)",
-  "Dynadot LLC",
-  "Hostinger International, Ltd.",
+  "Porkbun",
+  "DNSimple",
+  "GoDaddy",
+  "Namecheap",
+  "Name.com",
+  "Gandi",
+  "Bunny.net",
+  "Dynadot",
+  "Hostinger",
 ];
 
 export default function TheNineSection() {
@@ -43,7 +43,7 @@ export default function TheNineSection() {
         style={{ scale }}
         className="relative flex overflow-hidden py-10"
       >
-        <div className="animate-marquee hover:paused flex whitespace-nowrap">
+        <div className="animate-marquee flex whitespace-nowrap">
           {[...NINE, ...NINE, ...NINE].map((name, idx) => (
             <div
               key={`${name}-${idx}`}
@@ -60,20 +60,6 @@ export default function TheNineSection() {
 
       <div className="absolute top-0 bottom-0 left-0 z-10 w-32 bg-linear-to-r from-zinc-950 to-transparent" />
       <div className="absolute top-0 right-0 bottom-0 z-10 w-32 bg-linear-to-l from-zinc-950 to-transparent" />
-
-      <style jsx global>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-33.33%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }

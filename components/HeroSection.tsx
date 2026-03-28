@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
 } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { CtaButton } from "@/components/cta-button";
 
 const MOCK_RECORDS = [
   {
@@ -89,7 +88,7 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-[140vh] flex-col items-center justify-start overflow-hidden px-4 pt-32"
+      className="relative flex min-h-screen flex-col items-center justify-start overflow-hidden px-4 pt-32 md:min-h-[140vh]"
     >
       {/* Background Glow */}
       <div className="pointer-events-none absolute top-1/4 left-1/2 h-100 w-200 -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
@@ -141,16 +140,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          <Link
-            href="/login"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-amber-500 px-12 py-6 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_50px_rgba(245,158,11,0.4)] transition-all hover:scale-105 active:scale-95"
-          >
-            <div className="animate-pulse-slow pointer-events-none absolute inset-0 bg-white/20" />
-            <span className="relative z-10 flex items-center gap-3">
-              Start Managing Free
-              <ExternalLink size={18} strokeWidth={3} />
-            </span>
-          </Link>
+          <CtaButton />
         </motion.div>
       </motion.div>
 
@@ -257,21 +247,6 @@ export default function HeroSection() {
           </table>
         </div>
       </motion.div>
-
-      <style jsx global>{`
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 }

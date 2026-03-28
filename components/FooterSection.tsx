@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, ExternalLink } from "lucide-react";
+import { Mail } from "lucide-react";
 import Link from "next/link";
+import { CtaButton } from "@/components/cta-button";
 
 export default function FooterSection() {
   return (
@@ -19,16 +20,7 @@ export default function FooterSection() {
             &quot;One Portal to find them, one Interface to bind them.&quot;
           </p>
 
-          <Link
-            href="/login"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-amber-500 px-12 py-6 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_50px_rgba(245,158,11,0.4)] transition-all hover:scale-105 active:scale-95"
-          >
-            <div className="animate-pulse-slow pointer-events-none absolute inset-0 bg-white/20" />
-            <span className="relative z-10 flex items-center gap-3">
-              Start Managing Free
-              <ExternalLink size={18} strokeWidth={3} />
-            </span>
-          </Link>
+          <CtaButton />
         </motion.div>
 
         {/* Footer Links */}
@@ -133,21 +125,6 @@ export default function FooterSection() {
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-      `}</style>
     </footer>
   );
 }
