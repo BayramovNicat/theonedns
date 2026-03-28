@@ -37,10 +37,13 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-zinc-900/50 py-32 backdrop-blur-xl">
-          <div className="text-center px-4">
-            <h3 className="text-2xl font-bold text-white">No domains forged yet</h3>
+          <div className="px-4 text-center">
+            <h3 className="text-2xl font-bold text-white">
+              No domains forged yet
+            </h3>
             <p className="mt-2 font-serif text-zinc-500 italic">
-              Connect your first domain to start managing DNS records across the realm.
+              Connect your first domain to start managing DNS records across the
+              realm.
             </p>
             <div className="mt-10">
               <AddProjectForm />

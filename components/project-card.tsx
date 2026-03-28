@@ -69,17 +69,17 @@ export function ProjectCard({ project }: { project: Project }) {
         <Link href={`/projects/${project.id}`} className="block p-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <div className="h-2 w-2 rounded-full bg-amber-500/50 group-hover:bg-amber-500 transition-colors" />
-              <Badge className="border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-[10px] uppercase tracking-widest">
+              <div className="h-2 w-2 rounded-full bg-amber-500/50 transition-colors group-hover:bg-amber-500" />
+              <Badge className="border-amber-500/20 bg-amber-500/10 text-[10px] font-bold tracking-widest text-amber-500 uppercase">
                 {platformName}
               </Badge>
             </div>
-            
+
             <div>
-              <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
+              <h3 className="text-xl font-bold text-white transition-colors group-hover:text-amber-400">
                 {project.domain}
               </h3>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+              <p className="mt-1 font-mono text-[10px] tracking-[0.2em] text-zinc-500 uppercase">
                 Created: {new Date(project.created_at).toLocaleDateString()}
               </p>
             </div>
@@ -93,10 +93,13 @@ export function ProjectCard({ project }: { project: Project }) {
 
         <div className="absolute top-4 right-4">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full border border-white/5 bg-white/5 text-zinc-500 transition-all opacity-0 group-hover:opacity-100 hover:bg-white/10 hover:text-white active:scale-90">
+            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full border border-white/5 bg-white/5 text-zinc-500 opacity-0 transition-all group-hover:opacity-100 hover:bg-white/10 hover:text-white active:scale-90">
               <MoreVertical className="size-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
+            <DropdownMenuContent
+              align="end"
+              className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl"
+            >
               <DropdownMenuItem
                 onClick={() => router.push(`/projects/${project.id}`)}
                 className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
@@ -120,7 +123,9 @@ export function ProjectCard({ project }: { project: Project }) {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl font-bold text-white">Delete project</AlertDialogTitle>
+            <AlertDialogTitle className="text-2xl font-bold text-white">
+              Delete project
+            </AlertDialogTitle>
             <AlertDialogDescription className="font-serif text-zinc-500 italic">
               Are you sure you want to banish{" "}
               <span className="font-bold text-amber-500 not-italic">
@@ -130,7 +135,12 @@ export function ProjectCard({ project }: { project: Project }) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting} className="border-white/10 bg-white/5 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              disabled={deleting}
+              className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+            >
+              Cancel
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}

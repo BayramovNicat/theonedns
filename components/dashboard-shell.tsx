@@ -99,7 +99,7 @@ export function DashboardShell({
                 {fullName && (
                   <p className="text-sm font-bold text-white">{fullName}</p>
                 )}
-                <p className="text-muted-foreground truncate font-mono text-[10px] uppercase tracking-wider">
+                <p className="text-muted-foreground truncate font-mono text-[10px] tracking-wider uppercase">
                   {user.email}
                 </p>
               </div>

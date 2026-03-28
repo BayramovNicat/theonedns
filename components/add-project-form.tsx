@@ -81,7 +81,9 @@ export function AddProjectForm() {
       </DialogTrigger>
       <DialogContent className="max-w-md border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white">Connect a domain</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-white">
+            Connect a domain
+          </DialogTitle>
           <p className="font-serif text-sm text-zinc-500 italic">
             Forge a new connection across the digital realms.
           </p>
@@ -92,7 +94,9 @@ export function AddProjectForm() {
           autoComplete="one-time-code"
         >
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Platform</Label>
+            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+              Platform
+            </Label>
             <Select
               value={platform}
               onValueChange={(v) => {
@@ -107,7 +111,11 @@ export function AddProjectForm() {
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
                 {Object.entries(PLATFORMS).map(([key, cfg]) => (
-                  <SelectItem key={key} value={key} className="cursor-pointer hover:bg-white/5">
+                  <SelectItem
+                    key={key}
+                    value={key}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
                     {cfg.name}
                   </SelectItem>
                 ))}
@@ -116,7 +124,12 @@ export function AddProjectForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="domain" className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Domain</Label>
+            <Label
+              htmlFor="domain"
+              className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+            >
+              Domain
+            </Label>
             <Input
               id="domain"
               placeholder="example.com"
@@ -134,7 +147,12 @@ export function AddProjectForm() {
             </Label>
             {platformConfig.fields.map((field) => (
               <div key={field.key} className="space-y-2">
-                <Label htmlFor={field.key} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">{field.label}</Label>
+                <Label
+                  htmlFor={field.key}
+                  className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+                >
+                  {field.label}
+                </Label>
                 <Input
                   id={field.key}
                   type={field.type}
@@ -146,13 +164,19 @@ export function AddProjectForm() {
                   className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
                 />
                 {field.help && (
-                  <p className="font-serif text-[10px] text-zinc-600 italic">{field.help}</p>
+                  <p className="font-serif text-[10px] text-zinc-600 italic">
+                    {field.help}
+                  </p>
                 )}
               </div>
             ))}
           </div>
 
-          <Button type="submit" disabled={pending} className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50">
+          <Button
+            type="submit"
+            disabled={pending}
+            className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50"
+          >
             {pending ? "Connecting..." : "Connect domain"}
           </Button>
         </form>

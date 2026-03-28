@@ -127,11 +127,14 @@ export function SubdomainRow({
         </TableCell>
         <TableCell>
           {editing ? (
-            <Select 
-              value={recordType} 
+            <Select
+              value={recordType}
               onValueChange={(v) => v && setRecordType(v)}
             >
-              <SelectTrigger size="sm" className="w-24 border-white/10 bg-white/5 text-white">
+              <SelectTrigger
+                size="sm"
+                className="w-24 border-white/10 bg-white/5 text-white"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
@@ -141,7 +144,7 @@ export function SubdomainRow({
               </SelectContent>
             </Select>
           ) : (
-            <Badge className="border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-[10px] uppercase">
+            <Badge className="border-amber-500/20 bg-amber-500/10 text-[10px] font-bold text-amber-500 uppercase">
               {record.type}
             </Badge>
           )}
@@ -168,11 +171,14 @@ export function SubdomainRow({
                 size="sm"
               />
             ) : record.proxied ? (
-              <Badge className="border-orange-500/20 bg-orange-500/10 text-[10px] font-bold uppercase tracking-widest text-orange-500 hover:bg-orange-500/10">
+              <Badge className="border-orange-500/20 bg-orange-500/10 text-[10px] font-bold tracking-widest text-orange-500 uppercase hover:bg-orange-500/10">
                 Proxied
               </Badge>
             ) : (
-              <Badge variant="outline" className="border-white/10 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+              <Badge
+                variant="outline"
+                className="border-white/10 text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+              >
                 DNS only
               </Badge>
             )}
@@ -227,15 +233,24 @@ export function SubdomainRow({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl font-bold text-white">Delete record</AlertDialogTitle>
+            <AlertDialogTitle className="text-2xl font-bold text-white">
+              Delete record
+            </AlertDialogTitle>
             <AlertDialogDescription className="font-serif text-zinc-500 italic">
               Are you sure you want to banish the record{" "}
-              <span className="font-bold text-amber-500 not-italic">{record.name}</span>
+              <span className="font-bold text-amber-500 not-italic">
+                {record.name}
+              </span>
               ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting} className="border-white/10 bg-white/5 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              disabled={deleting}
+              className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+            >
+              Cancel
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}

@@ -81,14 +81,21 @@ export function AddSubdomainForm({
       </DialogTrigger>
       <DialogContent className="max-w-md border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white">New DNS record</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-white">
+            New DNS record
+          </DialogTitle>
           <p className="font-serif text-sm text-zinc-500 italic">
             Forge a new entry in the DNS registry of this realm.
           </p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-4 space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="subdomain" className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Subdomain</Label>
+            <Label
+              htmlFor="subdomain"
+              className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+            >
+              Subdomain
+            </Label>
             <div className="flex items-center gap-2">
               <Input
                 id="subdomain"
@@ -105,23 +112,40 @@ export function AddSubdomainForm({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Record type</Label>
-            <Select 
-              value={recordType} 
+            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+              Record type
+            </Label>
+            <Select
+              value={recordType}
               onValueChange={(v) => v && setRecordType(v)}
             >
               <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
-                <SelectItem value="A" className="cursor-pointer hover:bg-white/5">A (IPv4 address)</SelectItem>
-                <SelectItem value="CNAME" className="cursor-pointer hover:bg-white/5">CNAME (alias)</SelectItem>
+                <SelectItem
+                  value="A"
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  A (IPv4 address)
+                </SelectItem>
+                <SelectItem
+                  value="CNAME"
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  CNAME (alias)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content" className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Target</Label>
+            <Label
+              htmlFor="content"
+              className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase"
+            >
+              Target
+            </Label>
             <Input
               id="content"
               placeholder={recordType === "A" ? "192.0.2.1" : "example.com"}
@@ -135,7 +159,9 @@ export function AddSubdomainForm({
           {platform === "cloudflare" && (
             <div className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 px-4 py-3">
               <div>
-                <Label className="text-[10px] font-bold tracking-widest text-white uppercase">Proxy through Cloudflare</Label>
+                <Label className="text-[10px] font-bold tracking-widest text-white uppercase">
+                  Proxy through Cloudflare
+                </Label>
                 <p className="font-serif text-[10px] text-zinc-500 italic">
                   Enable CDN and DDoS protection
                 </p>
@@ -144,7 +170,11 @@ export function AddSubdomainForm({
             </div>
           )}
 
-          <Button type="submit" disabled={pending} className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50">
+          <Button
+            type="submit"
+            disabled={pending}
+            className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50"
+          >
             {pending ? "Creating..." : "Create record"}
           </Button>
         </form>

@@ -70,12 +70,12 @@ export default async function ProjectPage({
   return (
     <DashboardShell user={user!}>
       <div className="mb-8">
-        <ProjectBreadcrumb domain={project.domain} platform={project.platform} />
+        <ProjectBreadcrumb domain={project.domain} />
         <div className="mt-4 flex items-center justify-between">
           <h1 className="text-4xl font-black tracking-tighter text-white md:text-5xl">
             {project.domain}
           </h1>
-          <Badge className="border-amber-500/20 bg-amber-500/10 px-3 py-1 font-bold text-amber-500 text-xs uppercase tracking-widest">
+          <Badge className="border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-bold tracking-widest text-amber-500 uppercase">
             {project.platform}
           </Badge>
         </div>
@@ -87,7 +87,8 @@ export default async function ProjectPage({
             <div>
               <h2 className="text-xl font-bold text-white">DNS Records</h2>
               <p className="font-serif text-sm text-zinc-500 italic">
-                {records.length} record{records.length !== 1 && "s"} forged in this realm
+                {records.length} record{records.length !== 1 && "s"} forged in
+                this realm
               </p>
             </div>
             <AddSubdomainForm
@@ -102,11 +103,23 @@ export default async function ProjectPage({
               <Table>
                 <TableHeader>
                   <TableRow className="border-white/5 hover:bg-transparent">
-                    <TableHead className="pl-8 text-[10px] font-bold uppercase tracking-widest text-zinc-500">Name</TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Type</TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Content</TableHead>
-                    {showProxy && <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Proxy</TableHead>}
-                    <TableHead className="pr-8 text-right text-[10px] font-bold uppercase tracking-widest text-zinc-500">Actions</TableHead>
+                    <TableHead className="pl-8 text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                      Name
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                      Type
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                      Content
+                    </TableHead>
+                    {showProxy && (
+                      <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                        Proxy
+                      </TableHead>
+                    )}
+                    <TableHead className="pr-8 text-right text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -131,11 +144,12 @@ export default async function ProjectPage({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-zinc-900/50 py-32 backdrop-blur-xl">
-          <Badge className="mb-4 border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-xs uppercase tracking-widest">
+          <Badge className="mb-4 border-amber-500/20 bg-amber-500/10 text-xs font-bold tracking-widest text-amber-500 uppercase">
             Coming soon
           </Badge>
           <p className="font-serif text-lg text-zinc-500 italic">
-            DNS management for {project.platform} is not available yet in this interface.
+            DNS management for {project.platform} is not available yet in this
+            interface.
           </p>
         </div>
       )}
