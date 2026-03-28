@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { decrypt } from "@/lib/crypto";
 import { getProvider, isSupported } from "@/lib/dns";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,7 +11,7 @@ async function getProject(projectId: string) {
   if (!user) return null;
 
   const { data: project } = await supabase
-    .from("decrypted_projects")
+    .from("projects")
     .select("*")
     .eq("id", projectId)
     .eq("user_id", user.id)
@@ -20,7 +21,7 @@ async function getProject(projectId: string) {
 
   return {
     ...project,
-    credentials: JSON.parse(project.decrypted_credentials ?? "{}"),
+    credentials: decrypt(project.credentials),
   };
 }
 

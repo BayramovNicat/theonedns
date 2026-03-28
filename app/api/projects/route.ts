@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { encrypt } from "@/lib/crypto";
 import { getAdapter, isSupported } from "@/lib/dns";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
 import { createClient } from "@/lib/supabase/server";
@@ -73,7 +74,7 @@ export async function POST(request: Request) {
       user_id: user.id,
       platform,
       domain,
-      credentials: JSON.stringify(credentials),
+      credentials: encrypt(credentials),
     })
     .select("id")
     .single();

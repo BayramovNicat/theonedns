@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { decrypt } from "@/lib/crypto";
 import type { DnsRecord } from "@/lib/dns";
 import { getProvider, isSupported } from "@/lib/dns";
 import { createClient } from "@/lib/supabase/server";
@@ -27,7 +28,7 @@ export default async function ProjectPage({
   } = await supabase.auth.getUser();
 
   const { data: raw } = await supabase
-    .from("decrypted_projects")
+    .from("projects")
     .select("*")
     .eq("id", id)
     .eq("user_id", user!.id)
@@ -36,7 +37,7 @@ export default async function ProjectPage({
   const project = raw
     ? {
         ...raw,
-        credentials: JSON.parse(raw.decrypted_credentials ?? "{}"),
+        credentials: decrypt(raw.credentials),
       }
     : null;
 
