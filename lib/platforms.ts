@@ -215,6 +215,18 @@ export const PLATFORMS = {
       },
     ],
   },
+  vultr: {
+    name: "Vultr",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Vultr API token",
+        help: "Create one at Vultr > Account > API with DNS permissions.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

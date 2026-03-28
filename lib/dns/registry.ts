@@ -10,6 +10,7 @@ import { porkbunAdapter } from "./porkbun";
 import { route53Adapter } from "./route53";
 import type { DnsProvider, PlatformAdapter } from "./types";
 import { vercelAdapter } from "./vercel";
+import { vultrAdapter } from "./vultr";
 
 const adapters: Record<string, PlatformAdapter> = {
   cloudflare: cloudflareAdapter,
@@ -23,6 +24,7 @@ const adapters: Record<string, PlatformAdapter> = {
   dnsimple: dnsimpleAdapter,
   namecom: namecomAdapter,
   route53: route53Adapter,
+  vultr: vultrAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
