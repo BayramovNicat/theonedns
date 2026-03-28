@@ -46,8 +46,7 @@ export default async function ProjectPage({
     const records = await listDnsRecords(creds);
     subdomains = records.filter(
       (r) =>
-        r.name !== project.domain &&
-        r.name.endsWith(`.${project.domain}`) &&
+        (r.name === project.domain || r.name.endsWith(`.${project.domain}`)) &&
         (r.type === "A" || r.type === "AAAA" || r.type === "CNAME")
     );
   }
@@ -87,7 +86,7 @@ export default async function ProjectPage({
         {project.platform === "cloudflare" ? (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Subdomains</CardTitle>
+              <CardTitle>DNS Records</CardTitle>
               <AddSubdomainForm
                 domain={project.domain}
                 projectId={project.id}

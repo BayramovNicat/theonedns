@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
   createDnsRecord,
+  updateDnsRecord,
   deleteDnsRecord,
   type CloudflareCredentials,
 } from "@/lib/cloudflare";
@@ -87,6 +88,56 @@ export async function POST(
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Failed to create record" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ success: true });
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const project = await getProject(id);
+
+  if (!project) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
+  if (project.platform !== "cloudflare") {
+    return NextResponse.json(
+      { error: "DNS management not yet supported for this platform" },
+      { status: 400 }
+    );
+  }
+
+  const creds: CloudflareCredentials = {
+    api_token: project.credentials.api_token,
+    zone_id: project.credentials.zone_id,
+    domain: project.domain,
+  };
+
+  const body = await request.json();
+  const { cloudflareRecordId, type, content, proxied } = body;
+
+  if (!cloudflareRecordId || !content?.trim()) {
+    return NextResponse.json(
+      { error: "Record ID and content are required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await updateDnsRecord(creds, cloudflareRecordId, {
+      type,
+      content: content.trim(),
+      proxied: proxied ?? true,
+    });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to update record" },
       { status: 500 }
     );
   }

@@ -99,6 +99,37 @@ export async function createDnsRecord(
   return data.result as { id: string };
 }
 
+export async function updateDnsRecord(
+  creds: CloudflareCredentials,
+  recordId: string,
+  params: {
+    type?: string;
+    content: string;
+    proxied: boolean;
+  }
+) {
+  const body: Record<string, unknown> = {
+    content: params.content,
+    proxied: params.proxied,
+  };
+  if (params.type) body.type = params.type;
+
+  const res = await fetch(
+    `${API_BASE}/zones/${creds.zone_id}/dns_records/${recordId}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(creds.api_token),
+      body: JSON.stringify(body),
+    }
+  );
+
+  const data = await res.json();
+  if (!data.success) {
+    const msg = data.errors?.[0]?.message ?? "Failed to update DNS record";
+    throw new Error(msg);
+  }
+}
+
 export async function deleteDnsRecord(
   creds: CloudflareCredentials,
   recordId: string
