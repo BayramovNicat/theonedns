@@ -7,23 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-type Subdomain = {
+type DnsRecord = {
   id: string;
-  subdomain: string;
-  record_type: string;
+  name: string;
+  type: string;
   content: string;
   proxied: boolean;
-  created_at: string;
-  is_owner: boolean;
 };
 
-export function SubdomainRow({
-  record,
-  domain,
-}: {
-  record: Subdomain;
-  domain: string;
-}) {
+export function SubdomainRow({ record }: { record: DnsRecord }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [removed, setRemoved] = useState(false);
@@ -37,7 +29,7 @@ export function SubdomainRow({
       const res = await fetch("/api/subdomains", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: record.id }),
+        body: JSON.stringify({ cloudflareRecordId: record.id }),
       });
 
       const data = await res.json();
@@ -47,7 +39,7 @@ export function SubdomainRow({
         return;
       }
 
-      toast.success(`${record.subdomain}.${domain} deleted`);
+      toast.success(`${record.name} deleted`);
       setRemoved(true);
       router.refresh();
     } catch {
@@ -59,11 +51,9 @@ export function SubdomainRow({
 
   return (
     <TableRow>
-      <TableCell className="font-medium">
-        {record.subdomain}.{domain}
-      </TableCell>
+      <TableCell className="font-medium">{record.name}</TableCell>
       <TableCell>
-        <Badge variant="secondary">{record.record_type}</Badge>
+        <Badge variant="secondary">{record.type}</Badge>
       </TableCell>
       <TableCell className="font-mono text-sm">{record.content}</TableCell>
       <TableCell>
@@ -75,20 +65,15 @@ export function SubdomainRow({
           <Badge variant="outline">DNS only</Badge>
         )}
       </TableCell>
-      <TableCell className="text-muted-foreground text-sm">
-        {new Date(record.created_at).toLocaleDateString()}
-      </TableCell>
       <TableCell className="text-right">
-        {record.is_owner && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleDelete}
-            disabled={pending}
-          >
-            {pending ? "Deleting..." : "Delete"}
-          </Button>
-        )}
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={handleDelete}
+          disabled={pending}
+        >
+          {pending ? "Deleting..." : "Delete"}
+        </Button>
       </TableCell>
     </TableRow>
   );

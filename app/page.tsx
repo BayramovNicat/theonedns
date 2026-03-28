@@ -13,6 +13,7 @@ import { ConnectCloudflare } from "@/components/connect-cloudflare";
 import { DisconnectButton } from "@/components/disconnect-button";
 import { signOut } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
+import { listDnsRecords } from "@/lib/cloudflare";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -20,7 +21,6 @@ export default async function Dashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Fetch user's Cloudflare config
   const { data: config } = await supabase
     .from("cloudflare_configs")
     .select("*")
@@ -51,7 +51,13 @@ export default async function Dashboard() {
 
       <main className="mx-auto max-w-5xl px-6 py-8">
         {config ? (
-          <SubdomainDashboard userId={user!.id} domain={config.domain} />
+          <SubdomainDashboard
+            config={{
+              api_token: config.api_token,
+              zone_id: config.zone_id,
+              domain: config.domain,
+            }}
+          />
         ) : (
           <ConnectCloudflare />
         )}
@@ -61,28 +67,28 @@ export default async function Dashboard() {
 }
 
 async function SubdomainDashboard({
-  userId,
-  domain,
+  config,
 }: {
-  userId: string;
-  domain: string;
+  config: { api_token: string; zone_id: string; domain: string };
 }) {
-  const supabase = await createClient();
+  const records = await listDnsRecords(config);
 
-  const { data: subdomains } = await supabase
-    .from("subdomains")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  // Filter to only subdomains of the configured domain, exclude root
+  const subdomains = records.filter(
+    (r) =>
+      r.name !== config.domain &&
+      r.name.endsWith(`.${config.domain}`) &&
+      (r.type === "A" || r.type === "AAAA" || r.type === "CNAME")
+  );
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Subdomains</CardTitle>
-        <AddSubdomainForm domain={domain} />
+        <AddSubdomainForm domain={config.domain} />
       </CardHeader>
       <CardContent>
-        {subdomains && subdomains.length > 0 ? (
+        {subdomains.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
@@ -90,17 +96,12 @@ async function SubdomainDashboard({
                 <TableHead>Type</TableHead>
                 <TableHead>Target</TableHead>
                 <TableHead>Proxy</TableHead>
-                <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {subdomains.map((record) => (
-                <SubdomainRow
-                  key={record.id}
-                  record={{ ...record, is_owner: true }}
-                  domain={domain}
-                />
+                <SubdomainRow key={record.id} record={record} />
               ))}
             </TableBody>
           </Table>

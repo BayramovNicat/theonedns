@@ -13,22 +13,58 @@ function getHeaders(apiToken: string) {
   };
 }
 
-export async function verifyToken(
-  apiToken: string
+export async function verifyCredentials(
+  apiToken: string,
+  zoneId: string
 ): Promise<{ valid: boolean; error?: string }> {
-  const res = await fetch(`${API_BASE}/user/tokens/verify`, {
-    headers: getHeaders(apiToken),
-  });
+  // Verify by listing DNS records for the zone — this validates the token,
+  // zone ID, and DNS permissions in one call. Works for both User API Tokens
+  // and Account API Tokens (cfat_ prefix).
+  const res = await fetch(
+    `${API_BASE}/zones/${zoneId}/dns_records?per_page=1`,
+    { headers: getHeaders(apiToken) }
+  );
   const data = await res.json();
 
-  if (data.success && data.result?.status === "active") {
+  if (data.success) {
     return { valid: true };
   }
 
-  const msg =
-    data.errors?.[0]?.message ??
-    `Token status: ${data.result?.status ?? "unknown"}`;
+  const msg = data.errors?.[0]?.message ?? "Invalid token or zone ID";
   return { valid: false, error: msg };
+}
+
+export type DnsRecord = {
+  id: string;
+  name: string;
+  type: string;
+  content: string;
+  proxied: boolean;
+  created_on: string;
+};
+
+export async function listDnsRecords(
+  creds: CloudflareCredentials
+): Promise<DnsRecord[]> {
+  const records: DnsRecord[] = [];
+  let page = 1;
+
+  while (true) {
+    const res = await fetch(
+      `${API_BASE}/zones/${creds.zone_id}/dns_records?per_page=100&page=${page}`,
+      { headers: getHeaders(creds.api_token) }
+    );
+    const data = await res.json();
+
+    if (!data.success) break;
+
+    records.push(...data.result);
+
+    if (data.result.length < 100) break;
+    page++;
+  }
+
+  return records;
 }
 
 export async function createDnsRecord(
