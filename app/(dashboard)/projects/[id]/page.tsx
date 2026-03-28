@@ -1,19 +1,11 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { DashboardShell } from "@/components/dashboard-shell";
+import { DnsRecords, DnsRecordsSkeleton } from "@/components/dns-records";
 import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
-import { SubdomainRow } from "@/components/subdomain-row";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { decrypt } from "@/lib/crypto";
-import type { DnsRecord } from "@/lib/dns";
-import { getProvider, isSupported } from "@/lib/dns";
+import { isSupported } from "@/lib/dns";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function ProjectPage({
@@ -28,48 +20,20 @@ export default async function ProjectPage({
   } = await supabase.auth.getSession();
   const user = session!.user;
 
-  const { data: raw } = await supabase
+  const { data: project } = await supabase
     .from("projects")
     .select("*")
     .eq("id", id)
     .eq("user_id", user.id)
     .single();
 
-  const project = raw
-    ? {
-        ...raw,
-        credentials: decrypt(raw.credentials),
-      }
-    : null;
-
   if (!project) notFound();
 
-  let records: DnsRecord[] = [];
   const supported = isSupported(project.platform);
-
-  if (supported) {
-    try {
-      const provider = getProvider(
-        project.platform,
-        project.credentials,
-        project.domain
-      );
-      const allRecords = await provider.listRecords();
-      records = allRecords.filter(
-        (r) =>
-          (r.name === project.domain ||
-            r.name.endsWith(`.${project.domain}`)) &&
-          ["A", "AAAA", "CNAME"].includes(r.type)
-      );
-    } catch {
-      // Failed to fetch — show empty state
-    }
-  }
-
   const showProxy = project.platform === "cloudflare";
 
   return (
-    <DashboardShell user={user!}>
+    <DashboardShell user={user}>
       <div className="mb-8">
         <ProjectBreadcrumb domain={project.domain} />
         <div className="mt-4 flex items-center justify-between">
@@ -88,8 +52,7 @@ export default async function ProjectPage({
             <div>
               <h2 className="text-xl font-bold text-white">DNS Records</h2>
               <p className="font-serif text-sm text-zinc-500 italic">
-                {records.length} record{records.length !== 1 && "s"} forged in
-                this realm
+                Records forged in this realm
               </p>
             </div>
             <AddSubdomainForm
@@ -99,49 +62,9 @@ export default async function ProjectPage({
             />
           </div>
 
-          {records.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/5 hover:bg-transparent">
-                    <TableHead className="pl-8 text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                      Name
-                    </TableHead>
-                    <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                      Type
-                    </TableHead>
-                    <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                      Content
-                    </TableHead>
-                    {showProxy && (
-                      <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                        Proxy
-                      </TableHead>
-                    )}
-                    <TableHead className="pr-8 text-right text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {records.map((record) => (
-                    <SubdomainRow
-                      key={record.id}
-                      record={record}
-                      projectId={project.id}
-                      platform={project.platform}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <div className="px-8 py-24 text-center">
-              <p className="font-serif text-lg text-zinc-500 italic">
-                No DNS records found in this realm. Add one to begin.
-              </p>
-            </div>
-          )}
+          <Suspense fallback={<DnsRecordsSkeleton />}>
+            <DnsRecords project={project} />
+          </Suspense>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-zinc-900/50 py-32 backdrop-blur-xl">
