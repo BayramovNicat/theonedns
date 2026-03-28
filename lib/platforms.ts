@@ -369,6 +369,18 @@ export const PLATFORMS = {
       },
     ],
   },
+  dynadot: {
+    name: "Dynadot",
+    fields: [
+      {
+        key: "api_key",
+        label: "API Key",
+        type: "text" as const,
+        placeholder: "Your Dynadot API key",
+        help: "Found at Dynadot > My Account > Domain Tools > API.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;

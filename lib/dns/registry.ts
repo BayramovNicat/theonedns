@@ -3,6 +3,7 @@ import { bunnyAdapter } from "./bunny";
 import { cloudflareAdapter } from "./cloudflare";
 import { digitaloceanAdapter } from "./digitalocean";
 import { dnsimpleAdapter } from "./dnsimple";
+import { dynadotAdapter } from "./dynadot";
 import { gandiAdapter } from "./gandi";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
@@ -37,6 +38,7 @@ const adapters: Record<string, PlatformAdapter> = {
   namecheap: namecheapAdapter,
   azure: azureAdapter,
   bunny: bunnyAdapter,
+  dynadot: dynadotAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {
