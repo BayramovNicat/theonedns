@@ -74,21 +74,25 @@ export function AddProjectForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors">
-        <Plus className="size-4" />
-        New project
+      <DialogTrigger className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
+        <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
+        <Plus className="relative z-10 size-4 stroke-[3px]" />
+        <span className="relative z-10">New project</span>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-md border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle>Connect a domain</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-white">Connect a domain</DialogTitle>
+          <p className="font-serif text-sm text-zinc-500 italic">
+            Forge a new connection across the digital realms.
+          </p>
         </DialogHeader>
         <form
           onSubmit={handleSubmit}
-          className="space-y-5"
+          className="mt-4 space-y-6"
           autoComplete="one-time-code"
         >
           <div className="space-y-2">
-            <Label>Platform</Label>
+            <Label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Platform</Label>
             <Select
               value={platform}
               onValueChange={(v: Platform) => {
@@ -96,12 +100,12 @@ export function AddProjectForm() {
                 setCredentials({});
               }}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full border-white/10 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-white/10 bg-zinc-900 text-white">
                 {Object.entries(PLATFORMS).map(([key, cfg]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="cursor-pointer hover:bg-white/5">
                     {cfg.name}
                   </SelectItem>
                 ))}
@@ -110,7 +114,7 @@ export function AddProjectForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="domain">Domain</Label>
+            <Label htmlFor="domain" className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Domain</Label>
             <Input
               id="domain"
               placeholder="example.com"
@@ -118,16 +122,17 @@ export function AddProjectForm() {
               autoComplete="one-time-code"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
+              className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
             />
           </div>
 
           <div className="space-y-4">
-            <Label className="text-muted-foreground text-xs tracking-wider uppercase">
+            <Label className="text-[10px] font-bold tracking-[0.2em] text-amber-500/50 uppercase">
               {platformConfig.name} credentials
             </Label>
             {platformConfig.fields.map((field) => (
               <div key={field.key} className="space-y-2">
-                <Label htmlFor={field.key}>{field.label}</Label>
+                <Label htmlFor={field.key} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">{field.label}</Label>
                 <Input
                   id={field.key}
                   type={field.type}
@@ -136,15 +141,16 @@ export function AddProjectForm() {
                   autoComplete="one-time-code"
                   value={credentials[field.key] ?? ""}
                   onChange={(e) => updateCredential(field.key, e.target.value)}
+                  className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
                 />
                 {field.help && (
-                  <p className="text-muted-foreground text-xs">{field.help}</p>
+                  <p className="font-serif text-[10px] text-zinc-600 italic">{field.help}</p>
                 )}
               </div>
             ))}
           </div>
 
-          <Button type="submit" className="h-10 w-full" disabled={pending}>
+          <Button type="submit" disabled={pending} className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50">
             {pending ? "Connecting..." : "Connect domain"}
           </Button>
         </form>

@@ -49,20 +49,32 @@ export function DashboardShell({
   }
 
   return (
-    <div className="bg-background min-h-screen">
-      <header className="border-border/40 bg-background/80 sticky top-0 z-40 border-b backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+    <div className="relative min-h-screen bg-zinc-950 text-white selection:bg-amber-500/30 selection:text-amber-200">
+      {/* Background Elements */}
+      <div className="grid-bg pointer-events-none fixed inset-0 z-0 opacity-10" />
+      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-[100] opacity-[0.02]" />
+
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-zinc-900/50 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            className="group flex flex-col items-start transition-opacity hover:opacity-90"
           >
-            <span className="text-lg font-semibold tracking-tight">
-              TheOneDNS
+            <span className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 uppercase">
+              The Master Interface
             </span>
+            <h2 className="text-xl leading-none font-black md:text-2xl">
+              <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                TheOne
+              </span>
+              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                DNS
+              </span>
+            </h2>
           </Link>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="ring-offset-background focus-visible:ring-ring rounded-full ring-offset-2 transition-opacity outline-none hover:opacity-80 focus-visible:ring-2">
+            <DropdownMenuTrigger className="rounded-full ring-amber-500/50 ring-offset-zinc-950 transition-opacity outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2">
               {avatarUrl ? (
                 <Image
                   src={avatarUrl}
@@ -70,26 +82,35 @@ export function DashboardShell({
                   width={32}
                   height={32}
                   referrerPolicy="no-referrer"
-                  className="size-8 rounded-full object-cover"
+                  className="size-8 rounded-full border border-white/10 object-cover"
                   unoptimized
                 />
               ) : (
-                <Avatar className="size-8">
-                  <AvatarFallback className="bg-secondary text-xs font-medium">
+                <Avatar className="size-8 border border-white/10">
+                  <AvatarFallback className="bg-zinc-800 text-xs font-bold text-amber-500 uppercase">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
               )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={8} className="w-56">
+            <DropdownMenuContent
+              align="end"
+              sideOffset={8}
+              className="w-56 border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl"
+            >
               <div className="px-2 py-2">
-                {fullName && <p className="text-sm font-medium">{fullName}</p>}
-                <p className="text-muted-foreground truncate text-xs">
+                {fullName && (
+                  <p className="text-sm font-bold text-white">{fullName}</p>
+                )}
+                <p className="text-muted-foreground truncate font-mono text-[10px] uppercase tracking-wider">
                   {user.email}
                 </p>
               </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
+              <DropdownMenuSeparator className="bg-white/5" />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-amber-500/10 hover:text-amber-500 focus:bg-amber-500/10 focus:text-amber-500"
+              >
                 <LogOut className="mr-2 size-4" />
                 Sign out
               </DropdownMenuItem>
@@ -98,7 +119,9 @@ export function DashboardShell({
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
+      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+        {children}
+      </main>
     </div>
   );
 }

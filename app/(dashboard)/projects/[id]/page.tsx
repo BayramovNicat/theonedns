@@ -69,15 +69,25 @@ export default async function ProjectPage({
 
   return (
     <DashboardShell user={user!}>
-      <ProjectBreadcrumb domain={project.domain} platform={project.platform} />
+      <div className="mb-8">
+        <ProjectBreadcrumb domain={project.domain} platform={project.platform} />
+        <div className="mt-4 flex items-center justify-between">
+          <h1 className="text-4xl font-black tracking-tighter text-white md:text-5xl">
+            {project.domain}
+          </h1>
+          <Badge className="border-amber-500/20 bg-amber-500/10 px-3 py-1 font-bold text-amber-500 text-xs uppercase tracking-widest">
+            {project.platform}
+          </Badge>
+        </div>
+      </div>
 
       {supported ? (
-        <div className="border-border/60 bg-card mt-6 rounded-xl border">
-          <div className="border-border/40 flex items-center justify-between border-b px-6 py-4">
+        <div className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 shadow-2xl backdrop-blur-xl">
+          <div className="flex flex-col items-start justify-between gap-4 border-b border-white/5 bg-white/5 px-8 py-6 sm:flex-row sm:items-center">
             <div>
-              <h2 className="font-semibold">DNS Records</h2>
-              <p className="text-muted-foreground mt-0.5 text-sm">
-                {records.length} record{records.length !== 1 && "s"} found
+              <h2 className="text-xl font-bold text-white">DNS Records</h2>
+              <p className="font-serif text-sm text-zinc-500 italic">
+                {records.length} record{records.length !== 1 && "s"} forged in this realm
               </p>
             </div>
             <AddSubdomainForm
@@ -88,42 +98,44 @@ export default async function ProjectPage({
           </div>
 
           {records.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow className="border-border/40 hover:bg-transparent">
-                  <TableHead className="pl-6">Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Content</TableHead>
-                  {showProxy && <TableHead>Proxy</TableHead>}
-                  <TableHead className="pr-6 text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {records.map((record) => (
-                  <SubdomainRow
-                    key={record.id}
-                    record={record}
-                    projectId={project.id}
-                    platform={project.platform}
-                  />
-                ))}
-              </TableBody>
-            </Table>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/5 hover:bg-transparent">
+                    <TableHead className="pl-8 text-[10px] font-bold uppercase tracking-widest text-zinc-500">Name</TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Type</TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Content</TableHead>
+                    {showProxy && <TableHead className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Proxy</TableHead>}
+                    <TableHead className="pr-8 text-right text-[10px] font-bold uppercase tracking-widest text-zinc-500">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {records.map((record) => (
+                    <SubdomainRow
+                      key={record.id}
+                      record={record}
+                      projectId={project.id}
+                      platform={project.platform}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           ) : (
-            <div className="px-6 py-16 text-center">
-              <p className="text-muted-foreground text-sm">
-                No DNS records yet. Add one to get started.
+            <div className="px-8 py-24 text-center">
+              <p className="font-serif text-lg text-zinc-500 italic">
+                No DNS records found in this realm. Add one to begin.
               </p>
             </div>
           )}
         </div>
       ) : (
-        <div className="border-border/60 mt-6 rounded-xl border border-dashed px-6 py-16 text-center">
-          <Badge variant="secondary" className="mb-3">
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-zinc-900/50 py-32 backdrop-blur-xl">
+          <Badge className="mb-4 border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-xs uppercase tracking-widest">
             Coming soon
           </Badge>
-          <p className="text-muted-foreground text-sm">
-            DNS management for {project.platform} is not available yet.
+          <p className="font-serif text-lg text-zinc-500 italic">
+            DNS management for {project.platform} is not available yet in this interface.
           </p>
         </div>
       )}

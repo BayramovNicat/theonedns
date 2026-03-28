@@ -17,30 +17,32 @@ export default async function DashboardPage() {
 
   return (
     <DashboardShell user={user!}>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Manage your connected domains and DNS records.
+          <h2 className="text-4xl font-black tracking-tighter text-white md:text-5xl">
+            Projects
+          </h2>
+          <p className="mt-2 font-serif text-lg text-zinc-500 italic">
+            Manage your connected domains and DNS records from a single throne.
           </p>
         </div>
         <AddProjectForm />
       </div>
 
       {projects && projects.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       ) : (
-        <div className="border-border/60 flex flex-col items-center justify-center rounded-xl border border-dashed py-24">
-          <div className="text-center">
-            <p className="text-lg font-medium">No projects yet</p>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Connect your first domain to start managing DNS records.
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-zinc-900/50 py-32 backdrop-blur-xl">
+          <div className="text-center px-4">
+            <h3 className="text-2xl font-bold text-white">No domains forged yet</h3>
+            <p className="mt-2 font-serif text-zinc-500 italic">
+              Connect your first domain to start managing DNS records across the realm.
             </p>
-            <div className="mt-6">
+            <div className="mt-10">
               <AddProjectForm />
             </div>
           </div>

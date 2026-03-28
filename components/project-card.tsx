@@ -65,30 +65,41 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <>
-      <div className="group border-border/60 bg-card hover:border-border relative rounded-xl border transition-colors">
-        <Link href={`/projects/${project.id}`} className="block p-5">
-          <div className="flex items-start justify-between">
+      <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 backdrop-blur-xl transition-all duration-300 hover:border-amber-500/30 hover:bg-zinc-800/50">
+        <Link href={`/projects/${project.id}`} className="block p-8">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div className="h-2 w-2 rounded-full bg-amber-500/50 group-hover:bg-amber-500 transition-colors" />
+              <Badge className="border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-[10px] uppercase tracking-widest">
+                {platformName}
+              </Badge>
+            </div>
+            
             <div>
-              <div>
-                <p className="font-medium">{project.domain}</p>
-                <div className="mt-1 flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
-                    {platformName}
-                  </Badge>
-                </div>
-              </div>
+              <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                {project.domain}
+              </h3>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+                Created: {new Date(project.created_at).toLocaleDateString()}
+              </p>
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-[10px] font-bold tracking-widest text-zinc-600 uppercase transition-colors group-hover:text-white">
+              View Realm
+              <div className="h-px flex-1 bg-white/10" />
             </div>
           </div>
         </Link>
 
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-4 right-4">
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground flex size-8 items-center justify-center rounded-md opacity-0 transition-opacity group-hover:opacity-100">
+            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full border border-white/5 bg-white/5 text-zinc-500 transition-all opacity-0 group-hover:opacity-100 hover:bg-white/10 hover:text-white active:scale-90">
               <MoreVertical className="size-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
               <DropdownMenuItem
                 onClick={() => router.push(`/projects/${project.id}`)}
+                className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
               >
                 <ExternalLink className="mr-2 size-4" />
                 Open
@@ -96,6 +107,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <DropdownMenuItem
                 variant="destructive"
                 onClick={() => setConfirmOpen(true)}
+                className="cursor-pointer font-bold transition-colors"
               >
                 <Trash2 className="mr-2 size-4" />
                 Delete
@@ -106,23 +118,24 @@ export function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete project</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete{" "}
-              <span className="text-foreground font-medium">
+            <AlertDialogTitle className="text-2xl font-bold text-white">Delete project</AlertDialogTitle>
+            <AlertDialogDescription className="font-serif text-zinc-500 italic">
+              Are you sure you want to banish{" "}
+              <span className="font-bold text-amber-500 not-italic">
                 {project.domain}
               </span>
               ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting} className="border-white/10 bg-white/5 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
+              className="bg-red-500/80 font-bold hover:bg-red-500"
             >
               {deleting ? "Deleting..." : "Delete"}
             </Button>

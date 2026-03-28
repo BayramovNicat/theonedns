@@ -121,22 +121,24 @@ export function SubdomainRow({
 
   return (
     <>
-      <TableRow className="border-border/40">
-        <TableCell className="pl-6 font-medium">{record.name}</TableCell>
+      <TableRow className="border-white/5 transition-colors hover:bg-white/[0.02]">
+        <TableCell className="pl-8 font-mono text-sm text-zinc-300">
+          {record.name}
+        </TableCell>
         <TableCell>
           {editing ? (
             <Select value={recordType} onValueChange={setRecordType}>
-              <SelectTrigger size="sm" className="w-24">
+              <SelectTrigger size="sm" className="w-24 border-white/10 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-white/10 bg-zinc-900 text-white">
                 <SelectItem value="A">A</SelectItem>
                 <SelectItem value="AAAA">AAAA</SelectItem>
                 <SelectItem value="CNAME">CNAME</SelectItem>
               </SelectContent>
             </Select>
           ) : (
-            <Badge variant="secondary" className="font-mono text-xs">
+            <Badge className="border-amber-500/20 bg-amber-500/10 font-bold text-amber-500 text-[10px] uppercase">
               {record.type}
             </Badge>
           )}
@@ -146,10 +148,10 @@ export function SubdomainRow({
             <Input
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="h-8 font-mono text-sm"
+              className="h-8 border-white/10 bg-white/5 font-mono text-sm text-white"
             />
           ) : (
-            <span className="text-muted-foreground font-mono text-sm">
+            <span className="font-mono text-sm text-zinc-500">
               {record.content}
             </span>
           )}
@@ -163,25 +165,25 @@ export function SubdomainRow({
                 size="sm"
               />
             ) : record.proxied ? (
-              <Badge className="border-0 bg-orange-500/10 text-orange-500 hover:bg-orange-500/10">
+              <Badge className="border-orange-500/20 bg-orange-500/10 text-[10px] font-bold uppercase tracking-widest text-orange-500 hover:bg-orange-500/10">
                 Proxied
               </Badge>
             ) : (
-              <Badge variant="outline" className="text-muted-foreground">
+              <Badge variant="outline" className="border-white/10 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 DNS only
               </Badge>
             )}
           </TableCell>
         )}
-        <TableCell className="pr-6 text-right">
+        <TableCell className="pr-8 text-right">
           {editing ? (
-            <div className="flex justify-end gap-1">
+            <div className="flex justify-end gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleCancel}
                 disabled={saving}
-                className="size-8 p-0"
+                className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
               >
                 <X className="size-4" />
               </Button>
@@ -190,18 +192,18 @@ export function SubdomainRow({
                 size="sm"
                 onClick={handleSave}
                 disabled={saving}
-                className="size-8 p-0 text-green-500 hover:text-green-400"
+                className="size-8 p-0 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400"
               >
                 <Check className="size-4" />
               </Button>
             </div>
           ) : (
-            <div className="flex justify-end gap-1">
+            <div className="flex justify-end gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setEditing(true)}
-                className="text-muted-foreground hover:text-foreground size-8 p-0"
+                className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
               >
                 <Pencil className="size-3.5" />
               </Button>
@@ -210,7 +212,7 @@ export function SubdomainRow({
                 size="sm"
                 onClick={() => setConfirmOpen(true)}
                 disabled={deleting}
-                className="text-muted-foreground hover:text-destructive size-8 p-0"
+                className="size-8 p-0 text-zinc-500 hover:bg-red-500/10 hover:text-red-500"
               >
                 <Trash2 className="size-3.5" />
               </Button>
@@ -220,21 +222,22 @@ export function SubdomainRow({
       </TableRow>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete record</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete{" "}
-              <span className="text-foreground font-medium">{record.name}</span>
+            <AlertDialogTitle className="text-2xl font-bold text-white">Delete record</AlertDialogTitle>
+            <AlertDialogDescription className="font-serif text-zinc-500 italic">
+              Are you sure you want to banish the record{" "}
+              <span className="font-bold text-amber-500 not-italic">{record.name}</span>
               ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting} className="border-white/10 bg-white/5 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
+              className="bg-red-500/80 font-bold hover:bg-red-500"
             >
               {deleting ? "Deleting..." : "Delete"}
             </Button>
