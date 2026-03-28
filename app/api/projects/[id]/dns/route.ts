@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { getDnsProvider } from "@/lib/dns-provider";
+import { getProvider, isSupported } from "@/lib/dns";
 
 async function getProject(projectId: string) {
   const supabase = await createClient();
@@ -19,21 +19,29 @@ async function getProject(projectId: string) {
   return project;
 }
 
+function providerFor(project: {
+  platform: string;
+  credentials: Record<string, string>;
+  domain: string;
+}) {
+  if (!isSupported(project.platform)) {
+    return null;
+  }
+  return getProvider(project.platform, project.credentials, project.domain);
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const project = await getProject(id);
-
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  let provider;
-  try {
-    provider = getDnsProvider(project);
-  } catch {
+  const provider = providerFor(project);
+  if (!provider) {
     return NextResponse.json(
       { error: "DNS management not supported for this platform" },
       { status: 400 }
@@ -93,15 +101,12 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const project = await getProject(id);
-
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  let provider;
-  try {
-    provider = getDnsProvider(project);
-  } catch {
+  const provider = providerFor(project);
+  if (!provider) {
     return NextResponse.json(
       { error: "DNS management not supported for this platform" },
       { status: 400 }
@@ -140,15 +145,12 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const project = await getProject(id);
-
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  let provider;
-  try {
-    provider = getDnsProvider(project);
-  } catch {
+  const provider = providerFor(project);
+  if (!provider) {
     return NextResponse.json(
       { error: "DNS management not supported for this platform" },
       { status: 400 }
@@ -156,7 +158,6 @@ export async function DELETE(
   }
 
   const { recordId } = await request.json();
-
   if (!recordId) {
     return NextResponse.json({ error: "Missing record id" }, { status: 400 });
   }

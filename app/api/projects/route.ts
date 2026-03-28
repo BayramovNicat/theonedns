@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { verifyCredentials as verifyCf } from "@/lib/cloudflare";
-import { verifyCredentials as verifyVercel } from "@/lib/vercel";
+import { getAdapter, isSupported } from "@/lib/dns";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
 
 export async function POST(request: Request) {
@@ -33,20 +32,27 @@ export async function POST(request: Request) {
     );
   }
 
-  // Platform-specific validation
-  if (platform === "cloudflare") {
-    const apiToken = credentials.api_token?.trim();
-    const zoneId = credentials.zone_id?.trim();
+  // Validate credentials via the platform adapter
+  if (isSupported(platform)) {
+    const adapter = getAdapter(platform);
 
-    if (!apiToken || !zoneId) {
-      return NextResponse.json(
-        { error: "API Token and Zone ID are required" },
-        { status: 400 }
-      );
+    // Check required fields per platform
+    const requiredFields = PLATFORMS[platform].fields
+      .filter((f) => !f.label.includes("optional"))
+      .map((f) => f.key);
+
+    for (const key of requiredFields) {
+      if (!credentials[key]?.trim()) {
+        const field = PLATFORMS[platform].fields.find((f) => f.key === key);
+        return NextResponse.json(
+          { error: `${field?.label ?? key} is required` },
+          { status: 400 }
+        );
+      }
     }
 
     try {
-      const result = await verifyCf(apiToken, zoneId);
+      const result = await adapter.verify(credentials, domain);
       if (!result.valid) {
         return NextResponse.json(
           { error: result.error ?? "Invalid credentials" },
@@ -55,37 +61,7 @@ export async function POST(request: Request) {
       }
     } catch {
       return NextResponse.json(
-        { error: "Could not reach Cloudflare API" },
-        { status: 502 }
-      );
-    }
-  }
-
-  if (platform === "vercel") {
-    const apiToken = credentials.api_token?.trim();
-
-    if (!apiToken) {
-      return NextResponse.json(
-        { error: "API Token is required" },
-        { status: 400 }
-      );
-    }
-
-    try {
-      const result = await verifyVercel(
-        apiToken,
-        domain,
-        credentials.team_id?.trim() || undefined
-      );
-      if (!result.valid) {
-        return NextResponse.json(
-          { error: result.error ?? "Invalid credentials" },
-          { status: 400 }
-        );
-      }
-    } catch {
-      return NextResponse.json(
-        { error: "Could not reach Vercel API" },
+        { error: `Could not reach ${PLATFORMS[platform].name} API` },
         { status: 502 }
       );
     }

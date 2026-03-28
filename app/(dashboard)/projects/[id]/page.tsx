@@ -12,10 +12,8 @@ import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { SubdomainRow } from "@/components/subdomain-row";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
-import { getDnsProvider } from "@/lib/dns-provider";
+import { getProvider, isSupported } from "@/lib/dns";
 import type { DnsRecord } from "@/lib/dns";
-
-const SUPPORTED_PLATFORMS = ["cloudflare", "vercel"];
 
 export default async function ProjectPage({
   params,
@@ -38,11 +36,15 @@ export default async function ProjectPage({
   if (!project) notFound();
 
   let records: DnsRecord[] = [];
-  const isSupported = SUPPORTED_PLATFORMS.includes(project.platform);
+  const supported = isSupported(project.platform);
 
-  if (isSupported) {
+  if (supported) {
     try {
-      const provider = getDnsProvider(project);
+      const provider = getProvider(
+        project.platform,
+        project.credentials,
+        project.domain
+      );
       const allRecords = await provider.listRecords();
       records = allRecords.filter(
         (r) =>
@@ -61,7 +63,7 @@ export default async function ProjectPage({
     <DashboardShell user={user!}>
       <ProjectBreadcrumb domain={project.domain} platform={project.platform} />
 
-      {isSupported ? (
+      {supported ? (
         <div className="border-border/60 bg-card mt-6 rounded-xl border">
           <div className="border-border/40 flex items-center justify-between border-b px-6 py-4">
             <div>
