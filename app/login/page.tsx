@@ -1,8 +1,8 @@
 "use client";
 
+import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   async function signInWithGoogle() {
@@ -21,7 +21,7 @@ export default function LoginPage() {
       <div className="grid-bg pointer-events-none absolute inset-0 z-0 opacity-20" />
 
       {/* Epic Glow Backdrop */}
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -41,7 +41,7 @@ export default function LoginPage() {
               <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>
@@ -62,7 +62,7 @@ export default function LoginPage() {
             onClick={signInWithGoogle}
             className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/10 bg-white/5 py-4 text-sm font-bold tracking-widest text-white uppercase transition-all hover:bg-white/10 active:scale-95"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             <svg className="relative z-10 size-5" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -106,7 +106,7 @@ export default function LoginPage() {
       </motion.div>
 
       {/* Subtle Grain Overlay */}
-      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-[100] opacity-[0.03]" />
+      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-100 opacity-[0.03]" />
     </div>
   );
 }

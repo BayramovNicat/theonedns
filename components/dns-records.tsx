@@ -28,9 +28,8 @@ export async function DnsRecords({
     const allRecords = await provider.listRecords();
     records = allRecords.filter(
       (r) =>
-        (r.name === project.domain ||
-          r.name.endsWith(`.${project.domain}`)) &&
-        ["A", "AAAA", "CNAME"].includes(r.type),
+        (r.name === project.domain || r.name.endsWith(`.${project.domain}`)) &&
+        ["A", "AAAA", "CNAME"].includes(r.type)
     );
   } catch {
     // Failed to fetch — show empty state

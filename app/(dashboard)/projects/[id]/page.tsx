@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
 import { AddSubdomainForm } from "@/components/add-subdomain-form";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { DnsRecords, DnsRecordsSkeleton } from "@/components/dns-records";
@@ -7,6 +5,8 @@ import { ProjectBreadcrumb } from "@/components/project-breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { isSupported } from "@/lib/dns";
 import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function ProjectPage({
   params,
@@ -30,7 +30,6 @@ export default async function ProjectPage({
   if (!project) notFound();
 
   const supported = isSupported(project.platform);
-  const showProxy = project.platform === "cloudflare";
 
   return (
     <DashboardShell user={user}>
