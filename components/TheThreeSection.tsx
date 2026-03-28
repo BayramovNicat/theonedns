@@ -134,7 +134,9 @@ export default function TheThreeSection() {
           <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
             The Three: High-Tier Guardians
           </h2>
-          <div className="mx-auto h-1 w-24 rounded-full bg-amber-500/50" />
+          <p className="mx-auto max-w-xl text-zinc-500">
+            The mightiest platforms commanding the winds of the edge.
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 justify-items-center gap-8 md:grid-cols-3">
