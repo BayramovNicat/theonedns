@@ -4,6 +4,7 @@ import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
 import { netlifyAdapter } from "./netlify";
+import { porkbunAdapter } from "./porkbun";
 import type { DnsProvider, PlatformAdapter } from "./types";
 import { vercelAdapter } from "./vercel";
 
@@ -15,6 +16,7 @@ const adapters: Record<string, PlatformAdapter> = {
   hetzner: hetznerAdapter,
   godaddy: godaddyAdapter,
   gcloud: gcloudAdapter,
+  porkbun: porkbunAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

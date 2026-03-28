@@ -132,6 +132,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  porkbun: {
+    name: "Porkbun",
+    fields: [
+      {
+        key: "api_key",
+        label: "API Key",
+        type: "text" as const,
+        placeholder: "pk1_xxxxx",
+        help: "Create one at Porkbun > Account > API Access.",
+      },
+      {
+        key: "secret_api_key",
+        label: "Secret API Key",
+        type: "text" as const,
+        placeholder: "sk1_xxxxx",
+        help: "Shown once when you create the API key — save it immediately.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
