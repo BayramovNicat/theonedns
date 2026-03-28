@@ -4,6 +4,7 @@ import { dnsimpleAdapter } from "./dnsimple";
 import { gcloudAdapter } from "./gcloud";
 import { godaddyAdapter } from "./godaddy";
 import { hetznerAdapter } from "./hetzner";
+import { linodeAdapter } from "./linode";
 import { namecomAdapter } from "./namecom";
 import { netlifyAdapter } from "./netlify";
 import { porkbunAdapter } from "./porkbun";
@@ -25,6 +26,7 @@ const adapters: Record<string, PlatformAdapter> = {
   namecom: namecomAdapter,
   route53: route53Adapter,
   vultr: vultrAdapter,
+  linode: linodeAdapter,
 };
 
 export function getAdapter(platform: string): PlatformAdapter {

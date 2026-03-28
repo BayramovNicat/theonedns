@@ -227,6 +227,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  linode: {
+    name: "Linode (Akamai)",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Linode API token",
+        help: "Create one at Linode > Profile > API Tokens with Domains read/write.",
+      },
+      {
+        key: "domain_id",
+        label: "Domain ID",
+        type: "text" as const,
+        placeholder: "e.g. 12345",
+        help: "Found via Linode CLI: linode-cli domains list, or in the URL when viewing the domain.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
