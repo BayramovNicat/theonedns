@@ -68,6 +68,25 @@ export const PLATFORMS = {
       },
     ],
   },
+  hetzner: {
+    name: "Hetzner",
+    fields: [
+      {
+        key: "api_token",
+        label: "API Token",
+        type: "text" as const,
+        placeholder: "Your Hetzner DNS API token",
+        help: "Create one at Hetzner DNS Console > API Tokens.",
+      },
+      {
+        key: "zone_id",
+        label: "Zone ID",
+        type: "text" as const,
+        placeholder: "e.g. abcdef1234567890",
+        help: "Found in your domain's settings on Hetzner DNS Console.",
+      },
+    ],
+  },
 } as const;
 
 export type Platform = keyof typeof PLATFORMS;
