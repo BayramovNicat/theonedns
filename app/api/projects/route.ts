@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       user_id: user.id,
       platform,
       domain,
-      credentials,
+      credentials: JSON.stringify(credentials),
     })
     .select("id")
     .single();

@@ -26,12 +26,19 @@ export default async function ProjectPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: project } = await supabase
-    .from("projects")
+  const { data: raw } = await supabase
+    .from("decrypted_projects")
     .select("*")
     .eq("id", id)
     .eq("user_id", user!.id)
     .single();
+
+  const project = raw
+    ? {
+        ...raw,
+        credentials: JSON.parse(raw.decrypted_credentials ?? "{}"),
+      }
+    : null;
 
   if (!project) notFound();
 

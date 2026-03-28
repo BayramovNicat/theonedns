@@ -10,13 +10,18 @@ async function getProject(projectId: string) {
   if (!user) return null;
 
   const { data: project } = await supabase
-    .from("projects")
+    .from("decrypted_projects")
     .select("*")
     .eq("id", projectId)
     .eq("user_id", user.id)
     .single();
 
-  return project;
+  if (!project) return null;
+
+  return {
+    ...project,
+    credentials: JSON.parse(project.decrypted_credentials ?? "{}"),
+  };
 }
 
 function providerFor(project: {
