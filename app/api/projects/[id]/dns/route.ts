@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { decrypt } from '@/lib/crypto';
 import { getProvider, isSupported } from '@/lib/dns';
+import type { DnsProvider } from '@/lib/dns/types';
 import { rateLimit } from '@/lib/rate-limit';
 import { createClient } from '@/lib/supabase/server';
 
@@ -34,6 +35,11 @@ async function getUserId() {
     data: { session },
   } = await supabase.auth.getSession();
   return session?.user.id ?? null;
+}
+
+async function verifyRecordOwnership(provider: DnsProvider, recordId: string) {
+  const records = await provider.listRecords();
+  return records.some((r) => r.id === recordId);
 }
 
 function providerFor(project: {
@@ -161,6 +167,13 @@ export async function PATCH(
     );
   }
 
+  if (!(await verifyRecordOwnership(provider, recordId))) {
+    return NextResponse.json(
+      { error: 'Record not found in this project' },
+      { status: 403 },
+    );
+  }
+
   try {
     await provider.updateRecord(recordId, {
       type,
@@ -207,6 +220,13 @@ export async function DELETE(
   const { recordId } = await request.json();
   if (!recordId) {
     return NextResponse.json({ error: 'Missing record id' }, { status: 400 });
+  }
+
+  if (!(await verifyRecordOwnership(provider, recordId))) {
+    return NextResponse.json(
+      { error: 'Record not found in this project' },
+      { status: 403 },
+    );
   }
 
   try {
