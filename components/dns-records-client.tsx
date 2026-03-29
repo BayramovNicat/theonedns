@@ -1,8 +1,10 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
+import { DnsAuditDialog } from "@/components/dns-audit-dialog";
 import { SubdomainRow } from "@/components/subdomain-row";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -26,13 +28,16 @@ export function DnsRecordsClient({
   records,
   projectId,
   platform,
+  domain,
 }: {
   records: DnsRecord[];
   projectId: string;
   platform: string;
+  domain: string;
 }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [auditOpen, setAuditOpen] = useState(false);
 
   const types = useMemo(() => {
     const set = new Set(records.map((r) => r.type));
@@ -69,6 +74,15 @@ export function DnsRecordsClient({
             className="h-9 border-white/10 bg-white/5 pl-9 text-sm text-white placeholder:text-zinc-600"
           />
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setAuditOpen(true)}
+          className="h-9 gap-2 border border-white/10 bg-white/5 text-xs font-medium text-zinc-400 hover:bg-white/10 hover:text-white"
+        >
+          <ShieldCheck className="size-3.5" />
+          Health Audit
+        </Button>
         <div className="no-scrollbar flex gap-2 overflow-x-auto">
           <button
             onClick={() => setTypeFilter(null)}
@@ -142,6 +156,12 @@ export function DnsRecordsClient({
           </Table>
         </div>
       )}
+      <DnsAuditDialog
+        records={records}
+        domain={domain}
+        open={auditOpen}
+        onOpenChange={setAuditOpen}
+      />
     </div>
   );
 }

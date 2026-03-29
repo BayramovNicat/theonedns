@@ -41,6 +41,7 @@ export async function DnsRecords({
       records={records}
       projectId={project.id}
       platform={project.platform}
+      domain={project.domain}
     />
   );
 }
