@@ -300,21 +300,21 @@ export function DnsExportImport({
         >
           <DropdownMenuItem
             onClick={exportCsv}
-            className="cursor-pointer px-3 py-2.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="cursor-pointer px-2.5 py-1.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
             <Download className="mr-2 size-4" />
             Export as CSV
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={exportZone}
-            className="cursor-pointer px-3 py-2.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="cursor-pointer px-2.5 py-1.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
             <Download className="mr-2 size-4" />
             Export as Zone File
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => fileRef.current?.click()}
-            className="cursor-pointer px-3 py-2.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="cursor-pointer px-2.5 py-1.5 font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
             <Upload className="mr-2 size-4" />
             Import from File
