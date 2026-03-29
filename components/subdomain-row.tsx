@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Pencil, Trash2, X } from "lucide-react";
+import { Check, Globe, Pencil, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { PropagationCheckDialog } from "@/components/propagation-check-dialog";
 
 type DnsRecord = {
   id: string;
@@ -74,6 +75,7 @@ export function SubdomainRow({
   const [deleting, setDeleting] = useState(false);
   const [removed, setRemoved] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [propagationOpen, setPropagationOpen] = useState(false);
 
   if (removed) return null;
 
@@ -300,6 +302,14 @@ export function SubdomainRow({
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => setPropagationOpen(true)}
+                className="size-8 p-0 text-zinc-500 hover:bg-amber-500/10 hover:text-amber-500"
+              >
+                <Globe className="size-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setConfirmOpen(true)}
                 disabled={deleting}
                 className="size-8 p-0 text-zinc-500 hover:bg-red-500/10 hover:text-red-500"
@@ -343,6 +353,12 @@ export function SubdomainRow({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <PropagationCheckDialog
+        record={record}
+        open={propagationOpen}
+        onOpenChange={setPropagationOpen}
+      />
     </>
   );
 }
