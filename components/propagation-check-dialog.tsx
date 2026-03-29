@@ -70,7 +70,7 @@ export function PropagationCheckDialog({
             <Globe className="size-5 text-amber-500" />
             Propagation Check
           </DialogTitle>
-          <DialogDescription className="font-serif text-zinc-500 italic">
+          <DialogDescription className="truncate font-serif text-zinc-500 italic">
             Querying global resolvers for{" "}
             <span className="font-bold text-amber-500 not-italic">
               {record.name}
@@ -129,7 +129,7 @@ export function PropagationCheckDialog({
                     <XCircle className="size-4 shrink-0 text-red-400" />
                   )}
 
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-white">
                         {r.resolver}
@@ -139,7 +139,10 @@ export function PropagationCheckDialog({
                     {r.error ? (
                       <span className="text-xs text-zinc-500">{r.error}</span>
                     ) : r.values.length > 0 ? (
-                      <span className="block truncate font-mono text-xs text-zinc-500">
+                      <span
+                        className="block truncate font-mono text-xs text-zinc-500"
+                        title={r.values.join(", ")}
+                      >
                         {r.values.join(", ")}
                       </span>
                     ) : (
