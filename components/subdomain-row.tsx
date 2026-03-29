@@ -64,10 +64,14 @@ export function SubdomainRow({
   record,
   projectId,
   platform,
+  selected,
+  onToggleSelect,
 }: {
   record: DnsRecord;
   projectId: string;
   platform: string;
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -155,7 +159,15 @@ export function SubdomainRow({
   return (
     <>
       <TableRow className="border-white/5 transition-colors hover:bg-white/2">
-        <TableCell className="pl-8 font-mono text-sm text-zinc-300">
+        <TableCell className="w-10 pl-8">
+          <input
+            type="checkbox"
+            checked={selected ?? false}
+            onChange={onToggleSelect}
+            className="size-3.5 cursor-pointer appearance-none rounded border border-white/20 bg-white/5 checked:border-amber-500 checked:bg-amber-500"
+          />
+        </TableCell>
+        <TableCell className="font-mono text-sm text-zinc-300">
           {record.name}
         </TableCell>
         <TableCell>
