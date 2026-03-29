@@ -117,9 +117,7 @@ function parseZoneFile(
   return results;
 }
 
-function parseCsvFile(
-  text: string
-): {
+function parseCsvFile(text: string): {
   subdomain: string;
   recordType: string;
   content: string;
@@ -298,27 +296,27 @@ export function DnsExportImport({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="border-white/10 bg-zinc-900 text-white"
+          className="min-w-48 border-white/10 bg-zinc-900 text-white"
         >
           <DropdownMenuItem
             onClick={exportCsv}
-            className="gap-2 text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
           >
-            <Download className="size-3.5" />
+            <Download className="size-3.5 shrink-0" />
             Export as CSV
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={exportZone}
-            className="gap-2 text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
           >
-            <Download className="size-3.5" />
+            <Download className="size-3.5 shrink-0" />
             Export as Zone File
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => fileRef.current?.click()}
-            className="gap-2 text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
           >
-            <Upload className="size-3.5" />
+            <Upload className="size-3.5 shrink-0" />
             Import from File
           </DropdownMenuItem>
         </DropdownMenuContent>
