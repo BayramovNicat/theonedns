@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.cloudflare.com/client/v4";
+const API = 'https://api.cloudflare.com/client/v4';
 
 function headers(token: string) {
   return {
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -19,7 +19,7 @@ class CloudflareProvider implements DnsProvider {
   constructor(
     private token: string,
     private zoneId: string,
-    private domain: string
+    private domain: string,
   ) {}
 
   async listRecords(): Promise<DnsRecord[]> {
@@ -29,7 +29,7 @@ class CloudflareProvider implements DnsProvider {
     while (true) {
       const res = await fetch(
         `${API}/zones/${this.zoneId}/dns_records?per_page=100&page=${page}`,
-        { headers: headers(this.token) }
+        { headers: headers(this.token) },
       );
       const data = await res.json();
       if (!data.success) break;
@@ -56,7 +56,7 @@ class CloudflareProvider implements DnsProvider {
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const name = `${params.subdomain}.${this.domain}`;
     const res = await fetch(`${API}/zones/${this.zoneId}/dns_records`, {
-      method: "POST",
+      method: 'POST',
       headers: headers(this.token),
       body: JSON.stringify({
         type: params.type,
@@ -71,7 +71,7 @@ class CloudflareProvider implements DnsProvider {
     const data = await res.json();
     if (!data.success) {
       throw new Error(
-        data.errors?.[0]?.message ?? "Failed to create DNS record"
+        data.errors?.[0]?.message ?? 'Failed to create DNS record',
       );
     }
     return { id: data.result.id };
@@ -89,16 +89,16 @@ class CloudflareProvider implements DnsProvider {
     const res = await fetch(
       `${API}/zones/${this.zoneId}/dns_records/${recordId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: headers(this.token),
         body: JSON.stringify(body),
-      }
+      },
     );
 
     const data = await res.json();
     if (!data.success) {
       throw new Error(
-        data.errors?.[0]?.message ?? "Failed to update DNS record"
+        data.errors?.[0]?.message ?? 'Failed to update DNS record',
       );
     }
   }
@@ -106,13 +106,13 @@ class CloudflareProvider implements DnsProvider {
   async deleteRecord(recordId: string) {
     const res = await fetch(
       `${API}/zones/${this.zoneId}/dns_records/${recordId}`,
-      { method: "DELETE", headers: headers(this.token) }
+      { method: 'DELETE', headers: headers(this.token) },
     );
 
     const data = await res.json();
     if (!data.success) {
       throw new Error(
-        data.errors?.[0]?.message ?? "Failed to delete DNS record"
+        data.errors?.[0]?.message ?? 'Failed to delete DNS record',
       );
     }
   }
@@ -122,14 +122,14 @@ export const cloudflareAdapter: PlatformAdapter = {
   async verify(creds) {
     const res = await fetch(
       `${API}/zones/${creds.zone_id}/dns_records?per_page=1`,
-      { headers: headers(creds.api_token) }
+      { headers: headers(creds.api_token) },
     );
     const data = await res.json();
 
     if (data.success) return { valid: true };
     return {
       valid: false,
-      error: data.errors?.[0]?.message ?? "Invalid token or zone ID",
+      error: data.errors?.[0]?.message ?? 'Invalid token or zone ID',
     };
   },
 

@@ -1,23 +1,23 @@
-import { bunnyAdapter } from "./bunny";
-import { cloudflareAdapter } from "./cloudflare";
-import { digitaloceanAdapter } from "./digitalocean";
-import { dnsimpleAdapter } from "./dnsimple";
-import { dynadotAdapter } from "./dynadot";
-import { gandiAdapter } from "./gandi";
-import { gcloudAdapter } from "./gcloud";
-import { godaddyAdapter } from "./godaddy";
-import { hetznerAdapter } from "./hetzner";
-import { hostingerAdapter } from "./hostinger";
-import { linodeAdapter } from "./linode";
-import { namecheapAdapter } from "./namecheap";
-import { namecomAdapter } from "./namecom";
-import { netlifyAdapter } from "./netlify";
-import { ovhAdapter } from "./ovh";
-import { porkbunAdapter } from "./porkbun";
-import { route53Adapter } from "./route53";
-import type { DnsProvider, PlatformAdapter } from "./types";
-import { vercelAdapter } from "./vercel";
-import { vultrAdapter } from "./vultr";
+import { bunnyAdapter } from './bunny';
+import { cloudflareAdapter } from './cloudflare';
+import { digitaloceanAdapter } from './digitalocean';
+import { dnsimpleAdapter } from './dnsimple';
+import { dynadotAdapter } from './dynadot';
+import { gandiAdapter } from './gandi';
+import { gcloudAdapter } from './gcloud';
+import { godaddyAdapter } from './godaddy';
+import { hetznerAdapter } from './hetzner';
+import { hostingerAdapter } from './hostinger';
+import { linodeAdapter } from './linode';
+import { namecheapAdapter } from './namecheap';
+import { namecomAdapter } from './namecom';
+import { netlifyAdapter } from './netlify';
+import { ovhAdapter } from './ovh';
+import { porkbunAdapter } from './porkbun';
+import { route53Adapter } from './route53';
+import type { DnsProvider, PlatformAdapter } from './types';
+import { vercelAdapter } from './vercel';
+import { vultrAdapter } from './vultr';
 
 const adapters: Record<string, PlatformAdapter> = {
   cloudflare: cloudflareAdapter,
@@ -52,7 +52,7 @@ export function getAdapter(platform: string): PlatformAdapter {
 export function getProvider(
   platform: string,
   credentials: Record<string, string>,
-  domain: string
+  domain: string,
 ): DnsProvider {
   return getAdapter(platform).createProvider(credentials, domain);
 }

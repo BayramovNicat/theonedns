@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import { BookTemplate, Globe, Mail, Shield } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { BookTemplate, Globe, Mail, Shield } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DNS_TEMPLATES, type DnsTemplate } from "@/lib/dns/templates";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { DNS_TEMPLATES, type DnsTemplate } from '@/lib/dns/templates';
 
 const CATEGORY_META: Record<
-  DnsTemplate["category"],
+  DnsTemplate['category'],
   { label: string; icon: typeof Mail }
 > = {
-  email: { label: "Email", icon: Mail },
-  hosting: { label: "Hosting", icon: Globe },
-  security: { label: "Security", icon: Shield },
+  email: { label: 'Email', icon: Mail },
+  hosting: { label: 'Hosting', icon: Globe },
+  security: { label: 'Security', icon: Shield },
 };
 
-const CATEGORIES: DnsTemplate["category"][] = ["email", "hosting", "security"];
+const CATEGORIES: DnsTemplate['category'][] = ['email', 'hosting', 'security'];
 
 function hasPlaceholders(template: DnsTemplate): string[] {
   const placeholders = new Set<string>();
   for (const r of template.records) {
     const matches = r.content.matchAll(/\{\{(\w+)\}\}/g);
     for (const m of matches) {
-      if (m[1] !== "domain") placeholders.add(m[1]);
+      if (m[1] !== 'domain') placeholders.add(m[1]);
     }
   }
   return Array.from(placeholders);
@@ -42,11 +42,11 @@ function hasPlaceholders(template: DnsTemplate): string[] {
 function resolveContent(
   content: string,
   domain: string,
-  vars: Record<string, string>
+  vars: Record<string, string>,
 ): string {
-  let result = content.replace(/\{\{domain\}\}/g, domain.replace(/\./g, "-"));
+  let result = content.replace(/\{\{domain\}\}/g, domain.replace(/\./g, '-'));
   for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, "g"), value);
+    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
   return result;
 }
@@ -67,7 +67,7 @@ export function DnsTemplates({
   function handleSelect(template: DnsTemplate) {
     const placeholders = hasPlaceholders(template);
     if (placeholders.length > 0) {
-      setVars(Object.fromEntries(placeholders.map((p) => [p, ""])));
+      setVars(Object.fromEntries(placeholders.map((p) => [p, ''])));
       setSelected(template);
     } else {
       setSelected(template);
@@ -98,10 +98,10 @@ export function DnsTemplates({
     for (const record of selected.records) {
       try {
         const res = await fetch(`/api/projects/${projectId}/dns`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            subdomain: record.subdomain === "@" ? "@" : record.subdomain,
+            subdomain: record.subdomain === '@' ? '@' : record.subdomain,
             recordType: record.recordType,
             content: resolveContent(record.content, domain, vars),
             ttl: record.ttl,
@@ -123,11 +123,11 @@ export function DnsTemplates({
 
     if (failed === 0) {
       toast.success(
-        `${selected.name} — ${created} record${created !== 1 ? "s" : ""} created`
+        `${selected.name} — ${created} record${created !== 1 ? 's' : ''} created`,
       );
     } else {
       toast.warning(
-        `${created} created, ${failed} failed. Some records may already exist.`
+        `${created} created, ${failed} failed. Some records may already exist.`,
       );
     }
 
@@ -155,12 +155,12 @@ export function DnsTemplates({
       <DialogContent className="border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl sm:max-w-5xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
-            {selected ? selected.name : "DNS Templates"}
+            {selected ? selected.name : 'DNS Templates'}
           </DialogTitle>
           <p className="font-serif text-sm text-zinc-500 italic">
             {selected
               ? selected.description
-              : "Apply pre-configured DNS records with a single click."}
+              : 'Apply pre-configured DNS records with a single click.'}
           </p>
         </DialogHeader>
 
@@ -202,7 +202,7 @@ export function DnsTemplates({
                       {r.recordType}
                     </Badge>
                     <span className="font-mono text-zinc-400">
-                      {r.subdomain === "@"
+                      {r.subdomain === '@'
                         ? domain
                         : `${r.subdomain}.${domain}`}
                     </span>
@@ -231,7 +231,7 @@ export function DnsTemplates({
                 className="flex-1 bg-amber-500 font-bold text-black hover:bg-amber-400"
               >
                 {applying
-                  ? "Applying..."
+                  ? 'Applying...'
                   : `Apply ${selected.records.length} records`}
               </Button>
             </div>
@@ -246,7 +246,7 @@ export function DnsTemplates({
               return (
                 <div
                   key={cat}
-                  className={cat === "security" ? "col-span-2" : ""}
+                  className={cat === 'security' ? 'col-span-2' : ''}
                 >
                   <div className="mb-3 flex items-center gap-2">
                     <Icon className="size-4 text-zinc-500" />
@@ -255,7 +255,7 @@ export function DnsTemplates({
                     </h3>
                   </div>
                   <div
-                    className={`gap-2 ${cat === "security" ? "grid grid-cols-2" : "space-y-2"}`}
+                    className={`gap-2 ${cat === 'security' ? 'grid grid-cols-2' : 'space-y-2'}`}
                   >
                     {templates.map((t) => (
                       <button
@@ -277,7 +277,7 @@ export function DnsTemplates({
                           className="shrink-0 border-white/10 text-[10px] text-zinc-500"
                         >
                           {t.records.length} record
-                          {t.records.length !== 1 && "s"}
+                          {t.records.length !== 1 && 's'}
                         </Badge>
                       </button>
                     ))}

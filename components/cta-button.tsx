@@ -1,5 +1,5 @@
-import { ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 export function CtaButton() {
   return (

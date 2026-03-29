@@ -35,13 +35,13 @@ export interface DnsProvider {
 export interface PlatformAdapter {
   verify(
     credentials: Record<string, string>,
-    domain: string
+    domain: string,
   ): Promise<{
     valid: boolean;
     error?: string;
   }>;
   createProvider(
     credentials: Record<string, string>,
-    domain: string
+    domain: string,
   ): DnsProvider;
 }

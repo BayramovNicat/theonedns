@@ -1,70 +1,70 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
 import {
-  motion,
   AnimatePresence,
+  motion,
   useScroll,
   useTransform,
-} from "framer-motion";
-import { CtaButton } from "@/components/cta-button";
+} from 'framer-motion';
+import { useRef, useState } from 'react';
+import { CtaButton } from '@/components/cta-button';
 
 const MOCK_RECORDS = [
   {
     id: 1,
-    type: "A",
-    name: "@",
-    content: "76.76.21.21",
-    platform: "Vercel",
-    ttl: "3600",
+    type: 'A',
+    name: '@',
+    content: '76.76.21.21',
+    platform: 'Vercel',
+    ttl: '3600',
   },
   {
     id: 2,
-    type: "CNAME",
-    name: "www",
-    content: "cname.vercel-dns.com",
-    platform: "Vercel",
-    ttl: "3600",
+    type: 'CNAME',
+    name: 'www',
+    content: 'cname.vercel-dns.com',
+    platform: 'Vercel',
+    ttl: '3600',
   },
   {
     id: 3,
-    type: "A",
-    name: "api",
-    content: "1.1.1.1",
-    platform: "Cloudflare",
-    ttl: "Auto",
+    type: 'A',
+    name: 'api',
+    content: '1.1.1.1',
+    platform: 'Cloudflare',
+    ttl: 'Auto',
   },
   {
     id: 4,
-    type: "MX",
-    name: "@",
-    content: "mail.protonmail.ch",
-    platform: "Cloudflare",
-    ttl: "Auto",
+    type: 'MX',
+    name: '@',
+    content: 'mail.protonmail.ch',
+    platform: 'Cloudflare',
+    ttl: 'Auto',
   },
   {
     id: 5,
-    type: "TXT",
-    name: "_vercel",
-    content: "vc-domain-verify=...",
-    platform: "Vercel",
-    ttl: "60",
+    type: 'TXT',
+    name: '_vercel',
+    content: 'vc-domain-verify=...',
+    platform: 'Vercel',
+    ttl: '60',
   },
   {
     id: 6,
-    type: "NS",
-    name: "@",
-    content: "ns1.route53.aws.com",
-    platform: "AWS",
-    ttl: "172800",
+    type: 'NS',
+    name: '@',
+    content: 'ns1.route53.aws.com',
+    platform: 'AWS',
+    ttl: '172800',
   },
   {
     id: 7,
-    type: "AAAA",
-    name: "ipv6",
-    content: "2606:4700:4700::1111",
-    platform: "Cloudflare",
-    ttl: "Auto",
+    type: 'AAAA',
+    name: 'ipv6',
+    content: '2606:4700:4700::1111',
+    platform: 'Cloudflare',
+    ttl: 'Auto',
   },
 ];
 
@@ -73,7 +73,7 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: ['start start', 'end start'],
   });
 
   const mockupY = useTransform(scrollYProgress, [0, 1], [0, 100]);
@@ -83,7 +83,7 @@ export default function HeroSection() {
     ? MOCK_RECORDS.filter((r) => r.platform === filter)
     : MOCK_RECORDS;
 
-  const platforms = ["Cloudflare", "Vercel", "AWS"];
+  const platforms = ['Cloudflare', 'Vercel', 'AWS'];
 
   return (
     <section
@@ -103,7 +103,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
           className="group relative mb-10"
         >
           {/* Epic Glow Backdrop */}
@@ -161,25 +161,27 @@ export default function HeroSection() {
           </div>
           <div className="no-scrollbar flex gap-2 overflow-x-auto px-2 pb-1">
             <button
+              type="button"
               aria-pressed={filter === null}
               onClick={() => setFilter(null)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                 filter === null
-                  ? "border border-amber-500/40 bg-amber-500/20 text-amber-400"
-                  : "border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10"
+                  ? 'border border-amber-500/40 bg-amber-500/20 text-amber-400'
+                  : 'border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10'
               }`}
             >
               All Records
             </button>
             {platforms.map((p) => (
               <button
+                type="button"
                 key={p}
                 aria-pressed={filter === p}
                 onClick={() => setFilter(p)}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   filter === p
-                    ? "border border-amber-500/40 bg-amber-500/20 text-amber-400"
-                    : "border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10"
+                    ? 'border border-amber-500/40 bg-amber-500/20 text-amber-400'
+                    : 'border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10'
                 }`}
               >
                 {p}
@@ -229,11 +231,11 @@ export default function HeroSection() {
                       <div className="flex items-center gap-2">
                         <div
                           className={`h-2 w-2 rounded-full ${
-                            record.platform === "Cloudflare"
-                              ? "bg-orange-500"
-                              : record.platform === "Vercel"
-                                ? "bg-white"
-                                : "bg-amber-600"
+                            record.platform === 'Cloudflare'
+                              ? 'bg-orange-500'
+                              : record.platform === 'Vercel'
+                                ? 'bg-white'
+                                : 'bg-amber-600'
                           }`}
                         />
                         <span className="text-xs text-zinc-400">

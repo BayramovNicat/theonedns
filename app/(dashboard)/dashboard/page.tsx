@@ -1,15 +1,15 @@
-import { Suspense } from "react";
-import { AddProjectForm } from "@/components/add-project-form";
-import { DashboardShell } from "@/components/dashboard-shell";
-import { ProjectList, ProjectListSkeleton } from "@/components/project-list";
-import { createClient } from "@/lib/supabase/server";
+import { Suspense } from 'react';
+import { AddProjectForm } from '@/components/add-project-form';
+import { DashboardShell } from '@/components/dashboard-shell';
+import { ProjectList, ProjectListSkeleton } from '@/components/project-list';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  const user = session!.user;
+  const user = session?.user;
 
   return (
     <DashboardShell user={user}>

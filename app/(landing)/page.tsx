@@ -1,9 +1,9 @@
-import FooterSection from "@/components/FooterSection";
-import HeroSection from "@/components/HeroSection";
-import { ParallaxGrid } from "@/components/parallax-grid";
-import TheNineSection from "@/components/TheNineSection";
-import TheSevenSection from "@/components/TheSevenSection";
-import TheThreeSection from "@/components/TheThreeSection";
+import FooterSection from '@/components/FooterSection';
+import HeroSection from '@/components/HeroSection';
+import { ParallaxGrid } from '@/components/parallax-grid';
+import TheNineSection from '@/components/TheNineSection';
+import TheSevenSection from '@/components/TheSevenSection';
+import TheThreeSection from '@/components/TheThreeSection';
 
 export default function LandingPage() {
   return (

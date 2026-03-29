@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { createClient } from "@/lib/supabase/client";
-import { motion } from "framer-motion";
-import Link from "next/link";
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   async function signInWithGoogle() {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -59,11 +59,16 @@ export default function LoginPage() {
           </div>
 
           <button
+            type="button"
             onClick={signInWithGoogle}
             className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/10 bg-white/5 py-4 text-sm font-bold tracking-widest text-white uppercase transition-all hover:bg-white/10 active:scale-95"
           >
             <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            <svg className="relative z-10 size-5" viewBox="0 0 24 24">
+            <svg
+              className="relative z-10 size-5"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
                 fill="currentColor"

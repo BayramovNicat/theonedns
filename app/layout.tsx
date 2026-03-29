@@ -1,46 +1,46 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Toaster } from '@/components/ui/sonner';
+import './globals.css';
 
 const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
+  variable: '--font-sans',
+  subsets: ['latin'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
+  variable: '--font-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "TheOneDNS — The Master Interface for DNS Management",
+  title: 'TheOneDNS — The Master Interface for DNS Management',
   description:
-    "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure. Manage Cloudflare, Vercel, AWS, and more from a single throne.",
+    'One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure. Manage Cloudflare, Vercel, AWS, and more from a single throne.',
   keywords: [
-    "DNS management",
-    "Cloudflare",
-    "Vercel",
-    "AWS Route53",
-    "Netlify",
-    "unified DNS",
-    "DevOps tools",
+    'DNS management',
+    'Cloudflare',
+    'Vercel',
+    'AWS Route53',
+    'Netlify',
+    'unified DNS',
+    'DevOps tools',
   ],
-  authors: [{ name: "TheOneDNS Corporation" }],
+  authors: [{ name: 'TheOneDNS Corporation' }],
   openGraph: {
-    title: "TheOneDNS — The Master Interface for DNS Management",
+    title: 'TheOneDNS — The Master Interface for DNS Management',
     description:
-      "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.",
-    url: "https://theonedns.com",
-    siteName: "TheOneDNS",
-    locale: "en_US",
-    type: "website",
+      'One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.',
+    url: 'https://theonedns.com',
+    siteName: 'TheOneDNS',
+    locale: 'en_US',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "TheOneDNS — The Master Interface for DNS Management",
+    card: 'summary_large_image',
+    title: 'TheOneDNS — The Master Interface for DNS Management',
     description:
-      "One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.",
+      'One Dashboard to Rule Them All. The unified DNS control plane for modern web infrastructure.',
   },
   robots: {
     index: true,

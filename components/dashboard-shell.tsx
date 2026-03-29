@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { LogOut } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { createClient } from "@/lib/supabase/client";
+} from '@/components/ui/dropdown-menu';
+import { createClient } from '@/lib/supabase/client';
 
 type User = {
   id: string;
@@ -33,18 +33,18 @@ export function DashboardShell({
   const fullName = meta?.full_name ?? meta?.name;
   const initials =
     fullName
-      ?.split(" ")
+      ?.split(' ')
       .map((n) => n[0])
-      .join("")
+      .join('')
       .toUpperCase()
       .slice(0, 2) ??
     user.email?.slice(0, 2).toUpperCase() ??
-    "U";
+    'U';
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push('/login');
     router.refresh();
   }
 
@@ -75,7 +75,7 @@ export function DashboardShell({
               {avatarUrl ? (
                 <Image
                   src={avatarUrl}
-                  alt={fullName ?? user.email ?? ""}
+                  alt={fullName ?? user.email ?? ''}
                   width={32}
                   height={32}
                   referrerPolicy="no-referrer"

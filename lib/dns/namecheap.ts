@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.namecheap.com/xml.response";
+const API = 'https://api.namecheap.com/xml.response';
 
 /** Split domain into SLD and TLD (e.g. "example.com" → ["example", "com"]). */
 function splitDomain(domain: string): { sld: string; tld: string } {
-  const parts = domain.split(".");
-  const tld = parts.slice(1).join(".");
+  const parts = domain.split('.');
+  const tld = parts.slice(1).join('.');
   return { sld: parts[0], tld };
 }
 
@@ -20,8 +20,8 @@ function parseRecords(xml: string, domain: string): NamecheapRecord[] {
   const records: NamecheapRecord[] = [];
   const re =
     /<host\s[^>]*?HostId="(\d+)"[^>]*?Name="([^"]*)"[^>]*?Type="([^"]*)"[^>]*?Address="([^"]*)"[^>]*?TTL="(\d+)"[^>]*?\/>/gi;
-  let m;
-  while ((m = re.exec(xml))) {
+  let m: RegExpExecArray | null = re.exec(xml);
+  while (m !== null) {
     records.push({
       hostId: m[1],
       name: m[2],
@@ -30,6 +30,7 @@ function parseRecords(xml: string, domain: string): NamecheapRecord[] {
       ttl: m[5],
       domain,
     });
+    m = re.exec(xml);
   }
   return records;
 }
@@ -48,7 +49,7 @@ function buildBaseParams(apiUser: string, apiKey: string) {
     ApiUser: apiUser,
     ApiKey: apiKey,
     UserName: apiUser,
-    ClientIp: "0.0.0.0",
+    ClientIp: '0.0.0.0',
   });
 }
 
@@ -64,7 +65,7 @@ class NamecheapProvider implements DnsProvider {
   constructor(
     private apiUser: string,
     private apiKey: string,
-    private domain: string
+    private domain: string,
   ) {
     const { sld, tld } = splitDomain(domain);
     this.sld = sld;
@@ -73,9 +74,9 @@ class NamecheapProvider implements DnsProvider {
 
   private async getHosts(): Promise<NamecheapRecord[]> {
     const params = buildBaseParams(this.apiUser, this.apiKey);
-    params.set("Command", "namecheap.domains.dns.getHosts");
-    params.set("SLD", this.sld);
-    params.set("TLD", this.tld);
+    params.set('Command', 'namecheap.domains.dns.getHosts');
+    params.set('SLD', this.sld);
+    params.set('TLD', this.tld);
 
     const res = await fetch(`${API}?${params.toString()}`);
     if (!res.ok) return [];
@@ -86,9 +87,9 @@ class NamecheapProvider implements DnsProvider {
 
   private async setHosts(records: NamecheapRecord[]) {
     const params = buildBaseParams(this.apiUser, this.apiKey);
-    params.set("Command", "namecheap.domains.dns.setHosts");
-    params.set("SLD", this.sld);
-    params.set("TLD", this.tld);
+    params.set('Command', 'namecheap.domains.dns.setHosts');
+    params.set('SLD', this.sld);
+    params.set('TLD', this.tld);
 
     records.forEach((r, i) => {
       const n = i + 1;
@@ -100,13 +101,13 @@ class NamecheapProvider implements DnsProvider {
 
     const res = await fetch(`${API}?${params.toString()}`);
     if (!res.ok) {
-      throw new Error("Failed to update DNS records on Namecheap");
+      throw new Error('Failed to update DNS records on Namecheap');
     }
 
     const xml = await res.text();
     if (xml.includes('Status="ERROR"')) {
       const errMatch = xml.match(/<Err\d+[^>]*>([^<]+)<\/Err\d+>/);
-      throw new Error(errMatch?.[1] ?? "Namecheap API error");
+      throw new Error(errMatch?.[1] ?? 'Namecheap API error');
     }
   }
 
@@ -117,7 +118,7 @@ class NamecheapProvider implements DnsProvider {
     for (const r of hosts) {
       records.push({
         id: r.hostId,
-        name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
+        name: r.name === '@' ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.address,
         ttl: r.ttl ? Number(r.ttl) : undefined,
@@ -131,7 +132,7 @@ class NamecheapProvider implements DnsProvider {
     const hosts = await this.getHosts();
 
     hosts.push({
-      hostId: "0",
+      hostId: '0',
       name: params.subdomain,
       type: params.type,
       address: params.content,
@@ -144,17 +145,17 @@ class NamecheapProvider implements DnsProvider {
     // Namecheap assigns new IDs after setHosts — re-fetch to get actual ID
     const updated = await this.getHosts();
     const match = updated.find(
-      (r) => r.name === params.subdomain && r.type === params.type
+      (r) => r.name === params.subdomain && r.type === params.type,
     );
 
-    return { id: match?.hostId ?? "0" };
+    return { id: match?.hostId ?? '0' };
   }
 
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const hosts = await this.getHosts();
     const idx = hosts.findIndex((r) => r.hostId === recordId);
 
-    if (idx === -1) throw new Error("Record not found");
+    if (idx === -1) throw new Error('Record not found');
 
     hosts[idx].address = params.content;
     if (params.type) hosts[idx].type = params.type;
@@ -176,9 +177,9 @@ export const namecheapAdapter: PlatformAdapter = {
   async verify(creds, domain) {
     const { sld, tld } = splitDomain(domain);
     const params = buildBaseParams(creds.api_user, creds.api_key);
-    params.set("Command", "namecheap.domains.dns.getHosts");
-    params.set("SLD", sld);
-    params.set("TLD", tld);
+    params.set('Command', 'namecheap.domains.dns.getHosts');
+    params.set('SLD', sld);
+    params.set('TLD', tld);
 
     const res = await fetch(`${API}?${params.toString()}`);
 
@@ -188,18 +189,18 @@ export const namecheapAdapter: PlatformAdapter = {
     const xml = await res.text();
 
     if (xml.includes('Status="OK"')) return { valid: true };
-    if (xml.includes("Invalid request IP"))
+    if (xml.includes('Invalid request IP'))
       return {
         valid: false,
-        error: "Your server IP is not whitelisted in Namecheap API access",
+        error: 'Your server IP is not whitelisted in Namecheap API access',
       };
-    if (xml.includes("API Key is invalid"))
-      return { valid: false, error: "Invalid API key" };
+    if (xml.includes('API Key is invalid'))
+      return { valid: false, error: 'Invalid API key' };
 
     const errMatch = xml.match(/<Err\d+[^>]*>([^<]+)<\/Err\d+>/);
     return {
       valid: false,
-      error: errMatch?.[1] ?? "Verification failed",
+      error: errMatch?.[1] ?? 'Verification failed',
     };
   },
 

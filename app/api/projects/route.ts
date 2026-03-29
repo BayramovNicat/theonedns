@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import { encrypt } from "@/lib/crypto";
-import { getAdapter, isSupported } from "@/lib/dns";
-import { PLATFORMS, type Platform } from "@/lib/platforms";
-import { rateLimit } from "@/lib/rate-limit";
-import { createClient } from "@/lib/supabase/server";
+import { NextResponse } from 'next/server';
+import { encrypt } from '@/lib/crypto';
+import { getAdapter, isSupported } from '@/lib/dns';
+import { PLATFORMS, type Platform } from '@/lib/platforms';
+import { rateLimit } from '@/lib/rate-limit';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
   const user = session.user;
@@ -27,15 +27,15 @@ export async function POST(request: Request) {
 
   if (!platform || !domain) {
     return NextResponse.json(
-      { error: "Platform and domain are required" },
-      { status: 400 }
+      { error: 'Platform and domain are required' },
+      { status: 400 },
     );
   }
 
   if (!PLATFORMS[platform]) {
     return NextResponse.json(
-      { error: "Unsupported platform" },
-      { status: 400 }
+      { error: 'Unsupported platform' },
+      { status: 400 },
     );
   }
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
     // Check required fields per platform
     const requiredFields = PLATFORMS[platform].fields
-      .filter((f) => !f.label.includes("optional"))
+      .filter((f) => !f.label.includes('optional'))
       .map((f) => f.key);
 
     for (const key of requiredFields) {
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         const field = PLATFORMS[platform].fields.find((f) => f.key === key);
         return NextResponse.json(
           { error: `${field?.label ?? key} is required` },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -62,27 +62,27 @@ export async function POST(request: Request) {
       const result = await adapter.verify(credentials, domain);
       if (!result.valid) {
         return NextResponse.json(
-          { error: result.error ?? "Invalid credentials" },
-          { status: 400 }
+          { error: result.error ?? 'Invalid credentials' },
+          { status: 400 },
         );
       }
     } catch {
       return NextResponse.json(
         { error: `Could not reach ${PLATFORMS[platform].name} API` },
-        { status: 502 }
+        { status: 502 },
       );
     }
   }
 
   const { data: project, error: dbError } = await supabase
-    .from("projects")
+    .from('projects')
     .insert({
       user_id: user.id,
       platform,
       domain,
       credentials: encrypt(credentials),
     })
-    .select("id")
+    .select('id')
     .single();
 
   if (dbError) {
@@ -99,7 +99,7 @@ export async function DELETE(request: Request) {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
   const user = session.user;
@@ -110,14 +110,14 @@ export async function DELETE(request: Request) {
   const { id } = await request.json();
 
   if (!id) {
-    return NextResponse.json({ error: "Missing project id" }, { status: 400 });
+    return NextResponse.json({ error: 'Missing project id' }, { status: 400 });
   }
 
   const { error } = await supabase
-    .from("projects")
+    .from('projects')
     .delete()
-    .eq("id", id)
-    .eq("user_id", user.id);
+    .eq('id', id)
+    .eq('user_id', user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

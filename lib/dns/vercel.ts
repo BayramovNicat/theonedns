@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.vercel.com";
+const API = 'https://api.vercel.com';
 
 function headers(token: string) {
   return {
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -21,13 +21,13 @@ class VercelProvider implements DnsProvider {
   constructor(
     token: string,
     private domain: string,
-    private teamId?: string
+    private teamId?: string,
   ) {
     this.hdrs = headers(token);
   }
 
   private qs() {
-    return this.teamId ? `?teamId=${this.teamId}` : "";
+    return this.teamId ? `?teamId=${this.teamId}` : '';
   }
 
   async listRecords(): Promise<DnsRecord[]> {
@@ -36,9 +36,9 @@ class VercelProvider implements DnsProvider {
 
     while (true) {
       const url = new URL(`${API}/v5/domains/${this.domain}/records`);
-      url.searchParams.set("limit", "100");
-      if (this.teamId) url.searchParams.set("teamId", this.teamId);
-      if (until) url.searchParams.set("until", String(until));
+      url.searchParams.set('limit', '100');
+      if (this.teamId) url.searchParams.set('teamId', this.teamId);
+      if (until) url.searchParams.set('until', String(until));
 
       const res = await fetch(url.toString(), { headers: this.hdrs });
       if (!res.ok) break;
@@ -66,7 +66,7 @@ class VercelProvider implements DnsProvider {
     const res = await fetch(
       `${API}/v2/domains/${this.domain}/records${this.qs()}`,
       {
-        method: "POST",
+        method: 'POST',
         headers: this.hdrs,
         body: JSON.stringify({
           name: params.subdomain,
@@ -75,12 +75,12 @@ class VercelProvider implements DnsProvider {
           ttl: params.ttl ?? 60,
           ...(params.priority != null && { mxPriority: params.priority }),
         }),
-      }
+      },
     );
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data?.error?.message ?? "Failed to create DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to create DNS record');
     }
     return { id: data.uid };
   }
@@ -94,27 +94,27 @@ class VercelProvider implements DnsProvider {
     const res = await fetch(
       `${API}/v1/domains/records/${recordId}${this.qs()}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: this.hdrs,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error?.message ?? "Failed to update DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to update DNS record');
     }
   }
 
   async deleteRecord(recordId: string) {
     const res = await fetch(
       `${API}/v2/domains/${this.domain}/records/${recordId}${this.qs()}`,
-      { method: "DELETE", headers: this.hdrs }
+      { method: 'DELETE', headers: this.hdrs },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error?.message ?? "Failed to delete DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to delete DNS record');
     }
   }
 }
@@ -122,19 +122,19 @@ class VercelProvider implements DnsProvider {
 export const vercelAdapter: PlatformAdapter = {
   async verify(creds, domain) {
     const teamId = creds.team_id?.trim() || undefined;
-    const qs = teamId ? `&teamId=${teamId}` : "";
+    const qs = teamId ? `&teamId=${teamId}` : '';
 
     const res = await fetch(
       `${API}/v5/domains/${domain}/records?limit=1${qs}`,
-      { headers: headers(creds.api_token) }
+      { headers: headers(creds.api_token) },
     );
 
     if (res.ok) return { valid: true };
-    if (res.status === 401) return { valid: false, error: "Invalid API token" };
+    if (res.status === 401) return { valid: false, error: 'Invalid API token' };
     if (res.status === 403)
-      return { valid: false, error: "Token lacks permission for this domain" };
+      return { valid: false, error: 'Token lacks permission for this domain' };
     if (res.status === 404)
-      return { valid: false, error: "Domain not found on Vercel" };
+      return { valid: false, error: 'Domain not found on Vercel' };
 
     const data = await res.json().catch(() => null);
     return {
@@ -147,7 +147,7 @@ export const vercelAdapter: PlatformAdapter = {
     return new VercelProvider(
       creds.api_token,
       domain,
-      creds.team_id?.trim() || undefined
+      creds.team_id?.trim() || undefined,
     );
   },
 };

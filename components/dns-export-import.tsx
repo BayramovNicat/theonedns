@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Download, Upload } from "lucide-react";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Download, Upload } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
 type DnsRecord = {
   id: string;
@@ -23,12 +23,12 @@ type DnsRecord = {
 };
 
 function recordsToCsv(records: DnsRecord[]): string {
-  const header = "Name,Type,Content,TTL,Priority";
+  const header = 'Name,Type,Content,TTL,Priority';
   const rows = records.map(
     (r) =>
-      `${r.name},${r.type},"${r.content.replace(/"/g, '""')}",${r.ttl ?? ""},${r.priority ?? ""}`
+      `${r.name},${r.type},"${r.content.replace(/"/g, '""')}",${r.ttl ?? ''},${r.priority ?? ''}`,
   );
-  return [header, ...rows].join("\n");
+  return [header, ...rows].join('\n');
 }
 
 function recordsToZone(records: DnsRecord[], domain: string): string {
@@ -36,27 +36,27 @@ function recordsToZone(records: DnsRecord[], domain: string): string {
     `; Zone file for ${domain}`,
     `; Exported ${new Date().toISOString()}`,
     `$ORIGIN ${domain}.`,
-    "",
+    '',
   ];
   for (const r of records) {
-    const name = r.name === domain ? "@" : r.name.replace(`.${domain}`, "");
+    const name = r.name === domain ? '@' : r.name.replace(`.${domain}`, '');
     const ttl = r.ttl ?? 3600;
     const content =
-      r.type === "MX"
+      r.type === 'MX'
         ? `${r.priority ?? 10} ${r.content}.`
-        : r.type === "CNAME" || r.type === "NS"
+        : r.type === 'CNAME' || r.type === 'NS'
           ? `${r.content}.`
-          : r.type === "TXT"
+          : r.type === 'TXT'
             ? `"${r.content}"`
             : r.content;
     lines.push(`${name}\t${ttl}\tIN\t${r.type}\t${content}`);
   }
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 function parseZoneFile(
   text: string,
-  domain: string
+  domain: string,
 ): {
   subdomain: string;
   recordType: string;
@@ -72,9 +72,9 @@ function parseZoneFile(
     priority?: number;
   }[] = [];
 
-  for (const line of text.split("\n")) {
+  for (const line of text.split('\n')) {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith(";") || trimmed.startsWith("$"))
+    if (!trimmed || trimmed.startsWith(';') || trimmed.startsWith('$'))
       continue;
 
     // Parse: name [ttl] [class] type content
@@ -91,25 +91,25 @@ function parseZoneFile(
     }
 
     // Optional class (IN)
-    if (parts[idx] === "IN") idx++;
+    if (parts[idx] === 'IN') idx++;
 
     const recordType = parts[idx++];
-    if (!["A", "AAAA", "CNAME", "MX", "TXT", "NS"].includes(recordType))
+    if (!['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS'].includes(recordType))
       continue;
 
     let priority: number | undefined;
-    if (recordType === "MX" && /^\d+$/.test(parts[idx])) {
+    if (recordType === 'MX' && /^\d+$/.test(parts[idx])) {
       priority = Number(parts[idx++]);
     }
 
-    let content = parts.slice(idx).join(" ");
+    let content = parts.slice(idx).join(' ');
     // Strip trailing dots and quotes
-    content = content.replace(/\.+$/, "").replace(/^"|"$/g, "");
+    content = content.replace(/\.+$/, '').replace(/^"|"$/g, '');
 
     const subdomain =
-      name === "@" || name === domain || name === `${domain}.`
-        ? "@"
-        : name.replace(`.${domain}`, "").replace(/\.+$/, "");
+      name === '@' || name === domain || name === `${domain}.`
+        ? '@'
+        : name.replace(`.${domain}`, '').replace(/\.+$/, '');
 
     results.push({ subdomain, recordType, content, ttl, priority });
   }
@@ -132,20 +132,20 @@ function parseCsvFile(text: string): {
     priority?: number;
   }[] = [];
 
-  const lines = text.split("\n").slice(1); // Skip header
+  const lines = text.split('\n').slice(1); // Skip header
   for (const line of lines) {
     if (!line.trim()) continue;
 
     // Simple CSV parse handling quoted fields
     const fields: string[] = [];
-    let current = "";
+    let current = '';
     let inQuotes = false;
     for (const char of line) {
       if (char === '"') {
         inQuotes = !inQuotes;
-      } else if (char === "," && !inQuotes) {
+      } else if (char === ',' && !inQuotes) {
         fields.push(current.trim());
-        current = "";
+        current = '';
       } else {
         current += char;
       }
@@ -155,7 +155,7 @@ function parseCsvFile(text: string): {
     if (fields.length < 3) continue;
 
     const [name, recordType, content, ttlStr, priorityStr] = fields;
-    if (!["A", "AAAA", "CNAME", "MX", "TXT", "NS"].includes(recordType))
+    if (!['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS'].includes(recordType))
       continue;
 
     results.push({
@@ -173,7 +173,7 @@ function parseCsvFile(text: string): {
 function downloadFile(content: string, filename: string, mime: string) {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   a.click();
@@ -196,17 +196,17 @@ export function DnsExportImport({
   const [importing, setImporting] = useState(false);
 
   function exportCsv() {
-    downloadFile(recordsToCsv(records), `${domain}-dns.csv`, "text/csv");
-    toast.success("Exported as CSV");
+    downloadFile(recordsToCsv(records), `${domain}-dns.csv`, 'text/csv');
+    toast.success('Exported as CSV');
   }
 
   function exportZone() {
     downloadFile(
       recordsToZone(records, domain),
       `${domain}-dns.zone`,
-      "text/plain"
+      'text/plain',
     );
-    toast.success("Exported as zone file");
+    toast.success('Exported as zone file');
   }
 
   async function handleImport(file: File) {
@@ -214,15 +214,15 @@ export function DnsExportImport({
     try {
       const text = await file.text();
       const isZone =
-        file.name.endsWith(".zone") ||
-        file.name.endsWith(".txt") ||
-        text.includes("$ORIGIN") ||
-        text.includes("\tIN\t");
+        file.name.endsWith('.zone') ||
+        file.name.endsWith('.txt') ||
+        text.includes('$ORIGIN') ||
+        text.includes('\tIN\t');
 
       const parsed = isZone ? parseZoneFile(text, domain) : parseCsvFile(text);
 
       if (parsed.length === 0) {
-        toast.error("No valid records found in file");
+        toast.error('No valid records found in file');
         return;
       }
 
@@ -232,15 +232,15 @@ export function DnsExportImport({
       for (const rec of parsed) {
         try {
           const res = await fetch(`/api/projects/${projectId}/dns`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               subdomain: rec.subdomain,
               recordType: rec.recordType,
               content: rec.content,
               ttl: rec.ttl,
               priority: rec.priority,
-              proxied: platform === "cloudflare" ? false : undefined,
+              proxied: platform === 'cloudflare' ? false : undefined,
             }),
           });
           if (res.ok) success++;
@@ -251,19 +251,19 @@ export function DnsExportImport({
       }
 
       if (success > 0) {
-        toast.success(`Imported ${success} record${success > 1 ? "s" : ""}`);
+        toast.success(`Imported ${success} record${success > 1 ? 's' : ''}`);
         router.refresh();
       }
       if (failed > 0) {
         toast.error(
-          `Failed to import ${failed} record${failed > 1 ? "s" : ""}`
+          `Failed to import ${failed} record${failed > 1 ? 's' : ''}`,
         );
       }
     } catch {
-      toast.error("Failed to read file");
+      toast.error('Failed to read file');
     } finally {
       setImporting(false);
-      if (fileRef.current) fileRef.current.value = "";
+      if (fileRef.current) fileRef.current.value = '';
     }
   }
 
@@ -292,7 +292,7 @@ export function DnsExportImport({
           }
         >
           <Download className="size-3.5" />
-          {importing ? "Importing..." : "Export / Import"}
+          {importing ? 'Importing...' : 'Export / Import'}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"

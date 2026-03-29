@@ -4,15 +4,15 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.name.com/v4";
+const API = 'https://api.name.com/v4';
 
 function headers(username: string, token: string) {
   const encoded = btoa(`${username}:${token}`);
   return {
     Authorization: `Basic ${encoded}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -22,7 +22,7 @@ class NamecomProvider implements DnsProvider {
   constructor(
     username: string,
     token: string,
-    private domain: string
+    private domain: string,
   ) {
     this.hdrs = headers(username, token);
   }
@@ -34,7 +34,7 @@ class NamecomProvider implements DnsProvider {
     while (true) {
       const res = await fetch(
         `${API}/domains/${this.domain}/records?page=${page}&perPage=1000`,
-        { headers: this.hdrs }
+        { headers: this.hdrs },
       );
       if (!res.ok) break;
 
@@ -44,7 +44,7 @@ class NamecomProvider implements DnsProvider {
       for (const r of items) {
         records.push({
           id: String(r.id),
-          name: r.fqdn?.replace(/\.$/, "") ?? this.domain,
+          name: r.fqdn?.replace(/\.$/, '') ?? this.domain,
           type: r.type,
           content: r.answer,
           ttl: r.ttl,
@@ -61,7 +61,7 @@ class NamecomProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await fetch(`${API}/domains/${this.domain}/records`, {
-      method: "POST",
+      method: 'POST',
       headers: this.hdrs,
       body: JSON.stringify({
         type: params.type,
@@ -74,7 +74,7 @@ class NamecomProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to create DNS record");
+      throw new Error(data?.message ?? 'Failed to create DNS record');
     }
 
     const data = await res.json();
@@ -90,27 +90,27 @@ class NamecomProvider implements DnsProvider {
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,
       {
-        method: "PUT",
+        method: 'PUT',
         headers: this.hdrs,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to update DNS record");
+      throw new Error(data?.message ?? 'Failed to update DNS record');
     }
   }
 
   async deleteRecord(recordId: string) {
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,
-      { method: "DELETE", headers: this.hdrs }
+      { method: 'DELETE', headers: this.hdrs },
     );
 
     if (!res.ok && res.status !== 204 && res.status !== 404) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to delete DNS record");
+      throw new Error(data?.message ?? 'Failed to delete DNS record');
     }
   }
 }
@@ -123,11 +123,11 @@ export const namecomAdapter: PlatformAdapter = {
 
     if (res.ok) return { valid: true };
     if (res.status === 401)
-      return { valid: false, error: "Invalid username or API token" };
+      return { valid: false, error: 'Invalid username or API token' };
     if (res.status === 404)
       return {
         valid: false,
-        error: "Domain not found in your Name.com account",
+        error: 'Domain not found in your Name.com account',
       };
 
     return { valid: false, error: `Verification failed (${res.status})` };

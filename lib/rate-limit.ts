@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 interface RateLimitEntry {
   tokens: number;
@@ -8,14 +8,17 @@ interface RateLimitEntry {
 const buckets = new Map<string, RateLimitEntry>();
 
 // Clean up stale entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of buckets) {
-    if (now - entry.lastRefill > 5 * 60 * 1000) {
-      buckets.delete(key);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [key, entry] of buckets) {
+      if (now - entry.lastRefill > 5 * 60 * 1000) {
+        buckets.delete(key);
+      }
     }
-  }
-}, 5 * 60 * 1000);
+  },
+  5 * 60 * 1000,
+);
 
 /**
  * Token-bucket rate limiter. Returns null if allowed, or a 429 Response if denied.
@@ -27,7 +30,7 @@ setInterval(() => {
 export function rateLimit(
   key: string,
   max: number = 30,
-  windowMs: number = 60_000
+  windowMs: number = 60_000,
 ): NextResponse | null {
   const now = Date.now();
   let entry = buckets.get(key);
@@ -49,8 +52,8 @@ export function rateLimit(
 
   if (entry.tokens <= 0) {
     return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 }
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 },
     );
   }
 

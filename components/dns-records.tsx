@@ -1,7 +1,7 @@
-import { DnsRecordsClient } from "@/components/dns-records-client";
-import { decrypt } from "@/lib/crypto";
-import type { DnsRecord } from "@/lib/dns";
-import { getProvider } from "@/lib/dns";
+import { DnsRecordsClient } from '@/components/dns-records-client';
+import { decrypt } from '@/lib/crypto';
+import type { DnsRecord } from '@/lib/dns';
+import { getProvider } from '@/lib/dns';
 
 export async function DnsRecords({
   project,
@@ -20,7 +20,7 @@ export async function DnsRecords({
   try {
     const allRecords = await provider.listRecords();
     records = allRecords.filter(
-      (r) => r.name === project.domain || r.name.endsWith(`.${project.domain}`)
+      (r) => r.name === project.domain || r.name.endsWith(`.${project.domain}`),
     );
   } catch {
     // Failed to fetch — show empty state
@@ -50,7 +50,7 @@ export function DnsRecordsSkeleton() {
   return (
     <div className="space-y-4 px-8 py-6">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-6">
+        <div key={`skeleton-${i}`} className="flex items-center gap-6">
           <div className="h-4 w-40 animate-pulse rounded bg-white/5" />
           <div className="h-4 w-16 animate-pulse rounded bg-white/5" />
           <div className="h-4 w-32 animate-pulse rounded bg-white/5" />

@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 const NINE = [
-  "Porkbun",
-  "DNSimple",
-  "GoDaddy",
-  "Namecheap",
-  "Name.com",
-  "Gandi",
-  "Bunny.net",
-  "Dynadot",
-  "Hostinger",
+  'Porkbun',
+  'DNSimple',
+  'GoDaddy',
+  'Namecheap',
+  'Name.com',
+  'Gandi',
+  'Bunny.net',
+  'Dynadot',
+  'Hostinger',
 ];
 
 export default function TheNineSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
+    offset: ['start end', 'end start'],
   });
 
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.15]);

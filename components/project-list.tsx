@@ -1,14 +1,14 @@
-import { ProjectCard } from "@/components/project-card";
-import { AddProjectForm } from "@/components/add-project-form";
-import { createClient } from "@/lib/supabase/server";
+import { AddProjectForm } from '@/components/add-project-form';
+import { ProjectCard } from '@/components/project-card';
+import { createClient } from '@/lib/supabase/server';
 
 export async function ProjectList({ userId }: { userId: string }) {
   const supabase = await createClient();
   const { data: projects } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .from('projects')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
 
   if (!projects || projects.length === 0) {
     return (
@@ -43,7 +43,7 @@ export function ProjectListSkeleton() {
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 3 }).map((_, i) => (
         <div
-          key={i}
+          key={`skeleton-${i}`}
           className="rounded-3xl border border-white/10 bg-zinc-900/50 p-8 backdrop-blur-xl"
         >
           <div className="flex flex-col gap-4">

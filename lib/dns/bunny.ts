@@ -4,15 +4,15 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.bunny.net/dnszone";
+const API = 'https://api.bunny.net/dnszone';
 
 function headers(token: string) {
   return {
     AccessKey: token,
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 }
 
@@ -22,7 +22,7 @@ class BunnyProvider implements DnsProvider {
   constructor(
     token: string,
     private zoneId: string,
-    private domain: string
+    private domain: string,
   ) {
     this.hdrs = headers(token);
   }
@@ -41,7 +41,7 @@ class BunnyProvider implements DnsProvider {
       if (!typeName) continue;
       records.push({
         id: String(r.Id),
-        name: r.Name === "" ? this.domain : `${r.Name}.${this.domain}`,
+        name: r.Name === '' ? this.domain : `${r.Name}.${this.domain}`,
         type: typeName,
         content: r.Value,
         ttl: r.Ttl,
@@ -54,7 +54,7 @@ class BunnyProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await fetch(`${API}/${this.zoneId}/records`, {
-      method: "PUT",
+      method: 'PUT',
       headers: this.hdrs,
       body: JSON.stringify({
         Type: bunnyTypeId(params.type),
@@ -67,7 +67,7 @@ class BunnyProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.Message ?? "Failed to create DNS record");
+      throw new Error(data?.Message ?? 'Failed to create DNS record');
     }
 
     const data = await res.json();
@@ -76,10 +76,10 @@ class BunnyProvider implements DnsProvider {
 
   async updateRecord(recordId: string, params: UpdateRecordParams) {
     const res = await fetch(`${API}/${this.zoneId}/records/${recordId}`, {
-      method: "POST",
+      method: 'POST',
       headers: this.hdrs,
       body: JSON.stringify({
-        Type: bunnyTypeId(params.type ?? "A"),
+        Type: bunnyTypeId(params.type ?? 'A'),
         Value: params.content,
         Ttl: params.ttl ?? 300,
         ...(params.priority != null && { Priority: params.priority }),
@@ -88,19 +88,19 @@ class BunnyProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.Message ?? "Failed to update DNS record");
+      throw new Error(data?.Message ?? 'Failed to update DNS record');
     }
   }
 
   async deleteRecord(recordId: string) {
     const res = await fetch(`${API}/${this.zoneId}/records/${recordId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this.hdrs,
     });
 
     if (!res.ok && res.status !== 204 && res.status !== 404) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.Message ?? "Failed to delete DNS record");
+      throw new Error(data?.Message ?? 'Failed to delete DNS record');
     }
   }
 }
@@ -121,13 +121,13 @@ function bunnyTypeId(type: string): number {
 
 function bunnyTypeName(typeId: number): string | null {
   const map: Record<number, string> = {
-    0: "A",
-    1: "AAAA",
-    2: "CNAME",
-    3: "MX",
-    4: "TXT",
-    5: "NS",
-    6: "SRV",
+    0: 'A',
+    1: 'AAAA',
+    2: 'CNAME',
+    3: 'MX',
+    4: 'TXT',
+    5: 'NS',
+    6: 'SRV',
   };
   return map[typeId] ?? null;
 }
@@ -139,9 +139,9 @@ export const bunnyAdapter: PlatformAdapter = {
     });
 
     if (res.ok) return { valid: true };
-    if (res.status === 401) return { valid: false, error: "Invalid API key" };
+    if (res.status === 401) return { valid: false, error: 'Invalid API key' };
     if (res.status === 404)
-      return { valid: false, error: "DNS zone not found" };
+      return { valid: false, error: 'DNS zone not found' };
 
     return { valid: false, error: `Verification failed (${res.status})` };
   },

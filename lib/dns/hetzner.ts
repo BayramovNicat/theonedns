@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://dns.hetzner.com/api/v1";
+const API = 'https://dns.hetzner.com/api/v1';
 
 function headers(token: string) {
   return {
-    "Auth-API-Token": token,
-    "Content-Type": "application/json",
+    'Auth-API-Token': token,
+    'Content-Type': 'application/json',
   };
 }
 
@@ -21,7 +21,7 @@ class HetznerProvider implements DnsProvider {
   constructor(
     token: string,
     private zoneId: string,
-    private domain: string
+    private domain: string,
   ) {
     this.hdrs = headers(token);
   }
@@ -39,7 +39,7 @@ class HetznerProvider implements DnsProvider {
     for (const r of data.records ?? []) {
       records.push({
         id: r.id,
-        name: r.name === "@" ? this.domain : `${r.name}.${this.domain}`,
+        name: r.name === '@' ? this.domain : `${r.name}.${this.domain}`,
         type: r.type,
         content: r.value,
         ttl: r.ttl,
@@ -51,7 +51,7 @@ class HetznerProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await fetch(`${API}/records`, {
-      method: "POST",
+      method: 'POST',
       headers: this.hdrs,
       body: JSON.stringify({
         zone_id: this.zoneId,
@@ -64,7 +64,7 @@ class HetznerProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error?.message ?? "Failed to create DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to create DNS record');
     }
 
     const data = await res.json();
@@ -78,13 +78,13 @@ class HetznerProvider implements DnsProvider {
     });
 
     if (!getRes.ok) {
-      throw new Error("Failed to fetch existing record for update");
+      throw new Error('Failed to fetch existing record for update');
     }
 
     const existing = (await getRes.json()).record;
 
     const res = await fetch(`${API}/records/${recordId}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: this.hdrs,
       body: JSON.stringify({
         zone_id: this.zoneId,
@@ -97,19 +97,19 @@ class HetznerProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error?.message ?? "Failed to update DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to update DNS record');
     }
   }
 
   async deleteRecord(recordId: string) {
     const res = await fetch(`${API}/records/${recordId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this.hdrs,
     });
 
     if (!res.ok && res.status !== 200) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error?.message ?? "Failed to delete DNS record");
+      throw new Error(data?.error?.message ?? 'Failed to delete DNS record');
     }
   }
 }
@@ -122,7 +122,7 @@ export const hetznerAdapter: PlatformAdapter = {
 
     if (!res.ok) {
       if (res.status === 401)
-        return { valid: false, error: "Invalid API token" };
+        return { valid: false, error: 'Invalid API token' };
       return { valid: false, error: `Verification failed (${res.status})` };
     }
 
@@ -132,7 +132,7 @@ export const hetznerAdapter: PlatformAdapter = {
     if (!zone) {
       return {
         valid: false,
-        error: "Domain not found in your Hetzner DNS account",
+        error: 'Domain not found in your Hetzner DNS account',
       };
     }
 

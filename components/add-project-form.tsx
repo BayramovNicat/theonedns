@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { PLATFORMS, type Platform } from "@/lib/platforms";
+} from '@/components/ui/select';
+import { PLATFORMS, type Platform } from '@/lib/platforms';
 
 export function AddProjectForm() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [platform, setPlatform] = useState<Platform>("cloudflare");
-  const [domain, setDomain] = useState("");
+  const [platform, setPlatform] = useState<Platform>('cloudflare');
+  const [domain, setDomain] = useState('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
 
   const platformConfig = PLATFORMS[platform];
@@ -38,8 +38,8 @@ export function AddProjectForm() {
   }
 
   function resetForm() {
-    setPlatform("cloudflare");
-    setDomain("");
+    setPlatform('cloudflare');
+    setDomain('');
     setCredentials({});
   }
 
@@ -48,25 +48,25 @@ export function AddProjectForm() {
     setPending(true);
 
     try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ platform, domain, credentials }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error ?? "Something went wrong");
+        toast.error(data.error ?? 'Something went wrong');
         return;
       }
 
-      toast.success("Project created");
+      toast.success('Project created');
       resetForm();
       setOpen(false);
       router.refresh();
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setPending(false);
     }
@@ -161,9 +161,9 @@ export function AddProjectForm() {
                   id={field.key}
                   type={field.type}
                   placeholder={field.placeholder}
-                  required={!field.label.includes("optional")}
+                  required={!field.label.includes('optional')}
                   autoComplete="one-time-code"
-                  value={credentials[field.key] ?? ""}
+                  value={credentials[field.key] ?? ''}
                   onChange={(e) => updateCredential(field.key, e.target.value)}
                   className="border-white/10 bg-white/5 text-white placeholder:text-zinc-700"
                 />
@@ -181,7 +181,7 @@ export function AddProjectForm() {
             disabled={pending}
             className="group relative h-12 w-full overflow-hidden rounded-full bg-amber-500 text-xs font-black tracking-widest text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50"
           >
-            {pending ? "Connecting..." : "Connect domain"}
+            {pending ? 'Connecting...' : 'Connect domain'}
           </Button>
         </form>
       </DialogContent>

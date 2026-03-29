@@ -4,9 +4,9 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.dynadot.com/api3.json";
+const API = 'https://api.dynadot.com/api3.json';
 
 /**
  * Dynadot has no individual record CRUD — you must read all DNS settings,
@@ -24,20 +24,20 @@ function encodeId(type: string, subdomain: string) {
 }
 
 function decodeId(id: string) {
-  const idx = id.indexOf(":");
+  const idx = id.indexOf(':');
   return { type: id.slice(0, idx), subdomain: id.slice(idx + 1) };
 }
 
 class DynadotProvider implements DnsProvider {
   constructor(
     private apiKey: string,
-    private domain: string
+    private domain: string,
   ) {}
 
   private async getDns(): Promise<DynadotRecord[]> {
     const params = new URLSearchParams({
       key: this.apiKey,
-      command: "get_dns",
+      command: 'get_dns',
       domain: this.domain,
     });
 
@@ -45,7 +45,7 @@ class DynadotProvider implements DnsProvider {
     if (!res.ok) return [];
 
     const data = await res.json();
-    if (data.GetDnsResponse?.Status !== "success") return [];
+    if (data.GetDnsResponse?.Status !== 'success') return [];
 
     const records: DynadotRecord[] = [];
     const dnsResponse = data.GetDnsResponse;
@@ -53,7 +53,7 @@ class DynadotProvider implements DnsProvider {
     for (const r of dnsResponse.DnsRecord ?? []) {
       records.push({
         record_type: r.RecordType,
-        subdomain: r.SubDomain ?? "",
+        subdomain: r.SubDomain ?? '',
         value: r.Value,
       });
     }
@@ -64,7 +64,7 @@ class DynadotProvider implements DnsProvider {
   private async setDns(records: DynadotRecord[]) {
     const params = new URLSearchParams({
       key: this.apiKey,
-      command: "set_dns2",
+      command: 'set_dns2',
       domain: this.domain,
     });
 
@@ -76,12 +76,12 @@ class DynadotProvider implements DnsProvider {
 
     const res = await fetch(`${API}?${params.toString()}`);
     if (!res.ok) {
-      throw new Error("Failed to update DNS records on Dynadot");
+      throw new Error('Failed to update DNS records on Dynadot');
     }
 
     const data = await res.json();
-    if (data.SetDns2Response?.Status !== "success") {
-      throw new Error(data.SetDns2Response?.Error ?? "Dynadot API error");
+    if (data.SetDns2Response?.Status !== 'success') {
+      throw new Error(data.SetDns2Response?.Error ?? 'Dynadot API error');
     }
   }
 
@@ -93,7 +93,7 @@ class DynadotProvider implements DnsProvider {
       records.push({
         id: encodeId(r.record_type.toUpperCase(), r.subdomain),
         name:
-          r.subdomain === "" ? this.domain : `${r.subdomain}.${this.domain}`,
+          r.subdomain === '' ? this.domain : `${r.subdomain}.${this.domain}`,
         type: r.record_type.toUpperCase(),
         content: r.value,
       });
@@ -121,10 +121,10 @@ class DynadotProvider implements DnsProvider {
     const hosts = await this.getDns();
 
     const idx = hosts.findIndex(
-      (r) => r.record_type.toUpperCase() === type && r.subdomain === subdomain
+      (r) => r.record_type.toUpperCase() === type && r.subdomain === subdomain,
     );
 
-    if (idx === -1) throw new Error("Record not found");
+    if (idx === -1) throw new Error('Record not found');
 
     hosts[idx].value = params.content;
     if (params.type) hosts[idx].record_type = params.type.toLowerCase();
@@ -138,7 +138,7 @@ class DynadotProvider implements DnsProvider {
 
     const filtered = hosts.filter(
       (r) =>
-        !(r.record_type.toUpperCase() === type && r.subdomain === subdomain)
+        !(r.record_type.toUpperCase() === type && r.subdomain === subdomain),
     );
 
     if (filtered.length === hosts.length) return;
@@ -151,7 +151,7 @@ export const dynadotAdapter: PlatformAdapter = {
   async verify(creds, domain) {
     const params = new URLSearchParams({
       key: creds.api_key,
-      command: "get_dns",
+      command: 'get_dns',
       domain,
     });
 
@@ -162,18 +162,18 @@ export const dynadotAdapter: PlatformAdapter = {
 
     const data = await res.json();
 
-    if (data.GetDnsResponse?.Status === "success") return { valid: true };
+    if (data.GetDnsResponse?.Status === 'success') return { valid: true };
 
     const error = data.GetDnsResponse?.Error;
-    if (error?.includes("invalid key"))
-      return { valid: false, error: "Invalid API key" };
-    if (error?.includes("not found"))
+    if (error?.includes('invalid key'))
+      return { valid: false, error: 'Invalid API key' };
+    if (error?.includes('not found'))
       return {
         valid: false,
-        error: "Domain not found in your Dynadot account",
+        error: 'Domain not found in your Dynadot account',
       };
 
-    return { valid: false, error: error ?? "Verification failed" };
+    return { valid: false, error: error ?? 'Verification failed' };
   },
 
   createProvider(creds, domain) {

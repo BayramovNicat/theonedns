@@ -4,9 +4,9 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://eu.api.ovh.com/1.0";
+const API = 'https://eu.api.ovh.com/1.0';
 
 /** OVH API uses application key + secret + consumer key with signature. */
 async function signedHeaders(
@@ -15,29 +15,29 @@ async function signedHeaders(
   appKey: string,
   appSecret: string,
   consumerKey: string,
-  body: string = ""
+  body: string = '',
 ) {
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const toSign = [appSecret, consumerKey, method, url, body, timestamp].join(
-    "+"
+    '+',
   );
 
   const hash = await crypto.subtle.digest(
-    "SHA-1",
-    new TextEncoder().encode(toSign)
+    'SHA-1',
+    new TextEncoder().encode(toSign),
   );
   const signature =
-    "$1$" +
+    '$1$' +
     [...new Uint8Array(hash)]
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
 
   return {
-    "X-Ovh-Application": appKey,
-    "X-Ovh-Consumer": consumerKey,
-    "X-Ovh-Timestamp": timestamp,
-    "X-Ovh-Signature": signature,
-    "Content-Type": "application/json",
+    'X-Ovh-Application': appKey,
+    'X-Ovh-Consumer': consumerKey,
+    'X-Ovh-Timestamp': timestamp,
+    'X-Ovh-Signature': signature,
+    'Content-Type': 'application/json',
   };
 }
 
@@ -47,7 +47,7 @@ async function ovhFetch(
   appKey: string,
   appSecret: string,
   consumerKey: string,
-  body?: string
+  body?: string,
 ) {
   const url = `${API}${path}`;
   const hdrs = await signedHeaders(
@@ -56,7 +56,7 @@ async function ovhFetch(
     appKey,
     appSecret,
     consumerKey,
-    body
+    body,
   );
   return fetch(url, {
     method,
@@ -70,7 +70,7 @@ class OvhProvider implements DnsProvider {
     private appKey: string,
     private appSecret: string,
     private consumerKey: string,
-    private domain: string
+    private domain: string,
   ) {}
 
   private req(method: string, path: string, body?: string) {
@@ -80,17 +80,17 @@ class OvhProvider implements DnsProvider {
       this.appKey,
       this.appSecret,
       this.consumerKey,
-      body
+      body,
     );
   }
 
   async listRecords(): Promise<DnsRecord[]> {
     const records: DnsRecord[] = [];
 
-    for (const fieldType of ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV"]) {
+    for (const fieldType of ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SRV']) {
       const idsRes = await this.req(
-        "GET",
-        `/domain/zone/${this.domain}/record?fieldType=${fieldType}`
+        'GET',
+        `/domain/zone/${this.domain}/record?fieldType=${fieldType}`,
       );
       if (!idsRes.ok) continue;
 
@@ -98,8 +98,8 @@ class OvhProvider implements DnsProvider {
 
       for (const id of ids) {
         const res = await this.req(
-          "GET",
-          `/domain/zone/${this.domain}/record/${id}`
+          'GET',
+          `/domain/zone/${this.domain}/record/${id}`,
         );
         if (!res.ok) continue;
 
@@ -107,7 +107,7 @@ class OvhProvider implements DnsProvider {
         records.push({
           id: String(r.id),
           name:
-            r.subDomain === "" ? this.domain : `${r.subDomain}.${this.domain}`,
+            r.subDomain === '' ? this.domain : `${r.subDomain}.${this.domain}`,
           type: r.fieldType,
           content: r.target,
           ttl: r.ttl,
@@ -120,25 +120,25 @@ class OvhProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await this.req(
-      "POST",
+      'POST',
       `/domain/zone/${this.domain}/record`,
       JSON.stringify({
         fieldType: params.type,
         subDomain: params.subdomain,
         target: params.content,
         ttl: params.ttl ?? 300,
-      })
+      }),
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to create DNS record");
+      throw new Error(data?.message ?? 'Failed to create DNS record');
     }
 
     const data = await res.json();
 
     // Refresh the zone to apply changes
-    await this.req("POST", `/domain/zone/${this.domain}/refresh`);
+    await this.req('POST', `/domain/zone/${this.domain}/refresh`);
 
     return { id: String(data.id) };
   }
@@ -149,51 +149,51 @@ class OvhProvider implements DnsProvider {
     if (params.ttl != null) body.ttl = params.ttl;
 
     const res = await this.req(
-      "PUT",
+      'PUT',
       `/domain/zone/${this.domain}/record/${recordId}`,
-      JSON.stringify(body)
+      JSON.stringify(body),
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to update DNS record");
+      throw new Error(data?.message ?? 'Failed to update DNS record');
     }
 
-    await this.req("POST", `/domain/zone/${this.domain}/refresh`);
+    await this.req('POST', `/domain/zone/${this.domain}/refresh`);
   }
 
   async deleteRecord(recordId: string) {
     const res = await this.req(
-      "DELETE",
-      `/domain/zone/${this.domain}/record/${recordId}`
+      'DELETE',
+      `/domain/zone/${this.domain}/record/${recordId}`,
     );
 
     if (!res.ok && res.status !== 404) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.message ?? "Failed to delete DNS record");
+      throw new Error(data?.message ?? 'Failed to delete DNS record');
     }
 
-    await this.req("POST", `/domain/zone/${this.domain}/refresh`);
+    await this.req('POST', `/domain/zone/${this.domain}/refresh`);
   }
 }
 
 export const ovhAdapter: PlatformAdapter = {
   async verify(creds, domain) {
     const res = await ovhFetch(
-      "GET",
+      'GET',
       `/domain/zone/${domain}`,
       creds.app_key,
       creds.app_secret,
-      creds.consumer_key
+      creds.consumer_key,
     );
 
     if (res.ok) return { valid: true };
     if (res.status === 401 || res.status === 403)
-      return { valid: false, error: "Invalid credentials" };
+      return { valid: false, error: 'Invalid credentials' };
     if (res.status === 404)
       return {
         valid: false,
-        error: "Domain not found in your OVH account",
+        error: 'Domain not found in your OVH account',
       };
 
     return { valid: false, error: `Verification failed (${res.status})` };
@@ -204,7 +204,7 @@ export const ovhAdapter: PlatformAdapter = {
       creds.app_key,
       creds.app_secret,
       creds.consumer_key,
-      domain
+      domain,
     );
   },
 };

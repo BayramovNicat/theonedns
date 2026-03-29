@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.vultr.com/v2";
+const API = 'https://api.vultr.com/v2';
 
 function headers(token: string) {
   return {
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -20,7 +20,7 @@ class VultrProvider implements DnsProvider {
 
   constructor(
     token: string,
-    private domain: string
+    private domain: string,
   ) {
     this.hdrs = headers(token);
   }
@@ -31,8 +31,8 @@ class VultrProvider implements DnsProvider {
 
     while (true) {
       const url = new URL(`${API}/domains/${this.domain}/records`);
-      url.searchParams.set("per_page", "500");
-      if (cursor) url.searchParams.set("cursor", cursor);
+      url.searchParams.set('per_page', '500');
+      if (cursor) url.searchParams.set('cursor', cursor);
 
       const res = await fetch(url.toString(), { headers: this.hdrs });
       if (!res.ok) break;
@@ -43,7 +43,7 @@ class VultrProvider implements DnsProvider {
       for (const r of items) {
         records.push({
           id: r.id,
-          name: r.name === "" ? this.domain : `${r.name}.${this.domain}`,
+          name: r.name === '' ? this.domain : `${r.name}.${this.domain}`,
           type: r.type,
           content: r.data,
           ttl: r.ttl,
@@ -52,7 +52,7 @@ class VultrProvider implements DnsProvider {
       }
 
       cursor = data.meta?.links?.next;
-      if (!cursor || cursor === "") break;
+      if (!cursor || cursor === '') break;
     }
 
     return records;
@@ -60,7 +60,7 @@ class VultrProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await fetch(`${API}/domains/${this.domain}/records`, {
-      method: "POST",
+      method: 'POST',
       headers: this.hdrs,
       body: JSON.stringify({
         type: params.type,
@@ -73,7 +73,7 @@ class VultrProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error ?? "Failed to create DNS record");
+      throw new Error(data?.error ?? 'Failed to create DNS record');
     }
 
     const data = await res.json();
@@ -89,27 +89,27 @@ class VultrProvider implements DnsProvider {
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: this.hdrs,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error ?? "Failed to update DNS record");
+      throw new Error(data?.error ?? 'Failed to update DNS record');
     }
   }
 
   async deleteRecord(recordId: string) {
     const res = await fetch(
       `${API}/domains/${this.domain}/records/${recordId}`,
-      { method: "DELETE", headers: this.hdrs }
+      { method: 'DELETE', headers: this.hdrs },
     );
 
     if (!res.ok && res.status !== 204) {
       const data = await res.json().catch(() => null);
-      throw new Error(data?.error ?? "Failed to delete DNS record");
+      throw new Error(data?.error ?? 'Failed to delete DNS record');
     }
   }
 }
@@ -122,11 +122,11 @@ export const vultrAdapter: PlatformAdapter = {
 
     if (res.ok) return { valid: true };
     if (res.status === 401 || res.status === 403)
-      return { valid: false, error: "Invalid API token" };
+      return { valid: false, error: 'Invalid API token' };
     if (res.status === 404)
       return {
         valid: false,
-        error: "Domain not found in your Vultr account",
+        error: 'Domain not found in your Vultr account',
       };
 
     return { valid: false, error: `Verification failed (${res.status})` };

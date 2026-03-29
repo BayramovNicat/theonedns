@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export function ParallaxGrid() {
   const { scrollYProgress } = useScroll();

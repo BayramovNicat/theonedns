@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ExternalLink, MoreVertical, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ExternalLink, MoreVertical, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -13,16 +13,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { PLATFORMS, type Platform } from "@/lib/platforms";
+} from '@/components/ui/dropdown-menu';
+import { PLATFORMS, type Platform } from '@/lib/platforms';
 
 type Project = {
   id: string;
@@ -41,22 +41,22 @@ export function ProjectCard({ project }: { project: Project }) {
   async function handleDelete() {
     setDeleting(true);
     try {
-      const res = await fetch("/api/projects", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/projects', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: project.id }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error ?? "Something went wrong");
+        toast.error(data.error ?? 'Something went wrong');
         return;
       }
 
-      toast.success("Project deleted");
+      toast.success('Project deleted');
       router.refresh();
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setDeleting(false);
       setConfirmOpen(false);
@@ -127,7 +127,7 @@ export function ProjectCard({ project }: { project: Project }) {
               Delete project
             </AlertDialogTitle>
             <AlertDialogDescription className="font-serif text-zinc-500 italic">
-              Are you sure you want to banish{" "}
+              Are you sure you want to banish{' '}
               <span className="font-bold text-amber-500 not-italic">
                 {project.domain}
               </span>
@@ -147,7 +147,7 @@ export function ProjectCard({ project }: { project: Project }) {
               disabled={deleting}
               className="bg-red-500/80 font-bold hover:bg-red-500"
             >
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? 'Deleting...' : 'Delete'}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

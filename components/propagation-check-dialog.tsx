@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { CheckCircle2, Globe, Loader2, RefreshCw, XCircle } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { CheckCircle2, Globe, Loader2, RefreshCw, XCircle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 type ResolverResult = {
   resolver: string;
@@ -37,9 +37,9 @@ export function PropagationCheckDialog({
     setLoading(true);
     setResults([]);
     try {
-      const res = await fetch("/api/dns/propagation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/dns/propagation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: record.name,
           type: record.type,
@@ -71,7 +71,7 @@ export function PropagationCheckDialog({
             Propagation Check
           </DialogTitle>
           <DialogDescription className="font-serif text-zinc-500 italic break-all">
-            Querying global resolvers for{" "}
+            Querying global resolvers for{' '}
             <span className="font-bold text-amber-500 not-italic">
               {record.name}
             </span>
@@ -108,7 +108,7 @@ export function PropagationCheckDialog({
           {loading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div
-                  key={i}
+                  key={`skeleton-${i}`}
                   className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/2 p-3"
                 >
                   <Loader2 className="size-4 animate-spin text-zinc-500" />
@@ -143,9 +143,9 @@ export function PropagationCheckDialog({
                     ) : r.values.length > 0 ? (
                       <span
                         className="block break-all font-mono text-xs text-zinc-500"
-                        title={r.values.join(", ")}
+                        title={r.values.join(', ')}
                       >
-                        {r.values.join(", ")}
+                        {r.values.join(', ')}
                       </span>
                     ) : (
                       <span className="text-xs text-zinc-600">No records</span>
@@ -160,11 +160,11 @@ export function PropagationCheckDialog({
                       <Badge
                         className={
                           r.match
-                            ? "border-emerald-500/20 bg-emerald-500/10 text-[10px] font-bold text-emerald-500 uppercase"
-                            : "border-red-500/20 bg-red-500/10 text-[10px] font-bold text-red-400 uppercase"
+                            ? 'border-emerald-500/20 bg-emerald-500/10 text-[10px] font-bold text-emerald-500 uppercase'
+                            : 'border-red-500/20 bg-red-500/10 text-[10px] font-bold text-red-400 uppercase'
                         }
                       >
-                        {r.match ? "Resolved" : "Not found"}
+                        {r.match ? 'Resolved' : 'Not found'}
                       </Badge>
                     )}
                   </div>

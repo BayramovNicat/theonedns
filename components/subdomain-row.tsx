@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import { Check, Globe, Pencil, Trash2, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Check, Globe, Pencil, Trash2, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { PropagationCheckDialog } from '@/components/propagation-check-dialog';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,26 +13,25 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { TableCell, TableRow } from '@/components/ui/table';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { PropagationCheckDialog } from "@/components/propagation-check-dialog";
+} from '@/components/ui/tooltip';
 
 type DnsRecord = {
   id: string;
@@ -44,16 +44,16 @@ type DnsRecord = {
 };
 
 const TTL_OPTIONS = [
-  { value: "60", label: "1 min" },
-  { value: "300", label: "5 min" },
-  { value: "600", label: "10 min" },
-  { value: "1800", label: "30 min" },
-  { value: "3600", label: "1 hour" },
-  { value: "86400", label: "1 day" },
+  { value: '60', label: '1 min' },
+  { value: '300', label: '5 min' },
+  { value: '600', label: '10 min' },
+  { value: '1800', label: '30 min' },
+  { value: '3600', label: '1 hour' },
+  { value: '86400', label: '1 day' },
 ];
 
 function formatTtl(ttl?: number): string {
-  if (!ttl) return "Auto";
+  if (!ttl) return 'Auto';
   if (ttl < 60) return `${ttl}s`;
   if (ttl < 3600) return `${Math.round(ttl / 60)}m`;
   if (ttl < 86400) return `${Math.round(ttl / 3600)}h`;
@@ -77,10 +77,10 @@ export function SubdomainRow({
   const [editing, setEditing] = useState(false);
   const [recordType, setRecordType] = useState(record.type);
   const [content, setContent] = useState(record.content);
-  const [priority, setPriority] = useState(String(record.priority ?? "10"));
-  const [ttl, setTtl] = useState(String(record.ttl ?? ""));
+  const [priority, setPriority] = useState(String(record.priority ?? '10'));
+  const [ttl, setTtl] = useState(String(record.ttl ?? ''));
   const [proxied, setProxied] = useState(record.proxied ?? false);
-  const showProxy = platform === "cloudflare";
+  const showProxy = platform === 'cloudflare';
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [removed, setRemoved] = useState(false);
@@ -93,21 +93,21 @@ export function SubdomainRow({
     setSaving(true);
     try {
       const res = await fetch(`/api/projects/${projectId}/dns`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           recordId: record.id,
           type: recordType,
           content,
           ttl: ttl ? Number(ttl) : undefined,
-          priority: recordType === "MX" ? Number(priority) : undefined,
+          priority: recordType === 'MX' ? Number(priority) : undefined,
           proxied,
         }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error ?? "Something went wrong");
+        toast.error(data.error ?? 'Something went wrong');
         return;
       }
 
@@ -115,7 +115,7 @@ export function SubdomainRow({
       setEditing(false);
       router.refresh();
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setSaving(false);
     }
@@ -124,8 +124,8 @@ export function SubdomainRow({
   function handleCancel() {
     setRecordType(record.type);
     setContent(record.content);
-    setPriority(String(record.priority ?? "10"));
-    setTtl(String(record.ttl ?? ""));
+    setPriority(String(record.priority ?? '10'));
+    setTtl(String(record.ttl ?? ''));
     setProxied(record.proxied ?? false);
     setEditing(false);
   }
@@ -134,14 +134,14 @@ export function SubdomainRow({
     setDeleting(true);
     try {
       const res = await fetch(`/api/projects/${projectId}/dns`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recordId: record.id }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error ?? "Something went wrong");
+        toast.error(data.error ?? 'Something went wrong');
         return;
       }
 
@@ -149,7 +149,7 @@ export function SubdomainRow({
       setRemoved(true);
       router.refresh();
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setDeleting(false);
       setConfirmOpen(false);
@@ -200,7 +200,7 @@ export function SubdomainRow({
         <TableCell>
           {editing ? (
             <div className="flex items-center gap-2">
-              {recordType === "MX" && (
+              {recordType === 'MX' && (
                 <Input
                   type="number"
                   min="0"
@@ -216,15 +216,15 @@ export function SubdomainRow({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={
-                  recordType === "A"
-                    ? "192.0.2.1"
-                    : recordType === "AAAA"
-                      ? "2001:db8::1"
-                      : recordType === "MX"
-                        ? "mail.example.com"
-                        : recordType === "TXT"
-                          ? "v=spf1 ..."
-                          : "example.com"
+                  recordType === 'A'
+                    ? '192.0.2.1'
+                    : recordType === 'AAAA'
+                      ? '2001:db8::1'
+                      : recordType === 'MX'
+                        ? 'mail.example.com'
+                        : recordType === 'TXT'
+                          ? 'v=spf1 ...'
+                          : 'example.com'
                 }
                 className="h-8 flex-1 border-white/10 bg-white/5 font-mono text-sm text-white placeholder:text-zinc-700"
               />
@@ -239,13 +239,13 @@ export function SubdomainRow({
         </TableCell>
         <TableCell>
           {editing ? (
-            <Select value={ttl} onValueChange={(v) => setTtl(v ?? "")}>
+            <Select value={ttl} onValueChange={(v) => setTtl(v ?? '')}>
               <SelectTrigger
                 size="sm"
                 className="w-24 border-white/10 bg-white/5 text-white"
               >
                 <SelectValue>
-                  {ttl ? formatTtl(Number(ttl)) : "Auto"}
+                  {ttl ? formatTtl(Number(ttl)) : 'Auto'}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="border-white/10 bg-zinc-900 text-white">
@@ -383,7 +383,7 @@ export function SubdomainRow({
               Delete record
             </AlertDialogTitle>
             <AlertDialogDescription className="font-serif text-zinc-500 italic">
-              Are you sure you want to banish the record{" "}
+              Are you sure you want to banish the record{' '}
               <span className="font-bold text-amber-500 not-italic">
                 {record.name}
               </span>
@@ -403,7 +403,7 @@ export function SubdomainRow({
               disabled={deleting}
               className="bg-red-500/80 font-bold hover:bg-red-500"
             >
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? 'Deleting...' : 'Delete'}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

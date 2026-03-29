@@ -1,4 +1,4 @@
-import { Resolver } from "dns";
+import { Resolver } from 'node:dns';
 
 type DnsRecord = {
   id: string;
@@ -10,7 +10,7 @@ type DnsRecord = {
   proxied?: boolean;
 };
 
-export type AuditSeverity = "error" | "warning" | "info";
+export type AuditSeverity = 'error' | 'warning' | 'info';
 
 export type AuditIssue = {
   severity: AuditSeverity;
@@ -22,7 +22,7 @@ export type AuditIssue = {
 function resolveWithTimeout(
   name: string,
   type: string,
-  server = "8.8.8.8"
+  server = '8.8.8.8',
 ): Promise<string[]> {
   return new Promise((resolve) => {
     const resolver = new Resolver();
@@ -41,7 +41,7 @@ function resolveWithTimeout(
       }
       if (Array.isArray(records)) {
         resolve(
-          records.map((r) => (Array.isArray(r) ? r.join("") : String(r)))
+          records.map((r) => (Array.isArray(r) ? r.join('') : String(r))),
         );
       } else {
         resolve([]);
@@ -49,10 +49,10 @@ function resolveWithTimeout(
     };
 
     switch (type) {
-      case "TXT":
+      case 'TXT':
         resolver.resolveTxt(name, cb);
         break;
-      case "MX":
+      case 'MX':
         resolver.resolveMx(name, (err, records) => {
           clearTimeout(timeout);
           if (err || !records) {
@@ -71,54 +71,54 @@ function resolveWithTimeout(
 
 export async function auditDnsRecords(
   records: DnsRecord[],
-  domain: string
+  domain: string,
 ): Promise<AuditIssue[]> {
   const issues: AuditIssue[] = [];
 
   // Check from actual DNS for SPF/DMARC (catches records not in the provider)
   const [liveTxt, liveDmarcTxt, liveMx] = await Promise.all([
-    resolveWithTimeout(domain, "TXT"),
-    resolveWithTimeout(`_dmarc.${domain}`, "TXT"),
-    resolveWithTimeout(domain, "MX"),
+    resolveWithTimeout(domain, 'TXT'),
+    resolveWithTimeout(`_dmarc.${domain}`, 'TXT'),
+    resolveWithTimeout(domain, 'MX'),
   ]);
 
   // --- SPF check ---
-  const spfRecords = liveTxt.filter((r) => r.startsWith("v=spf1"));
+  const spfRecords = liveTxt.filter((r) => r.startsWith('v=spf1'));
   if (spfRecords.length === 0) {
     issues.push({
-      severity: "error",
-      title: "Missing SPF record",
+      severity: 'error',
+      title: 'Missing SPF record',
       description:
-        "No SPF record found. Email from this domain may be marked as spam. Add a TXT record with your SPF policy.",
+        'No SPF record found. Email from this domain may be marked as spam. Add a TXT record with your SPF policy.',
     });
   } else if (spfRecords.length > 1) {
     issues.push({
-      severity: "error",
-      title: "Multiple SPF records",
+      severity: 'error',
+      title: 'Multiple SPF records',
       description:
-        "Multiple SPF records found. RFC 7208 requires exactly one SPF record per domain. Merge them into a single record.",
+        'Multiple SPF records found. RFC 7208 requires exactly one SPF record per domain. Merge them into a single record.',
     });
   }
 
   // --- DMARC check ---
-  const dmarcRecords = liveDmarcTxt.filter((r) => r.startsWith("v=DMARC1"));
+  const dmarcRecords = liveDmarcTxt.filter((r) => r.startsWith('v=DMARC1'));
   if (dmarcRecords.length === 0) {
     issues.push({
-      severity: "error",
-      title: "Missing DMARC record",
+      severity: 'error',
+      title: 'Missing DMARC record',
       description:
-        "No DMARC record found at _dmarc." +
+        'No DMARC record found at _dmarc.' +
         domain +
-        ". Add a DMARC policy to prevent email spoofing.",
+        '. Add a DMARC policy to prevent email spoofing.',
     });
   } else {
     const dmarc = dmarcRecords[0];
-    if (dmarc.includes("p=none")) {
+    if (dmarc.includes('p=none')) {
       issues.push({
-        severity: "warning",
-        title: "DMARC policy is set to none",
+        severity: 'warning',
+        title: 'DMARC policy is set to none',
         description:
-          "Your DMARC policy is monitoring-only (p=none). Consider upgrading to p=quarantine or p=reject for better protection.",
+          'Your DMARC policy is monitoring-only (p=none). Consider upgrading to p=quarantine or p=reject for better protection.',
       });
     }
   }
@@ -126,10 +126,10 @@ export async function auditDnsRecords(
   // --- MX check ---
   if (liveMx.length === 0) {
     issues.push({
-      severity: "info",
-      title: "No MX records",
+      severity: 'info',
+      title: 'No MX records',
       description:
-        "No MX records found. This domain cannot receive email. Add MX records if email is needed.",
+        'No MX records found. This domain cannot receive email. Add MX records if email is needed.',
     });
   }
 
@@ -142,11 +142,11 @@ export async function auditDnsRecords(
   }
 
   for (const [name, recs] of byName) {
-    const hasCname = recs.some((r) => r.type === "CNAME");
+    const hasCname = recs.some((r) => r.type === 'CNAME');
     if (hasCname && recs.length > 1) {
       issues.push({
-        severity: "error",
-        title: "CNAME conflict",
+        severity: 'error',
+        title: 'CNAME conflict',
         description: `${name} has a CNAME record alongside other records. CNAME must be the only record for a name (RFC 1034).`,
         record: name,
       });
@@ -159,8 +159,8 @@ export async function auditDnsRecords(
     const key = `${r.name}|${r.type}|${r.content}`;
     if (seen.has(key)) {
       issues.push({
-        severity: "warning",
-        title: "Duplicate record",
+        severity: 'warning',
+        title: 'Duplicate record',
         description: `${r.name} has duplicate ${r.type} records with the same content (${r.content}).`,
         record: r.name,
       });
@@ -172,8 +172,8 @@ export async function auditDnsRecords(
   for (const r of records) {
     if (r.ttl && r.ttl >= 86400) {
       issues.push({
-        severity: "info",
-        title: "High TTL",
+        severity: 'info',
+        title: 'High TTL',
         description: `${r.name} (${r.type}) has a TTL of ${Math.round(r.ttl / 3600)}h. Changes will be slow to propagate.`,
         record: r.name,
       });

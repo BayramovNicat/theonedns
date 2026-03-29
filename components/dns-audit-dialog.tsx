@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertTriangle,
@@ -8,18 +8,18 @@ import {
   RefreshCw,
   ShieldCheck,
   XCircle,
-} from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-type AuditSeverity = "error" | "warning" | "info";
+type AuditSeverity = 'error' | 'warning' | 'info';
 
 type AuditIssue = {
   severity: AuditSeverity;
@@ -44,21 +44,21 @@ const severityConfig: Record<
 > = {
   error: {
     icon: XCircle,
-    color: "text-red-400",
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
+    color: 'text-red-400',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
   },
   warning: {
     icon: AlertTriangle,
-    color: "text-amber-400",
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/20",
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
   },
   info: {
     icon: Info,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/20",
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
   },
 };
 
@@ -80,9 +80,9 @@ export function DnsAuditDialog({
     setLoading(true);
     setIssues([]);
     try {
-      const res = await fetch("/api/dns/audit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/dns/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ records, domain }),
       });
       const data = await res.json();
@@ -98,8 +98,8 @@ export function DnsAuditDialog({
     if (open) audit();
   }, [open, audit]);
 
-  const errors = issues.filter((i) => i.severity === "error").length;
-  const warnings = issues.filter((i) => i.severity === "warning").length;
+  const errors = issues.filter((i) => i.severity === 'error').length;
+  const warnings = issues.filter((i) => i.severity === 'warning').length;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -110,7 +110,7 @@ export function DnsAuditDialog({
             DNS Health Audit
           </DialogTitle>
           <DialogDescription className="font-serif text-zinc-500 italic">
-            Checking configuration for{" "}
+            Checking configuration for{' '}
             <span className="font-bold text-amber-500 not-italic">
               {domain}
             </span>
@@ -123,13 +123,13 @@ export function DnsAuditDialog({
               {errors > 0 && (
                 <span className="flex items-center gap-1 text-red-400">
                   <XCircle className="size-3.5" />
-                  {errors} {errors === 1 ? "error" : "errors"}
+                  {errors} {errors === 1 ? 'error' : 'errors'}
                 </span>
               )}
               {warnings > 0 && (
                 <span className="flex items-center gap-1 text-amber-400">
                   <AlertTriangle className="size-3.5" />
-                  {warnings} {warnings === 1 ? "warning" : "warnings"}
+                  {warnings} {warnings === 1 ? 'warning' : 'warnings'}
                 </span>
               )}
               {errors === 0 && warnings === 0 && (
@@ -156,7 +156,7 @@ export function DnsAuditDialog({
           {loading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div
-                  key={i}
+                  key={`skeleton-${i}`}
                   className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/2 p-3"
                 >
                   <Loader2 className="mt-0.5 size-4 animate-spin text-zinc-500" />
@@ -171,7 +171,7 @@ export function DnsAuditDialog({
                 const Icon = config.icon;
                 return (
                   <div
-                    key={i}
+                    key={`issue-${i}`}
                     className={`flex items-start gap-3 rounded-lg border ${config.border} ${config.bg} p-3`}
                   >
                     <Icon

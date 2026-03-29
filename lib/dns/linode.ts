@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://api.linode.com/v4";
+const API = 'https://api.linode.com/v4';
 
 function headers(token: string) {
   return {
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -21,7 +21,7 @@ class LinodeProvider implements DnsProvider {
   constructor(
     token: string,
     private domainId: string,
-    private domain: string
+    private domain: string,
   ) {
     this.hdrs = headers(token);
   }
@@ -33,7 +33,7 @@ class LinodeProvider implements DnsProvider {
     while (true) {
       const res = await fetch(
         `${API}/domains/${this.domainId}/records?page=${page}&page_size=500`,
-        { headers: this.hdrs }
+        { headers: this.hdrs },
       );
       if (!res.ok) break;
 
@@ -43,7 +43,7 @@ class LinodeProvider implements DnsProvider {
       for (const r of items) {
         records.push({
           id: String(r.id),
-          name: r.name === "" ? this.domain : `${r.name}.${this.domain}`,
+          name: r.name === '' ? this.domain : `${r.name}.${this.domain}`,
           type: r.type,
           content: r.target,
           ttl: r.ttl_sec || undefined,
@@ -60,7 +60,7 @@ class LinodeProvider implements DnsProvider {
 
   async createRecord(params: CreateRecordParams): Promise<{ id: string }> {
     const res = await fetch(`${API}/domains/${this.domainId}/records`, {
-      method: "POST",
+      method: 'POST',
       headers: this.hdrs,
       body: JSON.stringify({
         type: params.type,
@@ -73,7 +73,7 @@ class LinodeProvider implements DnsProvider {
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      const msg = data?.errors?.[0]?.reason ?? "Failed to create DNS record";
+      const msg = data?.errors?.[0]?.reason ?? 'Failed to create DNS record';
       throw new Error(msg);
     }
 
@@ -90,15 +90,15 @@ class LinodeProvider implements DnsProvider {
     const res = await fetch(
       `${API}/domains/${this.domainId}/records/${recordId}`,
       {
-        method: "PUT",
+        method: 'PUT',
         headers: this.hdrs,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
-      const msg = data?.errors?.[0]?.reason ?? "Failed to update DNS record";
+      const msg = data?.errors?.[0]?.reason ?? 'Failed to update DNS record';
       throw new Error(msg);
     }
   }
@@ -106,12 +106,12 @@ class LinodeProvider implements DnsProvider {
   async deleteRecord(recordId: string) {
     const res = await fetch(
       `${API}/domains/${this.domainId}/records/${recordId}`,
-      { method: "DELETE", headers: this.hdrs }
+      { method: 'DELETE', headers: this.hdrs },
     );
 
     if (!res.ok && res.status !== 200) {
       const data = await res.json().catch(() => null);
-      const msg = data?.errors?.[0]?.reason ?? "Failed to delete DNS record";
+      const msg = data?.errors?.[0]?.reason ?? 'Failed to delete DNS record';
       throw new Error(msg);
     }
   }
@@ -126,19 +126,19 @@ export const linodeAdapter: PlatformAdapter = {
 
     if (!res.ok) {
       if (res.status === 401)
-        return { valid: false, error: "Invalid API token" };
+        return { valid: false, error: 'Invalid API token' };
       return { valid: false, error: `Verification failed (${res.status})` };
     }
 
     const data = await res.json();
     const match = (data.data ?? []).find(
-      (d: { domain: string }) => d.domain === domain
+      (d: { domain: string }) => d.domain === domain,
     );
 
     if (!match)
       return {
         valid: false,
-        error: "Domain not found in your Linode account",
+        error: 'Domain not found in your Linode account',
       };
 
     return { valid: true };

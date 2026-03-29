@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Search, ShieldCheck, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { DnsAuditDialog } from "@/components/dns-audit-dialog";
-import { DnsExportImport } from "@/components/dns-export-import";
-import { SubdomainRow } from "@/components/subdomain-row";
+import { Search, ShieldCheck, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { DnsAuditDialog } from '@/components/dns-audit-dialog';
+import { DnsExportImport } from '@/components/dns-export-import';
+import { SubdomainRow } from '@/components/subdomain-row';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -15,16 +15,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 type DnsRecord = {
   id: string;
@@ -48,7 +48,7 @@ export function DnsRecordsClient({
   domain: string;
 }) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [auditOpen, setAuditOpen] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -80,8 +80,8 @@ export function DnsRecordsClient({
     for (const id of selected) {
       try {
         const res = await fetch(`/api/projects/${projectId}/dns`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ recordId: id }),
         });
         if (res.ok) success++;
@@ -92,11 +92,11 @@ export function DnsRecordsClient({
     }
 
     if (success > 0) {
-      toast.success(`Deleted ${success} record${success > 1 ? "s" : ""}`);
+      toast.success(`Deleted ${success} record${success > 1 ? 's' : ''}`);
       router.refresh();
     }
     if (failed > 0) {
-      toast.error(`Failed to delete ${failed} record${failed > 1 ? "s" : ""}`);
+      toast.error(`Failed to delete ${failed} record${failed > 1 ? 's' : ''}`);
     }
 
     setSelected(new Set());
@@ -120,13 +120,13 @@ export function DnsRecordsClient({
       result = result.filter(
         (r) =>
           r.name.toLowerCase().includes(q) ||
-          r.content.toLowerCase().includes(q)
+          r.content.toLowerCase().includes(q),
       );
     }
     return result;
   }, [records, typeFilter, search]);
 
-  const showProxy = platform === "cloudflare";
+  const showProxy = platform === 'cloudflare';
 
   return (
     <div>
@@ -159,23 +159,25 @@ export function DnsRecordsClient({
         </div>
         <div className="no-scrollbar flex gap-2 overflow-x-auto">
           <button
+            type="button"
             onClick={() => setTypeFilter(null)}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
               typeFilter === null
-                ? "border border-amber-500/40 bg-amber-500/20 text-amber-400"
-                : "border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10"
+                ? 'border border-amber-500/40 bg-amber-500/20 text-amber-400'
+                : 'border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10'
             }`}
           >
             All
           </button>
           {types.map((t) => (
             <button
+              type="button"
               key={t}
               onClick={() => setTypeFilter(t)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                 typeFilter === t
-                  ? "border border-amber-500/40 bg-amber-500/20 text-amber-400"
-                  : "border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10"
+                  ? 'border border-amber-500/40 bg-amber-500/20 text-amber-400'
+                  : 'border border-white/5 bg-white/5 text-zinc-500 hover:border-white/10'
               }`}
             >
               {t}
@@ -282,11 +284,11 @@ export function DnsRecordsClient({
               Delete {selected.size} records
             </AlertDialogTitle>
             <AlertDialogDescription className="font-serif text-zinc-500 italic">
-              Are you sure you want to banish{" "}
+              Are you sure you want to banish{' '}
               <span className="font-bold text-amber-500 not-italic">
                 {selected.size}
-              </span>{" "}
-              record{selected.size > 1 ? "s" : ""}? This action cannot be
+              </span>{' '}
+              record{selected.size > 1 ? 's' : ''}? This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -303,7 +305,7 @@ export function DnsRecordsClient({
               disabled={bulkDeleting}
               className="bg-red-500/80 font-bold hover:bg-red-500"
             >
-              {bulkDeleting ? "Deleting..." : "Delete all"}
+              {bulkDeleting ? 'Deleting...' : 'Delete all'}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,72 +1,72 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2, RefreshCw } from "lucide-react";
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, Loader2, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
 
 const SEVEN = [
   {
-    name: "DigitalOcean",
-    desc: "The foundation for many digital halls",
-    grid: "md:col-span-2 md:row-span-1",
+    name: 'DigitalOcean',
+    desc: 'The foundation for many digital halls',
+    grid: 'md:col-span-2 md:row-span-1',
     ping: 24,
     records: 8,
   },
   {
-    name: "Hetzner",
-    desc: "Deeply rooted in bare-metal performance",
-    grid: "md:col-span-1 md:row-span-1",
+    name: 'Hetzner',
+    desc: 'Deeply rooted in bare-metal performance',
+    grid: 'md:col-span-1 md:row-span-1',
     ping: 18,
     records: 3,
   },
   {
-    name: "Google Cloud",
-    desc: "A vast, ancient power",
-    grid: "md:col-span-1 md:row-span-2",
+    name: 'Google Cloud',
+    desc: 'A vast, ancient power',
+    grid: 'md:col-span-1 md:row-span-2',
     ping: 12,
     records: 14,
   },
   {
-    name: "AWS Route 53",
-    desc: "Immense power, high-tier servant",
-    grid: "md:col-span-2 md:row-span-1",
+    name: 'AWS Route 53',
+    desc: 'Immense power, high-tier servant',
+    grid: 'md:col-span-2 md:row-span-1',
     ping: 16,
     records: 22,
   },
   {
-    name: "Vultr",
-    desc: "High-performance infrastructure",
-    grid: "md:col-span-1 md:row-span-1",
+    name: 'Vultr',
+    desc: 'High-performance infrastructure',
+    grid: 'md:col-span-1 md:row-span-1',
     ping: 31,
     records: 5,
   },
   {
-    name: "Akamai",
-    desc: "A legendary name in hosting",
-    grid: "md:col-span-1 md:row-span-1",
+    name: 'Akamai',
+    desc: 'A legendary name in hosting',
+    grid: 'md:col-span-1 md:row-span-1',
     ping: 22,
     records: 6,
   },
   {
-    name: "OVHcloud",
-    desc: "Sprawling network of northern data centers",
-    grid: "md:col-span-2 md:row-span-1",
+    name: 'OVHcloud',
+    desc: 'Sprawling network of northern data centers',
+    grid: 'md:col-span-2 md:row-span-1',
     ping: 35,
     records: 11,
   },
 ];
 
 function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
   const handleSync = () => {
-    setStatus("loading");
+    setStatus('loading');
     setTimeout(
       () => {
-        setStatus("success");
-        setTimeout(() => setStatus("idle"), 4000);
+        setStatus('success');
+        setTimeout(() => setStatus('idle'), 4000);
       },
-      1200 + Math.random() * 800
+      1200 + Math.random() * 800,
     );
   };
 
@@ -83,12 +83,13 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
           <span className="font-serif text-lg italic">{idx + 1}</span>
         </div>
         <button
+          type="button"
           onClick={handleSync}
-          disabled={status === "loading"}
+          disabled={status === 'loading'}
           className="relative flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-50"
         >
           <AnimatePresence mode="wait">
-            {status === "idle" && (
+            {status === 'idle' && (
               <motion.div
                 key="idle"
                 initial={{ opacity: 0, rotate: -90 }}
@@ -102,7 +103,7 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
                 </span>
               </motion.div>
             )}
-            {status === "loading" && (
+            {status === 'loading' && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -112,7 +113,7 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
                 <Loader2 size={14} className="animate-spin text-amber-500" />
               </motion.div>
             )}
-            {status === "success" && (
+            {status === 'success' && (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -144,14 +145,14 @@ function BentoCard({ item, idx }: { item: (typeof SEVEN)[0]; idx: number }) {
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <div
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${status === "success" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-zinc-700"}`}
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${status === 'success' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-zinc-700'}`}
           />
           <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase">
-            {status === "success" ? "Connected" : "Standby"}
+            {status === 'success' ? 'Connected' : 'Standby'}
           </span>
         </div>
         <AnimatePresence>
-          {status === "success" && (
+          {status === 'success' && (
             <motion.span
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}

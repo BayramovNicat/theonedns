@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { checkPropagation } from "@/lib/dns/propagation";
-import { rateLimit } from "@/lib/rate-limit";
-import { createClient } from "@/lib/supabase/server";
+import { NextResponse } from 'next/server';
+import { checkPropagation } from '@/lib/dns/propagation';
+import { rateLimit } from '@/lib/rate-limit';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     data: { session },
   } = await supabase.auth.getSession();
   if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const limited = rateLimit(`propagation:${session.user.id}`, 20, 60_000);
@@ -20,8 +20,8 @@ export async function POST(request: Request) {
 
   if (!name || !type || !expected) {
     return NextResponse.json(
-      { error: "name, type, and expected are required" },
-      { status: 400 }
+      { error: 'name, type, and expected are required' },
+      { status: 400 },
     );
   }
 

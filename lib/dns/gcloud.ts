@@ -4,14 +4,14 @@ import type {
   DnsRecord,
   PlatformAdapter,
   UpdateRecordParams,
-} from "./types";
+} from './types';
 
-const API = "https://dns.googleapis.com/dns/v1";
+const API = 'https://dns.googleapis.com/dns/v1';
 
 function headers(accessToken: string) {
   return {
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 }
 
@@ -20,55 +20,55 @@ async function getAccessToken(serviceAccountJson: string): Promise<string> {
   const sa = JSON.parse(serviceAccountJson);
   const now = Math.floor(Date.now() / 1000);
 
-  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  const header = btoa(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
   const payload = btoa(
     JSON.stringify({
       iss: sa.client_email,
-      scope: "https://www.googleapis.com/auth/ndev.clouddns.readwrite",
-      aud: "https://oauth2.googleapis.com/token",
+      scope: 'https://www.googleapis.com/auth/ndev.clouddns.readwrite',
+      aud: 'https://oauth2.googleapis.com/token',
       iat: now,
       exp: now + 3600,
-    })
+    }),
   )
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
   const signingInput = `${header}.${payload}`;
 
   const key = await crypto.subtle.importKey(
-    "pkcs8",
+    'pkcs8',
     pemToArrayBuffer(sa.private_key),
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
     false,
-    ["sign"]
+    ['sign'],
   );
 
   const signature = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
+    'RSASSA-PKCS1-v1_5',
     key,
-    new TextEncoder().encode(signingInput)
+    new TextEncoder().encode(signingInput),
   );
 
   const sig = btoa(String.fromCharCode(...new Uint8Array(signature)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
   const jwt = `${signingInput}.${sig}`;
 
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
   });
 
   if (!res.ok) {
-    throw new Error("Failed to obtain access token from Google");
+    throw new Error('Failed to obtain access token from Google');
   }
 
   const data = await res.json();
@@ -77,9 +77,9 @@ async function getAccessToken(serviceAccountJson: string): Promise<string> {
 
 function pemToArrayBuffer(pem: string): ArrayBuffer {
   const b64 = pem
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/\s/g, "");
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\s/g, '');
   const binary = atob(b64);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
@@ -94,13 +94,13 @@ function encodeId(type: string, name: string) {
 }
 
 function decodeId(id: string) {
-  const idx = id.indexOf(":");
+  const idx = id.indexOf(':');
   return { type: id.slice(0, idx), name: id.slice(idx + 1) };
 }
 
 /** Ensure name ends with a dot (Cloud DNS uses FQDNs). */
 function fqdn(name: string) {
-  return name.endsWith(".") ? name : `${name}.`;
+  return name.endsWith('.') ? name : `${name}.`;
 }
 
 class GoogleCloudDnsProvider implements DnsProvider {
@@ -108,7 +108,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
     private accessToken: string,
     private projectId: string,
     private managedZone: string,
-    private domain: string
+    private domain: string,
   ) {}
 
   async listRecords(): Promise<DnsRecord[]> {
@@ -117,9 +117,9 @@ class GoogleCloudDnsProvider implements DnsProvider {
 
     while (true) {
       const url = new URL(
-        `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/rrsets`
+        `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/rrsets`,
       );
-      if (pageToken) url.searchParams.set("pageToken", pageToken);
+      if (pageToken) url.searchParams.set('pageToken', pageToken);
 
       const res = await fetch(url.toString(), {
         headers: headers(this.accessToken),
@@ -131,12 +131,12 @@ class GoogleCloudDnsProvider implements DnsProvider {
 
       for (const rrset of data.rrsets ?? []) {
         for (const rdata of rrset.rrdatas ?? []) {
-          const name = rrset.name.replace(/\.$/, "");
+          const name = rrset.name.replace(/\.$/, '');
           records.push({
             id: encodeId(rrset.type, rrset.name),
             name,
             type: rrset.type,
-            content: rdata.replace(/\.$/, ""),
+            content: rdata.replace(/\.$/, ''),
             ttl: rrset.ttl,
           });
         }
@@ -155,7 +155,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
     const res = await fetch(
       `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/rrsets`,
       {
-        method: "POST",
+        method: 'POST',
         headers: headers(this.accessToken),
         body: JSON.stringify({
           name,
@@ -163,14 +163,14 @@ class GoogleCloudDnsProvider implements DnsProvider {
           ttl: params.ttl ?? 300,
           rrdatas: [params.content],
         }),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
       throw new Error(
         data?.error?.message ??
-          "Failed to create DNS record in Google Cloud DNS"
+          'Failed to create DNS record in Google Cloud DNS',
       );
     }
 
@@ -185,11 +185,11 @@ class GoogleCloudDnsProvider implements DnsProvider {
     // First, get the existing rrset to know old rrdatas
     const getRes = await fetch(
       `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/rrsets/${name}/${type}`,
-      { headers: headers(this.accessToken) }
+      { headers: headers(this.accessToken) },
     );
 
     if (!getRes.ok) {
-      throw new Error("Failed to fetch existing record for update");
+      throw new Error('Failed to fetch existing record for update');
     }
 
     const existing = await getRes.json();
@@ -197,7 +197,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
     const res = await fetch(
       `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/changes`,
       {
-        method: "POST",
+        method: 'POST',
         headers: headers(this.accessToken),
         body: JSON.stringify({
           deletions: [
@@ -217,14 +217,14 @@ class GoogleCloudDnsProvider implements DnsProvider {
             },
           ],
         }),
-      }
+      },
     );
 
     if (!res.ok) {
       const data = await res.json().catch(() => null);
       throw new Error(
         data?.error?.message ??
-          "Failed to update DNS record in Google Cloud DNS"
+          'Failed to update DNS record in Google Cloud DNS',
       );
     }
   }
@@ -235,11 +235,11 @@ class GoogleCloudDnsProvider implements DnsProvider {
     // Get existing rrset first
     const getRes = await fetch(
       `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/rrsets/${name}/${type}`,
-      { headers: headers(this.accessToken) }
+      { headers: headers(this.accessToken) },
     );
 
     if (!getRes.ok && getRes.status !== 404) {
-      throw new Error("Failed to fetch existing record for deletion");
+      throw new Error('Failed to fetch existing record for deletion');
     }
 
     if (getRes.status === 404) return;
@@ -249,7 +249,7 @@ class GoogleCloudDnsProvider implements DnsProvider {
     const res = await fetch(
       `${API}/projects/${this.projectId}/managedZones/${this.managedZone}/changes`,
       {
-        method: "POST",
+        method: 'POST',
         headers: headers(this.accessToken),
         body: JSON.stringify({
           deletions: [
@@ -261,14 +261,14 @@ class GoogleCloudDnsProvider implements DnsProvider {
             },
           ],
         }),
-      }
+      },
     );
 
     if (!res.ok && res.status !== 404) {
       const data = await res.json().catch(() => null);
       throw new Error(
         data?.error?.message ??
-          "Failed to delete DNS record from Google Cloud DNS"
+          'Failed to delete DNS record from Google Cloud DNS',
       );
     }
   }
@@ -280,32 +280,32 @@ export const gcloudAdapter: PlatformAdapter = {
       const token = await getAccessToken(creds.service_account_json);
       const res = await fetch(
         `${API}/projects/${creds.project_id}/managedZones/${creds.managed_zone}`,
-        { headers: headers(token) }
+        { headers: headers(token) },
       );
 
       if (res.ok) {
         const data = await res.json();
-        if (data.dnsName?.replace(/\.$/, "") === domain) {
+        if (data.dnsName?.replace(/\.$/, '') === domain) {
           return { valid: true };
         }
         return {
           valid: false,
-          error: `Managed zone DNS name (${data.dnsName?.replace(/\.$/, "")}) does not match domain (${domain})`,
+          error: `Managed zone DNS name (${data.dnsName?.replace(/\.$/, '')}) does not match domain (${domain})`,
         };
       }
       if (res.status === 401 || res.status === 403)
         return {
           valid: false,
-          error: "Invalid service account or insufficient permissions",
+          error: 'Invalid service account or insufficient permissions',
         };
       if (res.status === 404)
-        return { valid: false, error: "Managed zone not found" };
+        return { valid: false, error: 'Managed zone not found' };
 
       return { valid: false, error: `Verification failed (${res.status})` };
     } catch (e) {
       return {
         valid: false,
-        error: e instanceof Error ? e.message : "Invalid service account JSON",
+        error: e instanceof Error ? e.message : 'Invalid service account JSON',
       };
     }
   },
@@ -332,7 +332,7 @@ export const gcloudAdapter: PlatformAdapter = {
             token,
             creds.project_id,
             creds.managed_zone,
-            domain
+            domain,
           );
           return (
             provider as unknown as Record<string, (...a: unknown[]) => unknown>
