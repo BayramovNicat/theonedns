@@ -32,6 +32,12 @@ export async function POST(request: Request) {
     );
   }
 
+  // Must be a valid domain: labels separated by dots, 253 chars max
+  const DOMAIN_RE = /^([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/;
+  if (domain.length > 253 || !DOMAIN_RE.test(domain)) {
+    return NextResponse.json({ error: 'Invalid domain name' }, { status: 400 });
+  }
+
   if (!PLATFORMS[platform]) {
     return NextResponse.json(
       { error: 'Unsupported platform' },
