@@ -70,7 +70,7 @@ export function PropagationCheckDialog({
             <Globe className="size-5 text-amber-500" />
             Propagation Check
           </DialogTitle>
-          <DialogDescription className="truncate font-serif text-zinc-500 italic">
+          <DialogDescription className="font-serif text-zinc-500 italic break-all">
             Querying global resolvers for{" "}
             <span className="font-bold text-amber-500 not-italic">
               {record.name}
@@ -119,7 +119,7 @@ export function PropagationCheckDialog({
             : results.map((r) => (
                 <div
                   key={r.resolver}
-                  className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/2 p-3"
+                  className="flex items-center gap-3 overflow-hidden rounded-lg border border-white/5 bg-white/2 p-3"
                 >
                   {r.error ? (
                     <XCircle className="size-4 shrink-0 text-zinc-500" />
@@ -131,16 +131,18 @@ export function PropagationCheckDialog({
 
                   <div className="min-w-0 flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">
+                      <span className="truncate text-sm font-medium text-white">
                         {r.resolver}
                       </span>
-                      <span className="text-xs text-zinc-600">{r.ip}</span>
+                      <span className="shrink-0 text-xs text-zinc-600">
+                        {r.ip}
+                      </span>
                     </div>
                     {r.error ? (
                       <span className="text-xs text-zinc-500">{r.error}</span>
                     ) : r.values.length > 0 ? (
                       <span
-                        className="block truncate font-mono text-xs text-zinc-500"
+                        className="block break-all font-mono text-xs text-zinc-500"
                         title={r.values.join(", ")}
                       >
                         {r.values.join(", ")}
