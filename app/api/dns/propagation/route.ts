@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkPropagation } from "@/lib/dns/propagation";
+import { rateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
@@ -10,6 +11,9 @@ export async function POST(request: Request) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const limited = rateLimit(`propagation:${session.user.id}`, 20, 60_000);
+  if (limited) return limited;
 
   const body = await request.json();
   const { name, type, expected } = body;

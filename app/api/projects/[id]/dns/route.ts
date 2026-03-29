@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { decrypt } from "@/lib/crypto";
 import { getProvider, isSupported } from "@/lib/dns";
+import { rateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 async function getProject(projectId: string) {
@@ -27,6 +28,14 @@ async function getProject(projectId: string) {
 	};
 }
 
+async function getUserId() {
+	const supabase = await createClient();
+	const {
+		data: { session },
+	} = await supabase.auth.getSession();
+	return session?.user.id ?? null;
+}
+
 function providerFor(project: {
 	platform: string;
 	credentials: Record<string, string>;
@@ -42,6 +51,13 @@ export async function POST(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
+	const userId = await getUserId();
+	if (!userId) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
+	const limited = rateLimit(`dns:mutate:${userId}`, 30, 60_000);
+	if (limited) return limited;
+
 	const { id } = await params;
 	const project = await getProject(id);
 	if (!project) {
@@ -114,6 +130,13 @@ export async function PATCH(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
+	const userId = await getUserId();
+	if (!userId) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
+	const limited = rateLimit(`dns:mutate:${userId}`, 30, 60_000);
+	if (limited) return limited;
+
 	const { id } = await params;
 	const project = await getProject(id);
 	if (!project) {
@@ -160,6 +183,13 @@ export async function DELETE(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
+	const userId = await getUserId();
+	if (!userId) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
+	const limited = rateLimit(`dns:mutate:${userId}`, 30, 60_000);
+	if (limited) return limited;
+
 	const { id } = await params;
 	const project = await getProject(id);
 	if (!project) {

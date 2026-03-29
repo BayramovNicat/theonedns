@@ -26,9 +26,10 @@ export function encrypt(data: Record<string, string>): string {
 }
 
 export function decrypt(encoded: string): Record<string, string> {
-  // Handle legacy unencrypted JSON (from before encryption was added)
   if (encoded.startsWith("{")) {
-    return JSON.parse(encoded);
+    throw new Error(
+      "Plaintext credentials detected. Re-save this project to encrypt them."
+    );
   }
 
   const key = getKey();

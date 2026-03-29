@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { encrypt } from "@/lib/crypto";
 import { getAdapter, isSupported } from "@/lib/dns";
 import { PLATFORMS, type Platform } from "@/lib/platforms";
+import { rateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
@@ -15,6 +16,9 @@ export async function POST(request: Request) {
   }
 
   const user = session.user;
+
+  const limited = rateLimit(`projects:create:${user.id}`, 10, 60_000);
+  if (limited) return limited;
 
   const body = await request.json();
   const platform = body.platform as Platform;
@@ -99,6 +103,9 @@ export async function DELETE(request: Request) {
   }
 
   const user = session.user;
+
+  const limited = rateLimit(`projects:delete:${user.id}`, 10, 60_000);
+  if (limited) return limited;
 
   const { id } = await request.json();
 
