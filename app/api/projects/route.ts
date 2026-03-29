@@ -109,8 +109,14 @@ export async function DELETE(request: Request) {
 
   const { id } = await request.json();
 
-  if (!id) {
-    return NextResponse.json({ error: 'Missing project id' }, { status: 400 });
+  if (
+    !id ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  ) {
+    return NextResponse.json(
+      { error: 'Missing or invalid project id' },
+      { status: 400 },
+    );
   }
 
   const { error } = await supabase

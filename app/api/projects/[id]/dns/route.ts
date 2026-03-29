@@ -5,6 +5,9 @@ import type { DnsProvider } from '@/lib/dns/types';
 import { rateLimit } from '@/lib/rate-limit';
 import { createClient } from '@/lib/supabase/server';
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 async function getProject(projectId: string) {
   const supabase = await createClient();
   const {
@@ -65,6 +68,9 @@ export async function POST(
   if (limited) return limited;
 
   const { id } = await params;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: 'Invalid project ID' }, { status: 400 });
+  }
   const project = await getProject(id);
   if (!project) {
     return NextResponse.json({ error: 'Project not found' }, { status: 404 });
@@ -144,6 +150,9 @@ export async function PATCH(
   if (limited) return limited;
 
   const { id } = await params;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: 'Invalid project ID' }, { status: 400 });
+  }
   const project = await getProject(id);
   if (!project) {
     return NextResponse.json({ error: 'Project not found' }, { status: 404 });
@@ -204,6 +213,9 @@ export async function DELETE(
   if (limited) return limited;
 
   const { id } = await params;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: 'Invalid project ID' }, { status: 400 });
+  }
   const project = await getProject(id);
   if (!project) {
     return NextResponse.json({ error: 'Project not found' }, { status: 404 });
