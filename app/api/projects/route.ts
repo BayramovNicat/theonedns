@@ -86,7 +86,11 @@ export async function POST(request: Request) {
     .single();
 
   if (dbError) {
-    return NextResponse.json({ error: dbError.message }, { status: 500 });
+    console.error('Project insert failed:', dbError.message);
+    return NextResponse.json(
+      { error: 'Failed to create project' },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ success: true, id: project.id });
@@ -126,7 +130,11 @@ export async function DELETE(request: Request) {
     .eq('user_id', user.id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Project delete failed:', error.message);
+    return NextResponse.json(
+      { error: 'Failed to delete project' },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ success: true });
