@@ -25,6 +25,12 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { PropagationCheckDialog } from "@/components/propagation-check-dialog";
 
 type DnsRecord = {
@@ -268,56 +274,93 @@ export function SubdomainRow({
           </TableCell>
         )}
         <TableCell className="pr-8 text-right">
-          {editing ? (
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCancel}
-                disabled={saving}
-                className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
-              >
-                <X className="size-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSave}
-                disabled={saving}
-                className="size-8 p-0 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400"
-              >
-                <Check className="size-4" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setEditing(true)}
-                className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
-              >
-                <Pencil className="size-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setPropagationOpen(true)}
-                className="size-8 p-0 text-zinc-500 hover:bg-amber-500/10 hover:text-amber-500"
-              >
-                <Globe className="size-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setConfirmOpen(true)}
-                disabled={deleting}
-                className="size-8 p-0 text-zinc-500 hover:bg-red-500/10 hover:text-red-500"
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
-            </div>
-          )}
+          <TooltipProvider>
+            {editing ? (
+              <div className="flex justify-end gap-2">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCancel}
+                        disabled={saving}
+                        className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
+                      />
+                    }
+                  >
+                    <X className="size-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>Cancel</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="size-8 p-0 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400"
+                      />
+                    }
+                  >
+                    <Check className="size-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>Save</TooltipContent>
+                </Tooltip>
+              </div>
+            ) : (
+              <div className="flex justify-end gap-2">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditing(true)}
+                        className="size-8 p-0 text-zinc-500 hover:bg-white/5 hover:text-white"
+                      />
+                    }
+                  >
+                    <Pencil className="size-3.5" />
+                  </TooltipTrigger>
+                  <TooltipContent>Edit</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setPropagationOpen(true)}
+                        className="size-8 p-0 text-zinc-500 hover:bg-amber-500/10 hover:text-amber-500"
+                      />
+                    }
+                  >
+                    <Globe className="size-3.5" />
+                  </TooltipTrigger>
+                  <TooltipContent>Check propagation</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setConfirmOpen(true)}
+                        disabled={deleting}
+                        className="size-8 p-0 text-zinc-500 hover:bg-red-500/10 hover:text-red-500"
+                      />
+                    }
+                  >
+                    <Trash2 className="size-3.5" />
+                  </TooltipTrigger>
+                  <TooltipContent>Delete</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
+          </TooltipProvider>
         </TableCell>
       </TableRow>
 
