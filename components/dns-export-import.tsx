@@ -296,27 +296,27 @@ export function DnsExportImport({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="min-w-48 border-white/10 bg-zinc-900 text-white"
+          className="min-w-48 border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl"
         >
           <DropdownMenuItem
             onClick={exportCsv}
-            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
-            <Download className="size-3.5 shrink-0" />
+            <Download className="mr-2 size-4" />
             Export as CSV
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={exportZone}
-            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
-            <Download className="size-3.5 shrink-0" />
+            <Download className="mr-2 size-4" />
             Export as Zone File
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => fileRef.current?.click()}
-            className="gap-2 whitespace-nowrap text-zinc-300 focus:bg-white/10 focus:text-white"
+            className="cursor-pointer font-bold text-zinc-400 transition-colors hover:bg-white/5 hover:text-white"
           >
-            <Upload className="size-3.5 shrink-0" />
+            <Upload className="mr-2 size-4" />
             Import from File
           </DropdownMenuItem>
         </DropdownMenuContent>
