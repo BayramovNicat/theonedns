@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { AddSubdomainForm } from '@/components/add-subdomain-form';
 import { DashboardShell } from '@/components/dashboard-shell';
@@ -19,6 +19,10 @@ export default async function ProjectPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   const { data: project } = await supabase
     .from('projects')

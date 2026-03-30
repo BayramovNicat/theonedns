@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { AddProjectForm } from '@/components/add-project-form';
 import { DashboardShell } from '@/components/dashboard-shell';
@@ -7,8 +8,14 @@ import { createClient } from '@/lib/supabase/server';
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
-    data: { user },
+    data: { user: rawUser },
   } = await supabase.auth.getUser();
+
+  if (!rawUser) {
+    redirect('/login');
+  }
+
+  const user = rawUser;
 
   return (
     <DashboardShell user={user}>
