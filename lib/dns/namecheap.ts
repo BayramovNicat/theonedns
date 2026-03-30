@@ -78,7 +78,7 @@ class NamecheapProvider implements DnsProvider {
     params.set('SLD', this.sld);
     params.set('TLD', this.tld);
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
     if (!res.ok) return [];
 
     const xml = await res.text();
@@ -99,7 +99,7 @@ class NamecheapProvider implements DnsProvider {
       params.set(`TTL${n}`, r.ttl);
     });
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
     if (!res.ok) {
       throw new Error('Failed to update DNS records on Namecheap');
     }
@@ -181,7 +181,7 @@ export const namecheapAdapter: PlatformAdapter = {
     params.set('SLD', sld);
     params.set('TLD', tld);
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
 
     if (!res.ok)
       return { valid: false, error: `Verification failed (${res.status})` };

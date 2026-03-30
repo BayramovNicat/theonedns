@@ -41,7 +41,7 @@ class DynadotProvider implements DnsProvider {
       domain: this.domain,
     });
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
     if (!res.ok) return [];
 
     const data = await res.json();
@@ -74,7 +74,7 @@ class DynadotProvider implements DnsProvider {
       params.set(`sub_record${i}`, r.value);
     });
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
     if (!res.ok) {
       throw new Error('Failed to update DNS records on Dynadot');
     }
@@ -155,7 +155,7 @@ export const dynadotAdapter: PlatformAdapter = {
       domain,
     });
 
-    const res = await fetch(`${API}?${params.toString()}`);
+    const res = await fetch(API, { method: 'POST', body: params });
 
     if (!res.ok)
       return { valid: false, error: `Verification failed (${res.status})` };
