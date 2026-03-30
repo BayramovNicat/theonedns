@@ -8,14 +8,12 @@ import { createClient } from '@/lib/supabase/server';
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
-
-  const user = session.user;
 
   const limited = rateLimit(`projects:create:${user.id}`, 10, 60_000);
   if (limited) return limited;
@@ -105,14 +103,12 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
-
-  const user = session.user;
 
   const limited = rateLimit(`projects:delete:${user.id}`, 10, 60_000);
   if (limited) return limited;

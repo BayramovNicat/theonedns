@@ -29,13 +29,13 @@ function isValidRecord(r: unknown): r is {
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const limited = rateLimit(`audit:${session.user.id}`, 10, 60_000);
+  const limited = rateLimit(`audit:${user.id}`, 10, 60_000);
   if (limited) return limited;
 
   const body = await request.json();

@@ -11,11 +11,9 @@ const UUID_RE =
 async function getProject(projectId: string) {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) return null;
-
-  const user = session.user;
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
 
   const { data: project } = await supabase
     .from('projects')
@@ -35,9 +33,9 @@ async function getProject(projectId: string) {
 async function getUserId() {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return session?.user.id ?? null;
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user?.id ?? null;
 }
 
 async function verifyRecordOwnership(provider: DnsProvider, recordId: string) {

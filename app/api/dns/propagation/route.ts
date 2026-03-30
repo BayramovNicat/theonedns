@@ -10,13 +10,13 @@ const HOSTNAME_RE =
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const limited = rateLimit(`propagation:${session.user.id}`, 20, 60_000);
+  const limited = rateLimit(`propagation:${user.id}`, 20, 60_000);
   if (limited) return limited;
 
   const body = await request.json();
