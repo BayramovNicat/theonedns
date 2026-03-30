@@ -8,6 +8,44 @@ import { createClient } from '@/lib/supabase/server';
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+const ALLOWED_RECORD_TYPES = new Set([
+  'A',
+  'AAAA',
+  'CNAME',
+  'MX',
+  'TXT',
+  'NS',
+  'SRV',
+  'CAA',
+]);
+
+const MAX_CONTENT_LENGTH = 4096;
+
+function isValidIPv4(ip: string): boolean {
+  const parts = ip.split('.');
+  if (parts.length !== 4) return false;
+  return parts.every(
+    (p) => /^\d+$/.test(p) && Number(p) >= 0 && Number(p) <= 255,
+  );
+}
+
+function isValidTtl(ttl: number): boolean {
+  return Number.isInteger(ttl) && ttl >= 0 && ttl <= 2147483647;
+}
+
+function isValidPriority(priority: number): boolean {
+  return Number.isInteger(priority) && priority >= 0 && priority <= 65535;
+}
+
+function isValidRecordId(recordId: unknown): recordId is string {
+  return (
+    typeof recordId === 'string' &&
+    recordId.length > 0 &&
+    recordId.length <= 256 &&
+    !/[/\\]/.test(recordId)
+  );
+}
+
 async function getProject(projectId: string) {
   const supabase = await createClient();
   const {
@@ -97,6 +135,25 @@ export async function POST(
     );
   }
 
+  if (!recordType || !ALLOWED_RECORD_TYPES.has(recordType)) {
+    return NextResponse.json({ error: 'Invalid record type' }, { status: 400 });
+  }
+
+  if (content.length > MAX_CONTENT_LENGTH) {
+    return NextResponse.json(
+      { error: `Content too long (max ${MAX_CONTENT_LENGTH} chars)` },
+      { status: 400 },
+    );
+  }
+
+  if (ttl !== undefined && !isValidTtl(ttl)) {
+    return NextResponse.json({ error: 'Invalid TTL' }, { status: 400 });
+  }
+
+  if (priority !== undefined && !isValidPriority(priority)) {
+    return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
+  }
+
   if (
     subdomain !== '@' &&
     !/^[a-z0-9_]([a-z0-9_.-]*[a-z0-9_])?$/.test(subdomain)
@@ -110,7 +167,7 @@ export async function POST(
     );
   }
 
-  if (recordType === 'A' && !/^\d{1,3}(\.\d{1,3}){3}$/.test(content)) {
+  if (recordType === 'A' && !isValidIPv4(content)) {
     return NextResponse.json(
       { error: 'Invalid IP address for A record' },
       { status: 400 },
@@ -168,11 +225,33 @@ export async function PATCH(
   const body = await request.json();
   const { recordId, type, content, proxied, ttl, priority } = body;
 
-  if (!recordId || !content?.trim()) {
+  if (!isValidRecordId(recordId) || !content?.trim()) {
     return NextResponse.json(
-      { error: 'Record ID and content are required' },
+      { error: 'Valid record ID and content are required' },
       { status: 400 },
     );
+  }
+
+  if (type && !ALLOWED_RECORD_TYPES.has(type)) {
+    return NextResponse.json({ error: 'Invalid record type' }, { status: 400 });
+  }
+
+  if (content.trim().length > MAX_CONTENT_LENGTH) {
+    return NextResponse.json(
+      { error: `Content too long (max ${MAX_CONTENT_LENGTH} chars)` },
+      { status: 400 },
+    );
+  }
+
+  const parsedTtl = ttl ? Number(ttl) : undefined;
+  const parsedPriority = priority != null ? Number(priority) : undefined;
+
+  if (parsedTtl !== undefined && !isValidTtl(parsedTtl)) {
+    return NextResponse.json({ error: 'Invalid TTL' }, { status: 400 });
+  }
+
+  if (parsedPriority !== undefined && !isValidPriority(parsedPriority)) {
+    return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
   }
 
   if (!(await verifyRecordOwnership(provider, recordId))) {
@@ -186,8 +265,8 @@ export async function PATCH(
     await provider.updateRecord(recordId, {
       type,
       content: content.trim(),
-      ttl: ttl ? Number(ttl) : undefined,
-      priority: priority != null ? Number(priority) : undefined,
+      ttl: parsedTtl,
+      priority: parsedPriority,
       proxied: proxied ?? false,
     });
   } catch (e) {
@@ -230,8 +309,8 @@ export async function DELETE(
   }
 
   const { recordId } = await request.json();
-  if (!recordId) {
-    return NextResponse.json({ error: 'Missing record id' }, { status: 400 });
+  if (!isValidRecordId(recordId)) {
+    return NextResponse.json({ error: 'Invalid record ID' }, { status: 400 });
   }
 
   if (!(await verifyRecordOwnership(provider, recordId))) {
