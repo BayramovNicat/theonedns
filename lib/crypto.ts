@@ -6,7 +6,14 @@ const IV_LENGTH = 12;
 function getKey(): Buffer {
   const key = process.env.CREDENTIALS_ENCRYPTION_KEY;
   if (!key) throw new Error('CREDENTIALS_ENCRYPTION_KEY is not set');
-  return Buffer.from(key, 'hex');
+  if (key.length !== 64)
+    throw new Error(
+      'CREDENTIALS_ENCRYPTION_KEY must be 64 hex characters (32 bytes)',
+    );
+  const buf = Buffer.from(key, 'hex');
+  if (buf.length !== 32)
+    throw new Error('CREDENTIALS_ENCRYPTION_KEY contains non-hex characters');
+  return buf;
 }
 
 export function encrypt(data: Record<string, string>): string {

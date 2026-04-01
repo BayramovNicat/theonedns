@@ -17,7 +17,21 @@ function headers(accessToken: string) {
 
 /** Google Cloud DNS uses base64url-encoded JSON for service account auth. */
 async function getAccessToken(serviceAccountJson: string): Promise<string> {
-  const sa = JSON.parse(serviceAccountJson);
+  if (serviceAccountJson.length > 65_536) {
+    throw new Error('Service account JSON too large');
+  }
+  let sa: Record<string, string>;
+  try {
+    sa = JSON.parse(serviceAccountJson);
+  } catch {
+    throw new Error('Invalid service account JSON format');
+  }
+  if (
+    typeof sa.client_email !== 'string' ||
+    typeof sa.private_key !== 'string'
+  ) {
+    throw new Error('Service account JSON missing required fields');
+  }
   const now = Math.floor(Date.now() / 1000);
 
   const header = btoa(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))
