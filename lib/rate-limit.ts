@@ -6,22 +6,26 @@ interface RateLimitEntry {
 }
 
 const buckets = new Map<string, RateLimitEntry>();
+let lastCleanup = Date.now();
 
-// Clean up stale entries every 5 minutes
-setInterval(
-  () => {
-    const now = Date.now();
-    for (const [key, entry] of buckets) {
-      if (now - entry.lastRefill > 5 * 60 * 1000) {
-        buckets.delete(key);
-      }
+/** Purge entries older than 5 minutes. Called inline to avoid setInterval timer leaks in serverless. */
+function cleanup() {
+  const now = Date.now();
+  if (now - lastCleanup < 60_000) return;
+  lastCleanup = now;
+  for (const [key, entry] of buckets) {
+    if (now - entry.lastRefill > 5 * 60 * 1000) {
+      buckets.delete(key);
     }
-  },
-  5 * 60 * 1000,
-);
+  }
+}
 
 /**
  * Token-bucket rate limiter. Returns null if allowed, or a 429 Response if denied.
+ *
+ * NOTE: This is an in-memory limiter — it resets on cold starts and is per-instance
+ * in serverless deployments. For multi-instance protection, replace with a persistent
+ * store (e.g. @upstash/ratelimit or a Supabase-backed counter).
  *
  * @param key      Unique key (e.g. userId or userId:route)
  * @param max      Max tokens in the bucket
@@ -32,6 +36,8 @@ export function rateLimit(
   max: number = 30,
   windowMs: number = 60_000,
 ): NextResponse | null {
+  cleanup();
+
   const now = Date.now();
   let entry = buckets.get(key);
 

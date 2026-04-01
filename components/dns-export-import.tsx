@@ -226,6 +226,14 @@ export function DnsExportImport({
         return;
       }
 
+      const MAX_IMPORT_RECORDS = 100;
+      if (parsed.length > MAX_IMPORT_RECORDS) {
+        toast.error(
+          `Import limited to ${MAX_IMPORT_RECORDS} records at a time (file has ${parsed.length})`,
+        );
+        return;
+      }
+
       let success = 0;
       let failed = 0;
 

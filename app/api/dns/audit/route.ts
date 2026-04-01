@@ -20,9 +20,13 @@ function isValidRecord(r: unknown): r is {
   const rec = r as Record<string, unknown>;
   return (
     typeof rec.id === 'string' &&
+    rec.id.length <= 256 &&
     typeof rec.name === 'string' &&
+    rec.name.length <= 253 &&
     typeof rec.type === 'string' &&
-    typeof rec.content === 'string'
+    rec.type.length <= 10 &&
+    typeof rec.content === 'string' &&
+    rec.content.length <= 4096
   );
 }
 

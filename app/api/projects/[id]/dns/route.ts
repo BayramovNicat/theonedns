@@ -38,12 +38,14 @@ function isValidPriority(priority: number): boolean {
 }
 
 function isValidRecordId(recordId: unknown): recordId is string {
-  return (
-    typeof recordId === 'string' &&
-    recordId.length > 0 &&
-    recordId.length <= 256 &&
-    !/[/\\]/.test(recordId)
-  );
+  if (
+    typeof recordId !== 'string' ||
+    recordId.length === 0 ||
+    recordId.length > 256
+  )
+    return false;
+  // Only allow alphanumeric, hyphens, underscores, dots, and colons (for composite IDs like type:name)
+  return /^[a-zA-Z0-9._:-]+$/.test(recordId);
 }
 
 async function getProject(projectId: string) {
