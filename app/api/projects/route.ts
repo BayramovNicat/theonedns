@@ -18,7 +18,12 @@ export async function POST(request: Request) {
   const limited = rateLimit(`projects:create:${user.id}`, 10, 60_000);
   if (limited) return limited;
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
   const platform = body.platform as Platform;
   const domain = body.domain?.trim().toLowerCase();
   const credentials = body.credentials ?? {};
@@ -113,7 +118,13 @@ export async function DELETE(request: Request) {
   const limited = rateLimit(`projects:delete:${user.id}`, 10, 60_000);
   if (limited) return limited;
 
-  const { id } = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const { id } = body as { id: string };
 
   if (
     !id ||

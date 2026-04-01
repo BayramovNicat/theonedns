@@ -13,20 +13,7 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()',
   },
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://lh3.googleusercontent.com",
-      "font-src 'self'",
-      `connect-src 'self' ${process.env.NEXT_PUBLIC_SUPABASE_URL}`,
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-    ].join('; '),
-  },
+  // CSP is set dynamically in proxy.ts with per-request nonce
 ];
 
 const nextConfig: NextConfig = {

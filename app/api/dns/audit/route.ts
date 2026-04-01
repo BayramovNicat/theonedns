@@ -42,7 +42,12 @@ export async function POST(request: Request) {
   const limited = rateLimit(`audit:${user.id}`, 10, 60_000);
   if (limited) return limited;
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
   const { records, domain } = body;
 
   if (!records || !domain) {

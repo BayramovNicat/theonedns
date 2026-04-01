@@ -1,7 +1,24 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
+function buildCspHeader(nonce: string) {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}'`,
+    `style-src 'self' 'unsafe-inline'`,
+    "img-src 'self' data: blob: https://lh3.googleusercontent.com",
+    "font-src 'self'",
+    `connect-src 'self' ${process.env.NEXT_PUBLIC_SUPABASE_URL}`,
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join('; ');
+}
+
 export async function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const cspHeader = buildCspHeader(nonce);
+
   const pathname = request.nextUrl.pathname;
   const isPublic =
     pathname === '/' ||
@@ -10,7 +27,9 @@ export async function proxy(request: NextRequest) {
 
   // Skip auth entirely for public routes — saves ~500ms network round-trip.
   if (isPublic) {
-    return NextResponse.next({ request });
+    const response = NextResponse.next({ request });
+    response.headers.set('Content-Security-Policy', cspHeader);
+    return response;
   }
 
   let supabaseResponse = NextResponse.next({ request });
@@ -59,6 +78,7 @@ export async function proxy(request: NextRequest) {
   // 2. Copy over all cookies: supabaseResponse.cookies -> newResponse.cookies
   // Otherwise the browser and server may go out of sync and terminate the
   // user's session prematurely.
+  supabaseResponse.headers.set('Content-Security-Policy', cspHeader);
   return supabaseResponse;
 }
 

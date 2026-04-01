@@ -122,11 +122,16 @@ export async function POST(
     );
   }
 
-  const body = await request.json();
-  const subdomain = body.subdomain?.trim().toLowerCase();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const subdomain = (body.subdomain as string)?.trim().toLowerCase();
   const recordType = body.recordType as string;
-  const content = body.content?.trim();
-  const proxied = body.proxied ?? false;
+  const content = (body.content as string)?.trim();
+  const proxied = (body.proxied as boolean) ?? false;
   const ttl = body.ttl ? Number(body.ttl) : undefined;
   const priority = body.priority != null ? Number(body.priority) : undefined;
 
@@ -224,8 +229,20 @@ export async function PATCH(
     );
   }
 
-  const body = await request.json();
-  const { recordId, type, content, proxied, ttl, priority } = body;
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const { recordId, type, content, proxied, ttl, priority } = body as {
+    recordId: string;
+    type: string;
+    content: string;
+    proxied: boolean;
+    ttl: number;
+    priority: number;
+  };
 
   if (!isValidRecordId(recordId) || !content?.trim()) {
     return NextResponse.json(
@@ -310,7 +327,13 @@ export async function DELETE(
     );
   }
 
-  const { recordId } = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const { recordId } = body as { recordId: string };
   if (!isValidRecordId(recordId)) {
     return NextResponse.json({ error: 'Invalid record ID' }, { status: 400 });
   }
