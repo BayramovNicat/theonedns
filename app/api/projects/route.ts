@@ -26,8 +26,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
   const platform = body.platform as Platform;
-  const domain = body.domain?.trim().toLowerCase();
-  const credentials = body.credentials ?? {};
+  const domain = (body.domain as string | undefined)?.trim().toLowerCase();
+  const credentials = (body.credentials as Record<string, string>) ?? {};
 
   if (!platform || !domain) {
     return NextResponse.json(
