@@ -129,13 +129,13 @@ export default function FooterSection() {
         <div className="flex w-full flex-col items-center justify-between gap-4 text-xs font-bold tracking-widest text-zinc-600 uppercase md:flex-row">
           <p>© 2026 TheOneDNS Corporation. Forged in Middle-earth.</p>
           <div className="flex gap-6">
-            <Link href="/" className="hover:text-zinc-400">
+            <Link href="/security" className="hover:text-zinc-400">
               Security
             </Link>
-            <Link href="/" className="hover:text-zinc-400">
+            <Link href="/terms" className="hover:text-zinc-400">
               Terms
             </Link>
-            <Link href="/" className="hover:text-zinc-400">
+            <Link href="/status" className="hover:text-zinc-400">
               Status
             </Link>
           </div>
