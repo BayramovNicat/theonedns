@@ -1,6 +1,8 @@
 export const PLATFORMS = {
   cloudflare: {
     name: 'Cloudflare',
+    color: '#F38020',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -20,6 +22,8 @@ export const PLATFORMS = {
   },
   vercel: {
     name: 'Vercel',
+    color: '#FFFFFF',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -39,6 +43,8 @@ export const PLATFORMS = {
   },
   netlify: {
     name: 'Netlify',
+    color: '#00C7B7',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -58,6 +64,8 @@ export const PLATFORMS = {
   },
   digitalocean: {
     name: 'DigitalOcean',
+    color: '#0080FF',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -70,6 +78,8 @@ export const PLATFORMS = {
   },
   hetzner: {
     name: 'Hetzner',
+    color: '#D50C2D',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -89,6 +99,8 @@ export const PLATFORMS = {
   },
   godaddy: {
     name: 'GoDaddy',
+    color: '#1BDBDB',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_key',
@@ -108,6 +120,8 @@ export const PLATFORMS = {
   },
   gcloud: {
     name: 'Google Cloud DNS',
+    color: '#4285F4',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'project_id',
@@ -134,6 +148,8 @@ export const PLATFORMS = {
   },
   porkbun: {
     name: 'Porkbun',
+    color: '#F58EB7',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_key',
@@ -153,6 +169,8 @@ export const PLATFORMS = {
   },
   dnsimple: {
     name: 'DNSimple',
+    color: '#F5222D',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_token',
@@ -172,6 +190,8 @@ export const PLATFORMS = {
   },
   namecom: {
     name: 'Name.com',
+    color: '#00A1E1',
+    category: 'High Realm',
     fields: [
       {
         key: 'username',
@@ -191,6 +211,8 @@ export const PLATFORMS = {
   },
   route53: {
     name: 'AWS Route 53',
+    color: '#FF9900',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'access_key_id',
@@ -217,6 +239,8 @@ export const PLATFORMS = {
   },
   vultr: {
     name: 'Vultr',
+    color: '#007BFF',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -229,6 +253,8 @@ export const PLATFORMS = {
   },
   linode: {
     name: 'Linode (Akamai)',
+    color: '#00B050',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'api_token',
@@ -248,6 +274,8 @@ export const PLATFORMS = {
   },
   gandi: {
     name: 'Gandi',
+    color: '#F66E44',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_token',
@@ -260,6 +288,8 @@ export const PLATFORMS = {
   },
   ovh: {
     name: 'OVH',
+    color: '#004294',
+    category: 'Cloud Giant',
     fields: [
       {
         key: 'app_key',
@@ -286,6 +316,8 @@ export const PLATFORMS = {
   },
   namecheap: {
     name: 'Namecheap',
+    color: '#DE3723',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_user',
@@ -305,6 +337,8 @@ export const PLATFORMS = {
   },
   bunny: {
     name: 'Bunny DNS',
+    color: '#F48024',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_key',
@@ -324,6 +358,8 @@ export const PLATFORMS = {
   },
   dynadot: {
     name: 'Dynadot',
+    color: '#E31837',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_key',
@@ -336,6 +372,8 @@ export const PLATFORMS = {
   },
   hostinger: {
     name: 'Hostinger',
+    color: '#673DE6',
+    category: 'High Realm',
     fields: [
       {
         key: 'api_token',

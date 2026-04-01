@@ -23,11 +23,19 @@ import {
 } from '@/components/ui/select';
 import { PLATFORMS, type Platform } from '@/lib/platforms';
 
-export function AddProjectForm() {
+export function AddProjectForm({
+  initialPlatform,
+  trigger,
+}: {
+  initialPlatform?: Platform;
+  trigger?: React.ReactNode;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [platform, setPlatform] = useState<Platform>('cloudflare');
+  const [platform, setPlatform] = useState<Platform>(
+    initialPlatform ?? 'cloudflare',
+  );
   const [domain, setDomain] = useState('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
 
@@ -38,7 +46,7 @@ export function AddProjectForm() {
   }
 
   function resetForm() {
-    setPlatform('cloudflare');
+    setPlatform(initialPlatform ?? 'cloudflare');
     setDomain('');
     setCredentials({});
   }
@@ -74,11 +82,18 @@ export function AddProjectForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
-        <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
-        <Plus className="relative z-10 size-4 stroke-[3px]" />
-        <span className="relative z-10">New project</span>
-      </DialogTrigger>
+      <DialogTrigger
+        nativeButton={true}
+        render={
+          trigger ?? (
+            <button className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
+              <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
+              <Plus className="relative z-10 size-4 stroke-[3px]" />
+              <span className="relative z-10">New project</span>
+            </button>
+          )
+        }
+      />
       <DialogContent className="max-w-md border-white/10 bg-zinc-900 shadow-2xl backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">

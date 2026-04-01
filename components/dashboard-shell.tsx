@@ -3,7 +3,7 @@
 import { LogOut } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const meta = user.user_metadata;
   const avatarUrl = meta?.avatar_url ?? meta?.picture;
   const fullName = meta?.full_name ?? meta?.name;
@@ -56,19 +57,38 @@ export function DashboardShell({
 
       <header className="sticky top-0 z-40 border-b border-white/10 bg-zinc-900/50 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="group flex flex-col items-start transition-opacity hover:opacity-90"
-          >
-            <h2 className="text-xl leading-none font-black md:text-2xl">
-              <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
-                TheOne
-              </span>
-              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
-                DNS
-              </span>
-            </h2>
-          </Link>
+          <div className="flex items-center gap-12">
+            <Link
+              href="/dashboard"
+              className="group flex flex-col items-start transition-opacity hover:opacity-90"
+            >
+              <h2 className="text-xl leading-none font-black md:text-2xl">
+                <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                  TheOne
+                </span>
+                <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                  DNS
+                </span>
+              </h2>
+            </Link>
+
+            <nav className="hidden items-center gap-8 md:flex">
+              {[
+                { name: 'Dashboard', href: '/dashboard' },
+                { name: 'Integrations', href: '/integrations' },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors hover:text-amber-500 ${
+                    pathname === link.href ? 'text-amber-500' : 'text-zinc-500'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger className="rounded-full ring-amber-500/50 ring-offset-zinc-950 transition-opacity outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2">
