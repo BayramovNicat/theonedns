@@ -79,9 +79,12 @@ export default function FooterSection() {
                 </a>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-amber-500">
+                <Link
+                  href="/privacy"
+                  className="transition-colors hover:text-amber-500"
+                >
                   Privacy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
