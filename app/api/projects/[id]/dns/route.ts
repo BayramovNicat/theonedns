@@ -185,8 +185,8 @@ export async function POST(
       priority,
       proxied,
     });
-  } catch (e) {
-    console.error('DNS create failed:', e instanceof Error ? e.message : e);
+  } catch {
+    console.error('DNS create failed');
     return NextResponse.json(
       { error: 'Failed to create record' },
       { status: 500 },
@@ -271,8 +271,8 @@ export async function PATCH(
       priority: parsedPriority,
       proxied: proxied ?? false,
     });
-  } catch (e) {
-    console.error('DNS update failed:', e instanceof Error ? e.message : e);
+  } catch {
+    console.error('DNS update failed');
     return NextResponse.json(
       { error: 'Failed to update record' },
       { status: 500 },
@@ -324,8 +324,8 @@ export async function DELETE(
 
   try {
     await provider.deleteRecord(recordId);
-  } catch (e) {
-    console.error('DNS delete failed:', e instanceof Error ? e.message : e);
+  } catch {
+    console.error('DNS delete failed');
     return NextResponse.json(
       { error: 'Failed to delete record' },
       { status: 500 },

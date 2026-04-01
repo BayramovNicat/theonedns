@@ -21,7 +21,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://lh3.googleusercontent.com",
       "font-src 'self'",
-      "connect-src 'self' https://emrgdzsgzxtcuwjtklqq.supabase.co",
+      `connect-src 'self' ${process.env.NEXT_PUBLIC_SUPABASE_URL}`,
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

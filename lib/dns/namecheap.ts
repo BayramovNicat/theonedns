@@ -49,7 +49,7 @@ function buildBaseParams(apiUser: string, apiKey: string) {
     ApiUser: apiUser,
     ApiKey: apiKey,
     UserName: apiUser,
-    ClientIp: '0.0.0.0',
+    ClientIp: process.env.SERVER_IP ?? '127.0.0.1',
   });
 }
 
