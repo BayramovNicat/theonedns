@@ -26,7 +26,8 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith('/auth');
 
   // Skip auth entirely for public routes — saves ~500ms network round-trip.
-  if (isPublic) {
+  // Exception: /login checks auth so logged-in users get redirected to dashboard.
+  if (isPublic && !pathname.startsWith('/login')) {
     const response = NextResponse.next({ request });
     response.headers.set('Content-Security-Policy', cspHeader);
     return response;
@@ -62,9 +63,20 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user && !pathname.startsWith('/login')) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
+  }
+
+  // Redirect authenticated users away from /login to dashboard
+  if (user && pathname.startsWith('/login')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
     const redirectResponse = NextResponse.redirect(url);
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value);

@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   const nextParam = searchParams.get('next') ?? '/dashboard';
@@ -13,10 +13,34 @@ export async function GET(request: Request) {
       : '/dashboard';
 
   if (code) {
-    const supabase = await createClient();
+    const cookiesToSet: {
+      name: string;
+      value: string;
+      options?: Record<string, unknown>;
+    }[] = [];
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookies) {
+            cookiesToSet.push(...cookies);
+          },
+        },
+      },
+    );
+
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      const response = NextResponse.redirect(`${origin}${next}`);
+      for (const { name, value, options } of cookiesToSet) {
+        response.cookies.set(name, value, options);
+      }
+      return response;
     }
   }
 
