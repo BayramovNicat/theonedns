@@ -1,7 +1,7 @@
 'use client';
 
 import { Search, CheckCircle2, ArrowRight } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { AddProjectForm } from '@/components/add-project-form';
 import { Input } from '@/components/ui/input';
 import { PLATFORMS, type Platform } from '@/lib/platforms';
@@ -24,7 +24,11 @@ export function IntegrationsClient({
           count: connection?.count ?? 0,
         };
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => {
+        if (a.connected && !b.connected) return -1;
+        if (!a.connected && b.connected) return 1;
+        return a.name.localeCompare(b.name);
+      });
   }, [connectedPlatforms]);
 
   const filteredPlatforms = platforms.filter((p) =>
@@ -61,7 +65,7 @@ export function IntegrationsClient({
   );
 }
 
-function PlatformCard({
+const PlatformCard = memo(function PlatformCard({
   platform,
 }: {
   platform: (typeof PLATFORMS)[Platform] & {
@@ -120,10 +124,5 @@ function PlatformCard({
     </div>
   );
 
-  return (
-    <AddProjectForm
-      initialPlatform={platform.id}
-      trigger={cardContent}
-    />
-  );
-}
+  return <AddProjectForm initialPlatform={platform.id} trigger={cardContent} />;
+});
