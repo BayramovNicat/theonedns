@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, ShieldCheck, Trash2 } from 'lucide-react';
+import { RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -54,6 +54,26 @@ export function DnsRecordsClient({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    try {
+      const res = await fetch(`/api/projects/${projectId}/dns/clear-cache`, {
+        method: 'POST',
+      });
+      if (res.ok) {
+        router.refresh();
+        toast.success('Records refreshed');
+      } else {
+        toast.error('Failed to clear cache');
+      }
+    } catch {
+      toast.error('Failed to refresh');
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   function toggleSelect(id: string) {
     setSelected((prev) => {
@@ -139,6 +159,16 @@ export function DnsRecordsClient({
           />
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="h-9 gap-2 border border-white/10 bg-white/5 text-xs font-medium text-zinc-400 hover:bg-white/10 hover:text-white"
+          >
+            <RefreshCw className={`size-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { encrypt } from '@/lib/crypto';
 import { getAdapter, isSupported } from '@/lib/dns';
+import { invalidateCache } from '@/lib/dns/cache';
 import { PLATFORMS, type Platform } from '@/lib/platforms';
 import { rateLimit } from '@/lib/rate-limit';
 import { createClient } from '@/lib/supabase/server';
@@ -136,18 +137,29 @@ export async function DELETE(request: Request) {
     );
   }
 
-  const { error } = await supabase
+  const { data: project } = await supabase
     .from('projects')
-    .delete()
+    .select('domain')
     .eq('id', id)
-    .eq('user_id', user.id);
+    .eq('user_id', user.id)
+    .single();
 
-  if (error) {
-    console.error('Project delete failed:', error.message);
-    return NextResponse.json(
-      { error: 'Failed to delete project' },
-      { status: 500 },
-    );
+  if (project) {
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Project delete failed:', error.message);
+      return NextResponse.json(
+        { error: 'Failed to delete project' },
+        { status: 500 },
+      );
+    }
+
+    invalidateCache(`${id}:${project.domain}`);
   }
 
   return NextResponse.json({ success: true });
