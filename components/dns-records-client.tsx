@@ -218,7 +218,7 @@ export function DnsRecordsClient({
               </Button>
             </div>
           )}
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
