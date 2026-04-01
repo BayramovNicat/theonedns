@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
+import Link from 'next/link';
 import { CtaButton } from '@/components/cta-button';
 
 export default function FooterSection() {
@@ -39,9 +40,12 @@ export default function FooterSection() {
             </h4>
             <ul className="space-y-2 text-sm text-zinc-500">
               <li>
-                <a href="#" className="transition-colors hover:text-amber-500">
+                <Link
+                  href="/docs"
+                  className="transition-colors hover:text-amber-500"
+                >
                   Documentation
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="transition-colors hover:text-amber-500">
@@ -49,12 +53,12 @@ export default function FooterSection() {
                 </a>
               </li>
               <li>
-                <a
+                <Link
                   href="/integrations"
                   className="transition-colors hover:text-amber-500"
                 >
                   Integrations
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -129,15 +133,15 @@ export default function FooterSection() {
         <div className="flex w-full flex-col items-center justify-between gap-4 text-xs font-bold tracking-widest text-zinc-600 uppercase md:flex-row">
           <p>© 2026 TheOneDNS Corporation. Forged in Middle-earth.</p>
           <div className="flex gap-6">
-            <a href="/" className="hover:text-zinc-400">
+            <Link href="/" className="hover:text-zinc-400">
               Security
-            </a>
-            <a href="/" className="hover:text-zinc-400">
+            </Link>
+            <Link href="/" className="hover:text-zinc-400">
               Terms
-            </a>
-            <a href="/" className="hover:text-zinc-400">
+            </Link>
+            <Link href="/" className="hover:text-zinc-400">
               Status
-            </a>
+            </Link>
           </div>
         </div>
       </div>

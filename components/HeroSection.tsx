@@ -7,6 +7,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 import { CtaButton } from '@/components/cta-button';
 
 const MOCK_RECORDS = [
@@ -139,8 +140,15 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
+          className="flex flex-col items-center gap-6"
         >
           <CtaButton />
+          <Link
+            href="/docs"
+            className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 transition-colors hover:text-amber-500 uppercase"
+          >
+            Read the Archives
+          </Link>
         </motion.div>
       </motion.div>
 
