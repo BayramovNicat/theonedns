@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 function buildCspHeader(nonce: string) {
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}`,
+    `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}`,
     `style-src 'self' 'unsafe-inline'`,
     "img-src 'self' data: blob: https://lh3.googleusercontent.com",
     "font-src 'self'",
@@ -23,7 +23,14 @@ export async function proxy(request: NextRequest) {
   const isPublic =
     pathname === '/' ||
     pathname.startsWith('/login') ||
-    pathname.startsWith('/auth');
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/docs') ||
+    pathname.startsWith('/privacy') ||
+    pathname.startsWith('/about') ||
+    pathname.startsWith('/terms') ||
+    pathname.startsWith('/status') ||
+    pathname.startsWith('/security') ||
+    pathname.startsWith('/integrations');
 
   // Skip auth entirely for public routes — saves ~500ms network round-trip.
   // Exception: /login checks auth so logged-in users get redirected to dashboard.
