@@ -21,5 +21,6 @@ Required in `.env.local`:
 - Provider credentials are AES-256-GCM encrypted at rest (`lib/crypto.ts`)
 - All API routes verify auth via `supabase.auth.getUser()` (server-validated JWT)
 - Row Level Security enforces per-user data isolation at the DB layer
-- Rate limiting via token bucket (`lib/rate-limit.ts`) on all mutating endpoints
+- Rate limiting via token bucket (`lib/rate-limit.ts`) on all mutating endpoints — in-memory is intentional (single-instance deployment, no serverless)
 - DNS record validation: type allowlist, content length cap, TTL/priority bounds, record ID character allowlist
+- `proxy.ts` is the auth middleware — Next.js replaced `middleware.ts` with `proxy.ts` in the current version
