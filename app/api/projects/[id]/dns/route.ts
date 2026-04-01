@@ -78,7 +78,6 @@ async function getUserId() {
   return user?.id ?? null;
 }
 
-
 function providerFor(project: {
   platform: string;
   credentials: Record<string, string>;

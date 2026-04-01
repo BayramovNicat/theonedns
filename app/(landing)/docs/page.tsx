@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function DocsPage() {
   const providers = [

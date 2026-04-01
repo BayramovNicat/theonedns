@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function AboutPage() {
   return (
@@ -49,16 +49,16 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-6 text-xl leading-relaxed text-zinc-400 font-serif italic">
               <p>
-                In the age of the fragmented web, developers were forced to wander through
-                dozens of dashboards, each with its own rituals and complexities.
-                The builders were weary, their spirits dampened by the endless cycle
-                of logging in and out, searching for records scattered across the
-                digital realms.
+                In the age of the fragmented web, developers were forced to
+                wander through dozens of dashboards, each with its own rituals
+                and complexities. The builders were weary, their spirits
+                dampened by the endless cycle of logging in and out, searching
+                for records scattered across the digital realms.
               </p>
               <p>
-                From this chaos, TheOneDNS was forged. A single interface, a master
-                control plane designed to bind the disparate DNS providers into a
-                unified whole.
+                From this chaos, TheOneDNS was forged. A single interface, a
+                master control plane designed to bind the disparate DNS
+                providers into a unified whole.
               </p>
             </div>
           </section>
@@ -69,9 +69,9 @@ export default function AboutPage() {
                 Our Mission
               </h3>
               <p className="text-zinc-400">
-                To simplify the management of modern web infrastructure. We believe
-                that developers should spend their time building the future, not
-                wrestling with the configuration of the past.
+                To simplify the management of modern web infrastructure. We
+                believe that developers should spend their time building the
+                future, not wrestling with the configuration of the past.
               </p>
             </div>
             <div>
@@ -91,16 +91,17 @@ export default function AboutPage() {
               The Keepers of the Keys
             </h2>
             <p className="mb-8 text-zinc-400">
-              TheOneDNS is maintained by a small council of engineers and designers
-              dedicated to the craft of infrastructure tools. We are builders
-              who faced the same problems you face, and decided to forge a solution.
+              TheOneDNS is maintained by a small council of engineers and
+              designers dedicated to the craft of infrastructure tools. We are
+              builders who faced the same problems you face, and decided to
+              forge a solution.
             </p>
             <div className="rounded-2xl border border-white/5 bg-white/2 p-8">
               <p className="text-sm text-zinc-500 italic">
-                &quot;We don&apos;t just build tools; we forge the foundations of the
-                modern web. Every line of code is a rune, every integration a
-                treaty signed in the pursuit of a faster, more reliable
-                internet.&quot;
+                &quot;We don&apos;t just build tools; we forge the foundations
+                of the modern web. Every line of code is a rune, every
+                integration a treaty signed in the pursuit of a faster, more
+                reliable internet.&quot;
               </p>
             </div>
           </section>

@@ -166,7 +166,9 @@ export function DnsRecordsClient({
             disabled={refreshing}
             className="h-9 gap-2 border border-white/10 bg-white/5 text-xs font-medium text-zinc-400 hover:bg-white/10 hover:text-white"
           >
-            <RefreshCw className={`size-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`size-3.5 ${refreshing ? 'animate-spin' : ''}`}
+            />
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </Button>
           <Button

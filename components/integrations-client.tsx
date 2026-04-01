@@ -1,7 +1,7 @@
 'use client';
 
-import { Search, CheckCircle2, ArrowRight } from 'lucide-react';
-import { useState, useMemo, memo } from 'react';
+import { ArrowRight, CheckCircle2, Search } from 'lucide-react';
+import { memo, useMemo, useState } from 'react';
 import { AddProjectForm } from '@/components/add-project-form';
 import { Input } from '@/components/ui/input';
 import { PLATFORMS, type Platform } from '@/lib/platforms';

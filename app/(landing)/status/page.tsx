@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function StatusPage() {
   const realms = [
@@ -50,7 +50,8 @@ export default function StatusPage() {
           </h1>
           <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           <p className="mt-8 text-xl text-zinc-500 font-serif italic">
-            &quot;All is calm in the digital kingdom. The fires of the servers burn steady.&quot;
+            &quot;All is calm in the digital kingdom. The fires of the servers
+            burn steady.&quot;
           </p>
         </div>
 
@@ -101,8 +102,8 @@ export default function StatusPage() {
                   Solar Cycle 1, 2026
                 </h3>
                 <p className="mt-2 text-sm text-zinc-500 font-serif italic">
-                  No incidents reported. The master interface remained stable through
-                  the seasonal transition.
+                  No incidents reported. The master interface remained stable
+                  through the seasonal transition.
                 </p>
               </div>
               <div className="relative border-l border-white/5 pl-8 pb-8">
@@ -111,8 +112,8 @@ export default function StatusPage() {
                   Solar Cycle 365, 2025
                 </h3>
                 <p className="mt-2 text-sm text-zinc-500 font-serif italic">
-                  End of year maintenance completed. The encryption vaults were reinforced
-                  against spectral threats.
+                  End of year maintenance completed. The encryption vaults were
+                  reinforced against spectral threats.
                 </p>
               </div>
             </div>
@@ -123,8 +124,8 @@ export default function StatusPage() {
               Stay Informed
             </h2>
             <p className="mb-8 text-zinc-500 font-serif italic">
-              Subscribe to the archives to receive alerts should a storm approach
-              the digital shores.
+              Subscribe to the archives to receive alerts should a storm
+              approach the digital shores.
             </p>
             <button
               type="button"

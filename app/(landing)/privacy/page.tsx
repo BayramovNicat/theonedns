@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function PrivacyPage() {
   return (
@@ -41,7 +41,8 @@ export default function PrivacyPage() {
           </h1>
           <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           <p className="mt-8 text-xl text-zinc-500 font-serif italic">
-            &quot;Secrets must be kept secret, even from those who seek the One Interface.&quot;
+            &quot;Secrets must be kept secret, even from those who seek the One
+            Interface.&quot;
           </p>
         </div>
 
@@ -51,8 +52,8 @@ export default function PrivacyPage() {
               The Realm of Privacy
             </h2>
             <p className="text-lg leading-relaxed text-zinc-400">
-              At TheOneDNS, we believe your data is your own realm. We do not sell,
-              trade, or lease your DNS configurations to any dark lord or
+              At TheOneDNS, we believe your data is your own realm. We do not
+              sell, trade, or lease your DNS configurations to any dark lord or
               commercial entity. This decree outlines how we handle the scrolls
               of information you entrust to us.
             </p>
@@ -69,13 +70,18 @@ export default function PrivacyPage() {
               </p>
               <ul className="list-disc space-y-2 pl-6">
                 <li>
-                  <strong className="text-amber-500/80">Account Details:</strong>
-                  Your email address and name to identify you in the throne room.
+                  <strong className="text-amber-500/80">
+                    Account Details:
+                  </strong>
+                  Your email address and name to identify you in the throne
+                  room.
                 </li>
                 <li>
-                  <strong className="text-amber-500/80">Integration Keys:</strong>
-                  API keys and tokens for your DNS providers. These are forged in
-                  the fires of encryption and never stored in plain text.
+                  <strong className="text-amber-500/80">
+                    Integration Keys:
+                  </strong>
+                  API keys and tokens for your DNS providers. These are forged
+                  in the fires of encryption and never stored in plain text.
                 </li>
                 <li>
                   <strong className="text-amber-500/80">Usage Sigils:</strong>
@@ -91,9 +97,10 @@ export default function PrivacyPage() {
               2. How Your Data is Shielded
             </h3>
             <p className="text-zinc-400">
-              All sensitive scrolls (API keys, secrets) are encrypted using industry-standard
-              runes (AES-256). Only the master interface, acting on your behalf,
-              can decrypt these to communicate with your chosen providers.
+              All sensitive scrolls (API keys, secrets) are encrypted using
+              industry-standard runes (AES-256). Only the master interface,
+              acting on your behalf, can decrypt these to communicate with your
+              chosen providers.
             </p>
           </section>
 
@@ -102,9 +109,10 @@ export default function PrivacyPage() {
               3. The Third-Party Alliances
             </h3>
             <p className="text-zinc-400">
-              We only share information with third parties (like Cloudflare, Vercel, or AWS)
-              at your explicit command to manage your DNS records. We do not permit
-              them to use your data for any other purpose than fulfilling your requests.
+              We only share information with third parties (like Cloudflare,
+              Vercel, or AWS) at your explicit command to manage your DNS
+              records. We do not permit them to use your data for any other
+              purpose than fulfilling your requests.
             </p>
           </section>
 
@@ -113,9 +121,10 @@ export default function PrivacyPage() {
               4. Your Sovereignty
             </h3>
             <p className="text-zinc-400">
-              You retain full sovereignty over your data. You may request the deletion
-              of your account and all associated scrolls at any time. Once deleted,
-              the records are cast into the void and cannot be recovered.
+              You retain full sovereignty over your data. You may request the
+              deletion of your account and all associated scrolls at any time.
+              Once deleted, the records are cast into the void and cannot be
+              recovered.
             </p>
           </section>
 
@@ -124,7 +133,8 @@ export default function PrivacyPage() {
               Questions of the Decree?
             </h2>
             <p className="mb-8 text-zinc-500 font-serif italic">
-              Should you have questions about your privacy, contact the Keepers of the Keys.
+              Should you have questions about your privacy, contact the Keepers
+              of the Keys.
             </p>
             <a
               href="mailto:privacy@theonedns.com"

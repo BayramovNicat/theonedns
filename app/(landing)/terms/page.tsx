@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function TermsPage() {
   return (
@@ -41,7 +41,8 @@ export default function TermsPage() {
           </h1>
           <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           <p className="mt-8 text-xl text-zinc-500 font-serif italic">
-            &quot;To rule the DNS, one must abide by the laws of the realm.&quot;
+            &quot;To rule the DNS, one must abide by the laws of the
+            realm.&quot;
           </p>
         </div>
 
@@ -90,10 +91,11 @@ export default function TermsPage() {
               3. Limitation of Liability
             </h3>
             <p className="text-zinc-400 font-serif italic">
-              TheOneDNS is provided &quot;as is,&quot; without warranty of any kind.
-              The master interface and its keepers shall not be held liable for
-              any loss of data, downtime of your realms, or damages arising from
-              your use of the portal. You manage your DNS at your own peril.
+              TheOneDNS is provided &quot;as is,&quot; without warranty of any
+              kind. The master interface and its keepers shall not be held
+              liable for any loss of data, downtime of your realms, or damages
+              arising from your use of the portal. You manage your DNS at your
+              own peril.
             </p>
           </section>
 
@@ -113,8 +115,8 @@ export default function TermsPage() {
               The Council of Arbitration
             </h2>
             <p className="mb-8 text-zinc-500 font-serif italic">
-              Should any dispute arise, it shall be settled by the laws of the realm
-              where the master interface is hosted.
+              Should any dispute arise, it shall be settled by the laws of the
+              realm where the master interface is hosted.
             </p>
             <Link
               href="/"

@@ -86,7 +86,10 @@ export function AddProjectForm({
         nativeButton={!trigger}
         render={
           trigger ?? (
-            <button className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
+            <button
+              type="button"
+              className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95"
+            >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
               <Plus className="relative z-10 size-4 stroke-[3px]" />
               <span className="relative z-10">New project</span>

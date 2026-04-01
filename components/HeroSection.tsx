@@ -6,8 +6,8 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
-import { useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRef, useState } from 'react';
 import { CtaButton } from '@/components/cta-button';
 
 const MOCK_RECORDS = [

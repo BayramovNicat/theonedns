@@ -1,5 +1,5 @@
-import FooterSection from '@/components/FooterSection';
 import Link from 'next/link';
+import FooterSection from '@/components/FooterSection';
 
 export default function SecurityPage() {
   return (
@@ -41,7 +41,8 @@ export default function SecurityPage() {
           </h1>
           <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           <p className="mt-8 text-xl text-zinc-500 font-serif italic">
-            &quot;The One Interface is protected by the strongest runes and the most vigilant sentinels.&quot;
+            &quot;The One Interface is protected by the strongest runes and the
+            most vigilant sentinels.&quot;
           </p>
         </div>
 

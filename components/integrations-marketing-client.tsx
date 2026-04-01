@@ -1,8 +1,8 @@
 'use client';
 
-import { Search, ArrowRight } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { ArrowRight, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { PLATFORMS, type Platform } from '@/lib/platforms';
 
@@ -18,9 +18,10 @@ export function IntegrationsMarketingClient() {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
-  const filteredPlatforms = platforms.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.category.toLowerCase().includes(search.toLowerCase())
+  const filteredPlatforms = platforms.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.category.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (

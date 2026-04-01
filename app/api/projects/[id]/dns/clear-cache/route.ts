@@ -3,7 +3,7 @@ import { invalidateCache } from '@/lib/dns/cache';
 import { createClient } from '@/lib/supabase/server';
 
 export async function POST(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();

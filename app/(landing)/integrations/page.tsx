@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import FooterSection from '@/components/FooterSection';
 import { IntegrationsMarketingClient } from '@/components/integrations-marketing-client';
-import Link from 'next/link';
 
 export default function IntegrationsLandingPage() {
   return (
@@ -45,8 +45,8 @@ export default function IntegrationsLandingPage() {
           </h1>
           <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
           <p className="mx-auto mt-8 max-w-2xl text-xl text-zinc-500 font-serif italic">
-            &quot;One portal to bind every provider, from the cloud giants to the
-            high realms of domain registry.&quot;
+            &quot;One portal to bind every provider, from the cloud giants to
+            the high realms of domain registry.&quot;
           </p>
         </div>
 
@@ -57,8 +57,8 @@ export default function IntegrationsLandingPage() {
             Don&apos;t see your realm?
           </h2>
           <p className="mb-8 text-zinc-400 font-serif italic">
-            We are constantly forging new treaties. Contact the keepers to request
-            a native integration.
+            We are constantly forging new treaties. Contact the keepers to
+            request a native integration.
           </p>
           <a
             href="mailto:council@theonedns.com"
