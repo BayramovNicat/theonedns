@@ -75,7 +75,7 @@ export function DashboardShell({
             <nav className="hidden items-center gap-8 md:flex">
               {[
                 { name: 'Dashboard', href: '/dashboard' },
-                { name: 'Integrations', href: '/integrations' },
+                { name: 'Integrations', href: '/dashboard/integrations' },
               ].map((link) => (
                 <Link
                   key={link.href}
