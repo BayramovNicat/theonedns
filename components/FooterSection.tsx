@@ -48,11 +48,6 @@ export default function FooterSection() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-amber-500">
-                  API Reference
-                </a>
-              </li>
-              <li>
                 <Link
                   href="/integrations"
                   className="transition-colors hover:text-amber-500"
@@ -69,14 +64,12 @@ export default function FooterSection() {
             </h4>
             <ul className="space-y-2 text-sm text-zinc-500">
               <li>
-                <a href="#" className="transition-colors hover:text-amber-500">
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a href="#" className="transition-colors hover:text-amber-500">
+                <Link
+                  href="/about"
+                  className="transition-colors hover:text-amber-500"
+                >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
                 <Link
