@@ -70,8 +70,8 @@ function PlatformCard({
     count: number;
   };
 }) {
-  return (
-    <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-6 transition-all hover:border-amber-500/50 hover:bg-zinc-900">
+  const cardContent = (
+    <div className="group relative h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-6 transition-all hover:border-amber-500/50 hover:bg-zinc-900 text-left">
       {/* Visual Identity Glow */}
       <div
         className="absolute -top-12 -right-12 size-32 blur-[50px] transition-opacity duration-500 group-hover:opacity-40"
@@ -80,19 +80,21 @@ function PlatformCard({
 
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <h3 className="text-2xl font-bold text-white tracking-tight">{platform.name}</h3>
-          <p className="font-serif text-sm text-zinc-500 italic">
+          <h3 className="text-2xl font-bold tracking-tight text-white">
+            {platform.name}
+          </h3>
+          <p className="font-serif text-sm italic text-zinc-500">
             {platform.category}
           </p>
         </div>
-        
+
         {platform.connected ? (
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold tracking-widest text-emerald-500 uppercase ring-1 ring-emerald-500/20">
               <CheckCircle2 className="size-3" />
               Tethered
             </div>
-            <span className="text-[9px] font-bold text-zinc-600 uppercase">
+            <span className="text-[9px] font-bold uppercase text-zinc-600">
               {platform.count} {platform.count === 1 ? 'domain' : 'domains'}
             </span>
           </div>
@@ -104,22 +106,24 @@ function PlatformCard({
       </div>
 
       <div className="mt-8">
-        <p className="font-serif text-sm text-zinc-400 italic">
-          Requires {platform.fields.length} mystical keys for authentication.
+        <p className="font-serif text-sm italic text-zinc-400">
+          Requires {platform.fields.length} mystical keys.
         </p>
       </div>
 
       <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6">
-        <AddProjectForm
-          initialPlatform={platform.id}
-          trigger={
-            <button className="group/btn flex items-center gap-2 text-[10px] font-black tracking-widest text-zinc-400 uppercase transition-colors hover:text-amber-500">
-              {platform.connected ? 'Add another' : 'Forge connection'}
-              <ArrowRight className="size-3 transition-transform group-hover/btn:translate-x-1" />
-            </button>
-          }
-        />
+        <div className="group/btn flex items-center gap-2 text-[10px] font-black tracking-widest text-zinc-400 uppercase transition-colors group-hover:text-amber-500">
+          {platform.connected ? 'Add another' : 'Forge connection'}
+          <ArrowRight className="size-3 transition-transform group-hover/btn:translate-x-1" />
+        </div>
       </div>
     </div>
+  );
+
+  return (
+    <AddProjectForm
+      initialPlatform={platform.id}
+      trigger={cardContent}
+    />
   );
 }

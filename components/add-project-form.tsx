@@ -83,7 +83,7 @@ export function AddProjectForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
-        nativeButton={true}
+        nativeButton={!trigger}
         render={
           trigger ?? (
             <button className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-8 text-xs font-black tracking-widest text-black uppercase shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all hover:scale-105 active:scale-95">
