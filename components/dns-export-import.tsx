@@ -237,25 +237,28 @@ export function DnsExportImport({
       let success = 0;
       let failed = 0;
 
-      for (const rec of parsed) {
-        try {
-          const res = await fetch(`/api/projects/${projectId}/dns`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              subdomain: rec.subdomain,
-              recordType: rec.recordType,
-              content: rec.content,
-              ttl: rec.ttl,
-              priority: rec.priority,
-              proxied: platform === 'cloudflare' ? false : undefined,
-            }),
-          });
-          if (res.ok) success++;
-          else failed++;
-        } catch {
-          failed++;
-        }
+      const BATCH_SIZE = 10;
+      for (let i = 0; i < parsed.length; i += BATCH_SIZE) {
+        const batch = parsed.slice(i, i + BATCH_SIZE);
+        const results = await Promise.allSettled(
+          batch.map(async (rec) => {
+            const res = await fetch(`/api/projects/${projectId}/dns`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                subdomain: rec.subdomain,
+                recordType: rec.recordType,
+                content: rec.content,
+                ttl: rec.ttl,
+                priority: rec.priority,
+                proxied: platform === 'cloudflare' ? false : undefined,
+              }),
+            });
+            if (!res.ok) throw new Error('Import failed');
+          }),
+        );
+        success += results.filter((r) => r.status === 'fulfilled').length;
+        failed += results.filter((r) => r.status === 'rejected').length;
       }
 
       if (success > 0) {

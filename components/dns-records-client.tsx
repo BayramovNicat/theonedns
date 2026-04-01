@@ -74,22 +74,20 @@ export function DnsRecordsClient({
 
   async function handleBulkDelete() {
     setBulkDeleting(true);
-    let success = 0;
-    let failed = 0;
 
-    for (const id of selected) {
-      try {
+    const results = await Promise.allSettled(
+      [...selected].map(async (id) => {
         const res = await fetch(`/api/projects/${projectId}/dns`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ recordId: id }),
         });
-        if (res.ok) success++;
-        else failed++;
-      } catch {
-        failed++;
-      }
-    }
+        if (!res.ok) throw new Error('Delete failed');
+      }),
+    );
+
+    const success = results.filter((r) => r.status === 'fulfilled').length;
+    const failed = results.filter((r) => r.status === 'rejected').length;
 
     if (success > 0) {
       toast.success(`Deleted ${success} record${success > 1 ? 's' : ''}`);

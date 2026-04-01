@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { decrypt } from '@/lib/crypto';
 import { getProvider, isSupported } from '@/lib/dns';
-import type { DnsProvider } from '@/lib/dns/types';
+import { invalidateCache } from '@/lib/dns/cache';
 import { rateLimit } from '@/lib/rate-limit';
 import { createClient } from '@/lib/supabase/server';
 
@@ -78,10 +78,6 @@ async function getUserId() {
   return user?.id ?? null;
 }
 
-async function verifyRecordOwnership(provider: DnsProvider, recordId: string) {
-  const records = await provider.listRecords();
-  return records.some((r) => r.id === recordId);
-}
 
 function providerFor(project: {
   platform: string;
@@ -198,6 +194,7 @@ export async function POST(
     );
   }
 
+  invalidateCache(`${id}:${project.domain}`);
   return NextResponse.json({ success: true });
 }
 
@@ -273,13 +270,6 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
   }
 
-  if (!(await verifyRecordOwnership(provider, recordId))) {
-    return NextResponse.json(
-      { error: 'Record not found in this project' },
-      { status: 403 },
-    );
-  }
-
   try {
     await provider.updateRecord(recordId, {
       type,
@@ -296,6 +286,7 @@ export async function PATCH(
     );
   }
 
+  invalidateCache(`${id}:${project.domain}`);
   return NextResponse.json({ success: true });
 }
 
@@ -338,13 +329,6 @@ export async function DELETE(
     return NextResponse.json({ error: 'Invalid record ID' }, { status: 400 });
   }
 
-  if (!(await verifyRecordOwnership(provider, recordId))) {
-    return NextResponse.json(
-      { error: 'Record not found in this project' },
-      { status: 403 },
-    );
-  }
-
   try {
     await provider.deleteRecord(recordId);
   } catch {
@@ -355,5 +339,6 @@ export async function DELETE(
     );
   }
 
+  invalidateCache(`${id}:${project.domain}`);
   return NextResponse.json({ success: true });
 }

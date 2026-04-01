@@ -2,6 +2,7 @@ import { DnsRecordsClient } from '@/components/dns-records-client';
 import { decrypt } from '@/lib/crypto';
 import type { DnsRecord } from '@/lib/dns';
 import { getProvider } from '@/lib/dns';
+import { getCachedRecords, setCachedRecords } from '@/lib/dns/cache';
 
 export async function DnsRecords({
   project,
@@ -15,13 +16,21 @@ export async function DnsRecords({
 }) {
   const credentials = decrypt(project.credentials);
   const provider = getProvider(project.platform, credentials, project.domain);
+  const cacheKey = `${project.id}:${project.domain}`;
 
   let records: DnsRecord[] = [];
   try {
-    const allRecords = await provider.listRecords();
-    records = allRecords.filter(
-      (r) => r.name === project.domain || r.name.endsWith(`.${project.domain}`),
-    );
+    const cached = getCachedRecords(cacheKey);
+    if (cached) {
+      records = cached;
+    } else {
+      const allRecords = await provider.listRecords();
+      records = allRecords.filter(
+        (r) =>
+          r.name === project.domain || r.name.endsWith(`.${project.domain}`),
+      );
+      setCachedRecords(cacheKey, records);
+    }
   } catch {
     // Failed to fetch — show empty state
   }
