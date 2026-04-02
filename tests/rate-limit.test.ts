@@ -42,7 +42,7 @@ describe('rateLimit — token consumption', () => {
   it('returns a 429 response body mentioning "Too many requests"', () => {
     const key = uniqueKey();
     rateLimit(key, 1, 60_000); // uses the 1 token
-    const res = rateLimit(key, 1, 60_000) as {
+    const res = rateLimit(key, 1, 60_000) as unknown as {
       body: { error: string };
       status: number;
     };
