@@ -78,10 +78,12 @@ class VercelProvider implements DnsProvider {
       },
     );
 
-    const data = await res.json();
     if (!res.ok) {
+      const data = await res.json().catch(() => null);
       throw new Error(data?.error?.message ?? 'Failed to create DNS record');
     }
+
+    const data = await res.json();
     return { id: data.uid };
   }
 

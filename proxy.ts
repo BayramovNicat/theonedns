@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
-function buildCspHeader(nonce: string) {
+function buildCspHeader(_nonce: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}`,

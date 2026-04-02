@@ -1,0 +1,3 @@
+[test]
+coverageInclude = ["lib/**/*.ts"]
+coverageExclude = ["lib/dns/types.ts", "lib/dns/templates.ts", "tests/**"]
