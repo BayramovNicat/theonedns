@@ -6,7 +6,6 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { CtaButton } from '@/components/cta-button';
 
@@ -127,13 +126,18 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        <h3 className="mb-8 text-2xl font-bold tracking-tight text-zinc-300 md:text-4xl">
-          One Dashboard to Rule Them All.
+        <h3 className="mb-4 text-2xl font-bold tracking-tight text-zinc-300 md:text-4xl">
+          Manage DNS Across 19 Platforms in One Place
         </h3>
 
-        <p className="mx-auto mb-12 max-w-2xl font-serif text-lg leading-relaxed text-zinc-500 italic md:text-xl">
-          Stop logging into 20 different dashboards. TheOneDNS is the master web
-          portal forged to manage all your DNS records from a single throne.
+        <p className="mx-auto mb-2 max-w-2xl text-base leading-relaxed text-zinc-400 md:text-lg">
+          Stop logging into 19 different dashboards. Manage Cloudflare, Vercel,
+          AWS Route 53, and 16 other platforms from one unified interface.
+        </p>
+
+        <p className="mx-auto mb-12 max-w-xl text-sm leading-relaxed text-zinc-500 md:text-base">
+          Encrypted credentials. Live sync. Zero context switching. Save 10+
+          hours per week.
         </p>
 
         <motion.div
@@ -143,12 +147,6 @@ export default function HeroSection() {
           className="flex flex-col items-center gap-6"
         >
           <CtaButton />
-          <Link
-            href="/docs"
-            className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 uppercase transition-colors hover:text-amber-500"
-          >
-            Read the Archives
-          </Link>
         </motion.div>
       </motion.div>
 

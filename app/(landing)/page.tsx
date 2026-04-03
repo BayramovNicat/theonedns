@@ -1,9 +1,11 @@
+import BenefitsSection from '@/components/BenefitsSection';
+import ComparisonSection from '@/components/ComparisonSection';
+import FaqSection from '@/components/FaqSection';
 import FooterSection from '@/components/FooterSection';
 import HeroSection from '@/components/HeroSection';
+import HowItWorksSection from '@/components/HowItWorksSection';
 import { ParallaxGrid } from '@/components/parallax-grid';
-import TheNineSection from '@/components/TheNineSection';
-import TheSevenSection from '@/components/TheSevenSection';
-import TheThreeSection from '@/components/TheThreeSection';
+import SupportedPlatformsSection from '@/components/SupportedPlatformsSection';
 
 export default function LandingPage() {
   return (
@@ -12,9 +14,11 @@ export default function LandingPage() {
 
       <div className="relative z-10">
         <HeroSection />
-        <TheThreeSection />
-        <TheSevenSection />
-        <TheNineSection />
+        <BenefitsSection />
+        <SupportedPlatformsSection />
+        <HowItWorksSection />
+        <ComparisonSection />
+        <FaqSection />
         <FooterSection />
       </div>
 
