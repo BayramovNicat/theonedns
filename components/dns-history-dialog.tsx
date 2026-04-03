@@ -260,7 +260,10 @@ export function DnsHistoryDialog({
         </DialogHeader>
 
         <div className="flex gap-2 border-b border-zinc-800 pb-4">
-          <Select value={actionFilter} onValueChange={setActionFilter}>
+          <Select
+            value={actionFilter}
+            onValueChange={(value) => setActionFilter(value || 'all')}
+          >
             <SelectTrigger className="w-[140px]" size="default">
               <Filter className="mr-2 h-4 w-4" />
               <SelectValue placeholder="Action" />
@@ -273,7 +276,10 @@ export function DnsHistoryDialog({
             </SelectContent>
           </Select>
 
-          <Select value={recordTypeFilter} onValueChange={setRecordTypeFilter}>
+          <Select
+            value={recordTypeFilter}
+            onValueChange={(value) => setRecordTypeFilter(value || 'all')}
+          >
             <SelectTrigger className="w-[140px]" size="default">
               <Filter className="mr-2 h-4 w-4" />
               <SelectValue placeholder="Type" />
