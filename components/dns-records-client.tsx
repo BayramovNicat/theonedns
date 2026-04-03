@@ -325,7 +325,7 @@ export function DnsRecordsClient({
               </Button>
             </div>
           )}
-          <div className="relative overflow-x-auto">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
@@ -343,7 +343,7 @@ export function DnsRecordsClient({
                     className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
                     onClick={() => handleSort('name')}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 whitespace-nowrap">
                       Name
                       {getSortIcon('name')}
                     </div>
@@ -352,7 +352,7 @@ export function DnsRecordsClient({
                     className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
                     onClick={() => handleSort('type')}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 whitespace-nowrap">
                       Type
                       {getSortIcon('type')}
                     </div>
@@ -361,7 +361,7 @@ export function DnsRecordsClient({
                     className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
                     onClick={() => handleSort('content')}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 whitespace-nowrap">
                       Content
                       {getSortIcon('content')}
                     </div>
@@ -370,7 +370,7 @@ export function DnsRecordsClient({
                     className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
                     onClick={() => handleSort('ttl')}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 whitespace-nowrap">
                       TTL
                       {getSortIcon('ttl')}
                     </div>
@@ -380,14 +380,14 @@ export function DnsRecordsClient({
                       className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
                       onClick={() => handleSort('proxied')}
                     >
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 whitespace-nowrap">
                         Proxy
                         {getSortIcon('proxied')}
                       </div>
                     </TableHead>
                   )}
                   <TableHead className="pr-8 text-right text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                    Actions
+                    <span className="whitespace-nowrap">Actions</span>
                   </TableHead>
                 </TableRow>
               </TableHeader>

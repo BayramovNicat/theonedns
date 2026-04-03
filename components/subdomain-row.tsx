@@ -170,7 +170,7 @@ export function SubdomainRow({
         </TableCell>
         <TableCell className="font-mono text-sm text-zinc-300">
           <div className="flex items-center gap-2">
-            <span>{record.name}</span>
+            <span className="break-all">{record.name}</span>
             <CopyButton value={record.name} />
           </div>
         </TableCell>
@@ -235,7 +235,7 @@ export function SubdomainRow({
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm text-zinc-500">
+              <span className="max-w-md font-mono text-sm break-all text-zinc-500">
                 {record.priority != null
                   ? `${record.priority} ${record.content}`
                   : record.content}
