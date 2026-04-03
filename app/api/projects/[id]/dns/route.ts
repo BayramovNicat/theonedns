@@ -193,6 +193,28 @@ export async function POST(
     );
   }
 
+  // Log the change
+  try {
+    const supabase = await createClient();
+    await supabase.from('dns_changes').insert({
+      user_id: userId,
+      project_id: id,
+      action: 'create',
+      record_type: recordType,
+      record_name: subdomain,
+      old_value: null,
+      new_value: {
+        type: recordType,
+        content,
+        ttl,
+        priority,
+        proxied,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to log DNS change:', error);
+  }
+
   invalidateCache(`${id}:${project.domain}`);
   return NextResponse.json({ success: true });
 }
@@ -269,6 +291,15 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
   }
 
+  // Fetch old record for audit log
+  let oldRecord = null;
+  try {
+    const records = await provider.listRecords();
+    oldRecord = records.find((r) => r.id === recordId);
+  } catch {
+    // Continue even if we can't fetch old record
+  }
+
   try {
     await provider.updateRecord(recordId, {
       type,
@@ -283,6 +314,36 @@ export async function PATCH(
       { error: 'Failed to update record' },
       { status: 500 },
     );
+  }
+
+  // Log the change
+  try {
+    const supabase = await createClient();
+    await supabase.from('dns_changes').insert({
+      user_id: userId,
+      project_id: id,
+      action: 'update',
+      record_type: type || oldRecord?.type || 'unknown',
+      record_name: oldRecord?.name || recordId,
+      old_value: oldRecord
+        ? {
+            type: oldRecord.type,
+            content: oldRecord.content,
+            ttl: oldRecord.ttl,
+            priority: oldRecord.priority,
+            proxied: oldRecord.proxied,
+          }
+        : null,
+      new_value: {
+        type,
+        content: content.trim(),
+        ttl: parsedTtl,
+        priority: parsedPriority,
+        proxied: proxied ?? false,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to log DNS change:', error);
   }
 
   invalidateCache(`${id}:${project.domain}`);
@@ -328,6 +389,15 @@ export async function DELETE(
     return NextResponse.json({ error: 'Invalid record ID' }, { status: 400 });
   }
 
+  // Fetch old record for audit log
+  let oldRecord = null;
+  try {
+    const records = await provider.listRecords();
+    oldRecord = records.find((r) => r.id === recordId);
+  } catch {
+    // Continue even if we can't fetch old record
+  }
+
   try {
     await provider.deleteRecord(recordId);
   } catch {
@@ -336,6 +406,30 @@ export async function DELETE(
       { error: 'Failed to delete record' },
       { status: 500 },
     );
+  }
+
+  // Log the change
+  try {
+    const supabase = await createClient();
+    await supabase.from('dns_changes').insert({
+      user_id: userId,
+      project_id: id,
+      action: 'delete',
+      record_type: oldRecord?.type || 'unknown',
+      record_name: oldRecord?.name || recordId,
+      old_value: oldRecord
+        ? {
+            type: oldRecord.type,
+            content: oldRecord.content,
+            ttl: oldRecord.ttl,
+            priority: oldRecord.priority,
+            proxied: oldRecord.proxied,
+          }
+        : null,
+      new_value: null,
+    });
+  } catch (error) {
+    console.error('Failed to log DNS change:', error);
   }
 
   invalidateCache(`${id}:${project.domain}`);

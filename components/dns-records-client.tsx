@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  History,
   RefreshCw,
   Search,
   ShieldCheck,
@@ -14,6 +15,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { DnsAuditDialog } from '@/components/dns-audit-dialog';
 import { DnsExportImport } from '@/components/dns-export-import';
+import { DnsHistoryDialog } from '@/components/dns-history-dialog';
 import { SubdomainRow } from '@/components/subdomain-row';
 import {
   AlertDialog,
@@ -59,6 +61,7 @@ export function DnsRecordsClient({
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [auditOpen, setAuditOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
@@ -245,6 +248,15 @@ export function DnsRecordsClient({
             <ShieldCheck className="size-3.5" />
             Health Audit
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setHistoryOpen(true)}
+            className="h-9 gap-2 border border-white/10 bg-white/5 text-xs font-medium text-zinc-400 hover:bg-white/10 hover:text-white"
+          >
+            <History className="size-3.5" />
+            History
+          </Button>
           <DnsExportImport
             records={records}
             domain={domain}
@@ -400,6 +412,12 @@ export function DnsRecordsClient({
         domain={domain}
         open={auditOpen}
         onOpenChange={setAuditOpen}
+      />
+
+      <DnsHistoryDialog
+        projectId={projectId}
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
       />
 
       <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
