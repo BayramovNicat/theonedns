@@ -1,6 +1,14 @@
 'use client';
 
-import { RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  RefreshCw,
+  Search,
+  ShieldCheck,
+  Trash2,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -55,6 +63,26 @@ export function DnsRecordsClient({
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [sortField, setSortField] = useState<
+    'name' | 'type' | 'content' | 'ttl' | 'proxied' | null
+  >(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(
+    null,
+  );
+
+  function handleSort(field: 'name' | 'type' | 'content' | 'ttl' | 'proxied') {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortDirection(null);
+        setSortField(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  }
 
   async function handleRefresh() {
     setRefreshing(true);
@@ -141,10 +169,47 @@ export function DnsRecordsClient({
           r.content.toLowerCase().includes(q),
       );
     }
+
+    // Apply sorting
+    if (sortField && sortDirection) {
+      result = [...result].sort((a, b) => {
+        let aVal: string | number | boolean = '';
+        let bVal: string | number | boolean = '';
+
+        if (sortField === 'ttl') {
+          aVal = a.ttl ?? 0;
+          bVal = b.ttl ?? 0;
+        } else if (sortField === 'proxied') {
+          aVal = a.proxied ?? false;
+          bVal = b.proxied ?? false;
+        } else {
+          aVal = (a[sortField] || '').toString().toLowerCase();
+          bVal = (b[sortField] || '').toString().toLowerCase();
+        }
+
+        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
     return result;
-  }, [records, typeFilter, search]);
+  }, [records, typeFilter, search, sortField, sortDirection]);
 
   const showProxy = platform === 'cloudflare';
+
+  function getSortIcon(field: 'name' | 'type' | 'content' | 'ttl' | 'proxied') {
+    if (sortField !== field) {
+      return <ArrowUpDown className="size-3 text-zinc-600" />;
+    }
+    if (sortDirection === 'asc') {
+      return <ArrowUp className="size-3 text-amber-500" />;
+    }
+    if (sortDirection === 'desc') {
+      return <ArrowDown className="size-3 text-amber-500" />;
+    }
+    return <ArrowUpDown className="size-3 text-zinc-600" />;
+  }
 
   return (
     <div>
@@ -262,21 +327,51 @@ export function DnsRecordsClient({
                       className="size-3.5 cursor-pointer appearance-none rounded border border-white/20 bg-white/5 checked:border-amber-500 checked:bg-amber-500"
                     />
                   </TableHead>
-                  <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                    Name
+                  <TableHead
+                    className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
+                    onClick={() => handleSort('name')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Name
+                      {getSortIcon('name')}
+                    </div>
                   </TableHead>
-                  <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                    Type
+                  <TableHead
+                    className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
+                    onClick={() => handleSort('type')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Type
+                      {getSortIcon('type')}
+                    </div>
                   </TableHead>
-                  <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                    Content
+                  <TableHead
+                    className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
+                    onClick={() => handleSort('content')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Content
+                      {getSortIcon('content')}
+                    </div>
                   </TableHead>
-                  <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                    TTL
+                  <TableHead
+                    className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
+                    onClick={() => handleSort('ttl')}
+                  >
+                    <div className="flex items-center gap-1">
+                      TTL
+                      {getSortIcon('ttl')}
+                    </div>
                   </TableHead>
                   {showProxy && (
-                    <TableHead className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
-                      Proxy
+                    <TableHead
+                      className="cursor-pointer text-[10px] font-bold tracking-widest text-zinc-500 uppercase hover:text-zinc-400"
+                      onClick={() => handleSort('proxied')}
+                    >
+                      <div className="flex items-center gap-1">
+                        Proxy
+                        {getSortIcon('proxied')}
+                      </div>
                     </TableHead>
                   )}
                   <TableHead className="pr-8 text-right text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
