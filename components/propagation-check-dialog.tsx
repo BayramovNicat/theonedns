@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Globe, Loader2, RefreshCw, XCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { CopyButton } from '@/components/copy-button';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,7 +71,7 @@ export function PropagationCheckDialog({
             <Globe className="size-5 text-amber-500" />
             Propagation Check
           </DialogTitle>
-          <DialogDescription className="font-serif text-zinc-500 italic break-all">
+          <DialogDescription className="font-serif break-all text-zinc-500 italic">
             Querying global resolvers for{' '}
             <span className="font-bold text-amber-500 not-italic">
               {record.name}
@@ -137,16 +138,23 @@ export function PropagationCheckDialog({
                       <span className="shrink-0 text-xs text-zinc-600">
                         {r.ip}
                       </span>
+                      <CopyButton value={r.ip} className="h-6 w-6" />
                     </div>
                     {r.error ? (
                       <span className="text-xs text-zinc-500">{r.error}</span>
                     ) : r.values.length > 0 ? (
-                      <span
-                        className="block break-all font-mono text-xs text-zinc-500"
-                        title={r.values.join(', ')}
-                      >
-                        {r.values.join(', ')}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="block font-mono text-xs break-all text-zinc-500"
+                          title={r.values.join(', ')}
+                        >
+                          {r.values.join(', ')}
+                        </span>
+                        <CopyButton
+                          value={r.values.join(', ')}
+                          className="h-6 w-6"
+                        />
+                      </div>
                     ) : (
                       <span className="text-xs text-zinc-600">No records</span>
                     )}

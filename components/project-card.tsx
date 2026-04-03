@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { CopyButton } from '@/components/copy-button';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -69,9 +70,12 @@ export function ProjectCard({ project }: { project: Project }) {
         <Link href={`/projects/${project.id}`} className="block px-6 pt-5 pb-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-lg font-bold text-white transition-colors group-hover:text-amber-400">
-                {project.domain}
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-lg font-bold text-white transition-colors group-hover:text-amber-400">
+                  {project.domain}
+                </h3>
+                <CopyButton value={project.domain} />
+              </div>
               <div className="mt-2 flex items-center gap-2">
                 <Badge className="border-amber-500/20 bg-amber-500/10 text-[10px] font-bold tracking-widest text-amber-500 uppercase">
                   {platformName}

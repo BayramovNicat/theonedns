@@ -4,6 +4,7 @@ import { Check, Globe, Pencil, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { CopyButton } from '@/components/copy-button';
 import { PropagationCheckDialog } from '@/components/propagation-check-dialog';
 import {
   AlertDialog,
@@ -168,7 +169,10 @@ export function SubdomainRow({
           />
         </TableCell>
         <TableCell className="font-mono text-sm text-zinc-300">
-          {record.name}
+          <div className="flex items-center gap-2">
+            <span>{record.name}</span>
+            <CopyButton value={record.name} />
+          </div>
         </TableCell>
         <TableCell>
           {editing ? (
@@ -230,11 +234,14 @@ export function SubdomainRow({
               />
             </div>
           ) : (
-            <span className="font-mono text-sm text-zinc-500">
-              {record.priority != null
-                ? `${record.priority} ${record.content}`
-                : record.content}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-sm text-zinc-500">
+                {record.priority != null
+                  ? `${record.priority} ${record.content}`
+                  : record.content}
+              </span>
+              <CopyButton value={record.content} />
+            </div>
           )}
         </TableCell>
         <TableCell>
