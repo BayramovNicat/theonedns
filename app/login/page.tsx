@@ -41,7 +41,7 @@ export default function LoginPage() {
               <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>
@@ -63,7 +63,7 @@ export default function LoginPage() {
             onClick={signInWithGoogle}
             className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/10 bg-white/5 py-4 text-sm font-bold tracking-widest text-white uppercase transition-all hover:bg-white/10 active:scale-95"
           >
-            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             <svg
               className="relative z-10 size-5"
               viewBox="0 0 24 24"

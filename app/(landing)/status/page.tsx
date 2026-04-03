@@ -1,5 +1,11 @@
-import Link from 'next/link';
-import FooterSection from '@/components/FooterSection';
+import type { Metadata } from 'next';
+import LandingLayout from '@/components/LandingLayout';
+
+export const metadata: Metadata = {
+  title: 'System Status - TheOneDNS',
+  description:
+    'Check the current operational status of TheOneDNS and all integrated services.',
+};
 
 export default function StatusPage() {
   const realms = [
@@ -12,33 +18,8 @@ export default function StatusPage() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-zinc-950 text-white selection:bg-amber-500/30 selection:text-amber-200 font-sans">
-      {/* Simple Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 border-b border-white/5 bg-transparent px-4 py-8">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="bg-linear-to-r from-amber-400 to-amber-600 bg-clip-text text-xl font-black text-transparent">
-              TheOneDNS
-            </span>
-          </Link>
-          <nav className="flex items-center gap-8">
-            <Link
-              href="/docs"
-              className="text-[10px] font-bold tracking-[0.3em] text-zinc-500 uppercase transition-colors hover:text-amber-500"
-            >
-              Archives
-            </Link>
-            <Link
-              href="/login"
-              className="rounded-full border border-amber-500/20 bg-amber-500/5 px-6 py-2 text-[10px] font-bold tracking-[0.2em] text-amber-500 uppercase transition-all hover:bg-amber-500/10"
-            >
-              Enter Throne
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      <div className="relative z-10 mx-auto max-w-4xl px-6 pt-48 pb-24 md:pb-32">
+    <LandingLayout>
+      <div className="mx-auto max-w-4xl px-6 pt-48 pb-24 md:pb-32">
         <div className="mb-16 text-center">
           <span className="mb-4 inline-block text-[10px] font-bold tracking-[0.6em] text-zinc-600 uppercase">
             The Watchtower
@@ -48,8 +29,8 @@ export default function StatusPage() {
               System Status
             </span>
           </h1>
-          <div className="mx-auto h-1 w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
-          <p className="mt-8 text-xl text-zinc-500 font-serif italic">
+          <div className="mx-auto h-1 w-32 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+          <p className="mt-8 font-serif text-xl text-zinc-500 italic">
             &quot;All is calm in the digital kingdom. The fires of the servers
             burn steady.&quot;
           </p>
@@ -96,22 +77,22 @@ export default function StatusPage() {
               Incident History
             </h2>
             <div className="space-y-8">
-              <div className="relative border-l border-white/5 pl-8 pb-8">
+              <div className="relative border-l border-white/5 pb-8 pl-8">
                 <div className="absolute top-0 -left-1 h-2 w-2 rounded-full bg-zinc-700" />
                 <h3 className="text-sm font-bold text-zinc-300">
                   Solar Cycle 1, 2026
                 </h3>
-                <p className="mt-2 text-sm text-zinc-500 font-serif italic">
+                <p className="mt-2 font-serif text-sm text-zinc-500 italic">
                   No incidents reported. The master interface remained stable
                   through the seasonal transition.
                 </p>
               </div>
-              <div className="relative border-l border-white/5 pl-8 pb-8">
+              <div className="relative border-l border-white/5 pb-8 pl-8">
                 <div className="absolute top-0 -left-1 h-2 w-2 rounded-full bg-zinc-700" />
                 <h3 className="text-sm font-bold text-zinc-300">
                   Solar Cycle 365, 2025
                 </h3>
-                <p className="mt-2 text-sm text-zinc-500 font-serif italic">
+                <p className="mt-2 font-serif text-sm text-zinc-500 italic">
                   End of year maintenance completed. The encryption vaults were
                   reinforced against spectral threats.
                 </p>
@@ -123,7 +104,7 @@ export default function StatusPage() {
             <h2 className="mb-4 text-2xl font-bold text-white">
               Stay Informed
             </h2>
-            <p className="mb-8 text-zinc-500 font-serif italic">
+            <p className="mb-8 font-serif text-zinc-500 italic">
               Subscribe to the archives to receive alerts should a storm
               approach the digital shores.
             </p>
@@ -136,11 +117,6 @@ export default function StatusPage() {
           </section>
         </div>
       </div>
-
-      <FooterSection />
-
-      {/* Subtle Grain Overlay */}
-      <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] pointer-events-none fixed inset-0 z-100 opacity-[0.03]" />
-    </div>
+    </LandingLayout>
   );
 }

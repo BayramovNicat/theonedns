@@ -58,8 +58,8 @@ export default function TheNineSection() {
         </div>
       </motion.div>
 
-      <div className="absolute top-0 bottom-0 left-0 z-10 w-32 bg-linear-to-r from-zinc-950 to-transparent" />
-      <div className="absolute top-0 right-0 bottom-0 z-10 w-32 bg-linear-to-l from-zinc-950 to-transparent" />
+      <div className="absolute top-0 bottom-0 left-0 z-10 w-32 bg-gradient-to-r from-zinc-950 to-transparent" />
+      <div className="absolute top-0 right-0 bottom-0 z-10 w-32 bg-gradient-to-l from-zinc-950 to-transparent" />
     </section>
   );
 }

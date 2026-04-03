@@ -66,7 +66,7 @@ export function DashboardShell({
                 <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                   TheOne
                 </span>
-                <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-2 text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
                   DNS
                 </span>
               </h2>

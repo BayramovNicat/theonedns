@@ -26,7 +26,7 @@ export default function FooterSection() {
         {/* Footer Links */}
         <div className="mb-12 grid w-full grid-cols-1 gap-12 border-b border-white/5 pb-12 text-center md:grid-cols-4 md:text-left">
           <div className="md:col-span-1">
-            <h3 className="mb-4 bg-linear-to-r from-amber-400 to-amber-600 bg-clip-text text-2xl font-bold text-transparent">
+            <h3 className="mb-4 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-2xl font-bold text-transparent">
               TheOneDNS
             </h3>
             <p className="text-sm text-zinc-500">

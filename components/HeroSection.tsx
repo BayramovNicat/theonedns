@@ -119,11 +119,11 @@ export default function HeroSection() {
               <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                 TheOne
               </span>
-              <span className="bg-linear-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+              <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 bg-clip-text pr-4 text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)]">
                 DNS
               </span>
             </h2>
-            <div className="mt-6 h-px w-32 bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
+            <div className="mt-6 h-px w-32 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
           </div>
         </motion.div>
 
@@ -145,7 +145,7 @@ export default function HeroSection() {
           <CtaButton />
           <Link
             href="/docs"
-            className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 transition-colors hover:text-amber-500 uppercase"
+            className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 uppercase transition-colors hover:text-amber-500"
           >
             Read the Archives
           </Link>
